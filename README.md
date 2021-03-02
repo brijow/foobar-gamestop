@@ -33,7 +33,7 @@ In this project, the following directory structure is followed:
 ├── setup.cfg
 │
 ├── data                                    <- All data sets reside here, but dir not in version control
-│   ├── raw                                 <- Raw data, populated by various make_dataset.py scripts
+│   ├── raw                                 <- Raw data, populated by various download_data.py scripts
 │   │   ├── reddit_wsb_raw_jan20.csv
 │   │   ├── reddit_wsb_raw_feb20.csv
 │   │   ├── ...
