@@ -13,13 +13,10 @@
 
 
 > **Note:** 
-This assumes you have installed black, flake8, isort, and mypy in your python environment.
-
-For example, if using conda:
-
-```
-conda install black flake8 isort mypy
-```
+> This assumes you have installed black, flake8, isort, and mypy in your python environment.
+> For example, if using conda: 
+>
+> `conda install black flake8 isort mypy`
 
 
 ## Notes on directory structure
