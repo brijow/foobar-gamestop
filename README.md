@@ -1,5 +1,13 @@
 ## Notes on code formatting
 
+> **Note:** 
+> This assumes you have installed black, flake8, isort, and mypy in your python environment.
+> For example, if using conda: 
+>
+> `conda install black flake8 isort mypy`
+
+
+
 1. There is a setup.cfg file in root of the project. This config file ensure that
    the auto-formatting / linting tools play nicely together. The tools used are the following:
    - black
@@ -10,13 +18,6 @@
 2. There is a .pre-commit-config.yaml file in the root of the project. This ensures that that
    auto-formatting tools will be run every time code is committed to ensure the formatting is
    consistent.
-
-
-> **Note:** 
-> This assumes you have installed black, flake8, isort, and mypy in your python environment.
-> For example, if using conda: 
->
-> `conda install black flake8 isort mypy`
 
 
 ## Notes on directory structure
