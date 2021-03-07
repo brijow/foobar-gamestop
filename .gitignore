@@ -1,4 +1,11 @@
-data/raw
-data/__pycache__
+foobar_gamestop/__pycache__
+
+foobar_gamestop/datasets/raw
+foobar_gamestop/datasets/__pycache__
+
+foobar_gamestop/vis/__pycache__
+
+foobar_gamestop.egg-info
+
 .pdb-pyhist
 

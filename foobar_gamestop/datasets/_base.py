@@ -3,14 +3,18 @@ Base IO code for all datasets.
 """
 
 import os
+from pathlib import Path
 
 from kaggle.api.kaggle_api_extended import KaggleApi
+
+def get_project_root():
+    return Path(__file__).parent.parent
 
 
 def get_root_data_dir():
     """Return the path of the top level data dir."""
     root_data_dir = os.environ.get('GAMESTOP_ROOT_DATA_DIR',
-                                   os.path.join('.', 'data'))
+                                   os.path.join(get_project_root(), 'datasets'))
 
     dir_path = os.path.expanduser(root_data_dir)
 
