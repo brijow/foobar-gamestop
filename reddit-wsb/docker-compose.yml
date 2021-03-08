@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  reddit_wsb:
+    container_name: reddit_wsb
+    build: .
+    environment:
+      KAFKA_BROKER_URL: broker:9092
+      TOPIC_NAME: "${WSB_TOPIC}"
+      BATCH_SIZE: ${WSB_BATCH_SIZE}
+
+networks:
+  default:
+    external:
+      name: kafka-network
