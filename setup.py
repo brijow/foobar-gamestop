@@ -7,5 +7,6 @@ setup(name='foobar_gamestop',
       # list folders, not files
       packages=['foobar_gamestop',
                 'foobar_gamestop.datasets',
+                'foobar_gamestop.reddit-wsb',
                 'foobar_gamestop.vis'],
       )
