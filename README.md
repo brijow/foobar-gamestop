@@ -11,41 +11,47 @@
 In this project, the following directory structure is followed:
 
 ```
+.
+├── .gitignore
+├── .pre-commit-config.yaml
 ├── README.md
-├── README.md
-├── .pre-commit-config.yaml                 <-- hooks to run linters on each git commit
-├── setup.cfg                               <-- linter configuration options
-├── setup.py                                <-- defines the package, run 'pip install -e ./' in root dir after cloning repo to install
-│
-├── Makefile                                <-- TODO
-├── LICENSE                                 <-- TODO
-│
 ├── foobar_gamestop
-│   ├── __init__.py
-│   ├── datasets
-│   │   ├── __init__.py                     <-- explicitly defines what functions in this folder are importable
-│   │   ├── _base.py                        <-- general functions shared by other data specific modules
-│   │   ├── _avocado_data.py                <-- logic specific for managing avocado data
-│   │   ├── _reddit_data.py                 <-- logic specific for managing reddit data
-│   │   └── raw                             <-- folder and contents not in version control
-│   │       ├── avocado.csv
-│   │       └── reddit_wsb.csv
-│   └── vis                                 <-- the dash app logic lives here
-│       ├── __init__.py                     <-- empty file, just defines vis to be a subpackage (importable)
-│       └── app.py                          <-- does "from foobar_gamestop.datasets import load_<subject>_data"
-│
-├── reddit-wsb                              <- (TODO) Logic for reddit wallstreetbets
-│   ├── __init__.py
-│   ├── __main__.py                         <- Driver code
-│   ├── reddit_post.py                      <- Module defining a RedditPost class
-│   ├── data                                <- Scripts to manage reddit-wsb data
-│   │   ├── download_data.py                <- Download reddit wallstreetbets data and save in root data/raw dir
-│   │   └── extract_gs_sentiment.py         <- Extract sentiment data from raw wallstreetbets data
-│   └── test                                <- Unit tests for modules in reddit-wsb dir (optional)
-│       ├── __init__.py
-│       └── test_extract_gs_sentiment.py    <- Tests for logic in extract_gs_sentiment.py
-│
-└── ... more-services-here ...
+│   ├── __init__.py
+│   ├── avocados
+│   │   ├── __init__.py
+│   │   └── data_utils
+│   │       ├── __init__.py
+│   │       └── _avocado_data.py
+│   ├── datasets
+│   │   ├── __init__.py
+│   │   ├── _base.py
+│   │   ├── raw
+│   │   │   ├── avocado.csv
+│   │   │   └── reddit_wsb.csv
+│   │   └── samples
+│   │       ├── comment_sample_object.json
+│   │       └── submission_sample_object.json
+│   ├── notebooks
+│   │   └── wsb-senti-analysis.ipynb
+│   ├── reddit_wsb
+│   │   ├── __init__.py
+│   │   ├── data_utils
+│   │   │   ├── __init__.py
+│   │   │   ├── _kaggle_wsb_get_data.py
+│   │   │   ├── _reddit_data.py
+│   │   │   └── praw.ini
+│   │   └── producer
+│   │       ├── .env
+│   │       ├── Dockerfile
+│   │       ├── docker-compose.yml
+│   │       ├── requirements.txt
+│   │       ├── wsb_comments_producer.py
+│   │       └── wsb_posts_producer.py
+│   └── vis
+│       ├── __init__.py
+│       └── app.py
+├── setup.cfg
+└── setup.py
 ```
 
 ## Notes on code formatting (for contributors)
