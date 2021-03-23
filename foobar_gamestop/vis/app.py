@@ -3,7 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 
-from foobar_gamestop.datasets import load_avocado_data
+from foobar_gamestop.avocados.data_utils import load_avocado_data
 
 df = load_avocado_data()
 df = df.query("type == 'conventional' and region == 'Albany'")

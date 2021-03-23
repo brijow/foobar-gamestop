@@ -65,8 +65,8 @@ def _fetch_all_files_from_kaggle(dataset, path=None, force=False, unzip=False):
     api.dataset_download_files(dataset=dataset, path=path, force=force, unzip=unzip)
 
 
-def _load_kaggle_data(local_fname, dataset, unzip, single_file=False,
-                      download_if_missing=True, force=False):
+def load_kaggle_data(local_fname, dataset, unzip, single_file=False,
+                     download_if_missing=True, force=False):
     """Load a dataset from kaggle."""
 
     data_dir = get_or_create_raw_data_dir()
