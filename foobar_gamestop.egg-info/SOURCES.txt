@@ -1,0 +1,14 @@
+README.md
+setup.cfg
+setup.py
+foobar_gamestop/__init__.py
+foobar_gamestop.egg-info/PKG-INFO
+foobar_gamestop.egg-info/SOURCES.txt
+foobar_gamestop.egg-info/dependency_links.txt
+foobar_gamestop.egg-info/top_level.txt
+foobar_gamestop/datasets/__init__.py
+foobar_gamestop/datasets/_avocado_data.py
+foobar_gamestop/datasets/_base.py
+foobar_gamestop/datasets/_reddit_data.py
+foobar_gamestop/vis/__init__.py
+foobar_gamestop/vis/app.py
