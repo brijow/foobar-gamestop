@@ -31,12 +31,8 @@ reddit = praw.Reddit('reddit_wsb', user_agent="reddit wsb producer")
 def run():
     # kafkaurl = KAFKA_BROKER_URL
     subreddit = reddit.subreddit("wallstreetbets")
-    for submission in subreddit.stream.submissions(skip_existing=True):
-        print(submission)
-        print(type(submission))
-        print(vars(submission))
-    # for comment in subreddit.stream.comments(skip_existing=True):
-    #     print(comment)
+    for comment in subreddit.stream.comments(skip_existing=True):
+        print(vars(comment))
 
 
 if __name__ == "__main__":
