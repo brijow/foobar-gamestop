@@ -5,6 +5,7 @@ import time
 from collections import namedtuple
 
 import praw
+
 # from kafka import KafkaProducer
 
 
@@ -12,7 +13,7 @@ import praw
 # TOPIC_NAME = os.environ.get("TOPIC_NAME")
 BATCH_SIZE = int(os.environ.get("BATCH_SIZE", 100))
 
-reddit = praw.Reddit('reddit_wsb', user_agent="reddit wsb producer")
+reddit = praw.Reddit("reddit_wsb", user_agent="reddit wsb producer")
 
 # access_token = api_credential['access_token']
 # reddit = praw.Reddit(

@@ -43,7 +43,8 @@ top_row = html.Div(
                         ),
                         dbc.RadioItems(
                             options=[
-                                {"label": "Option {}".format(i), "value": i} for i in range(1, 4)
+                                {"label": "Option {}".format(i), "value": i}
+                                for i in range(1, 4)
                             ],
                             value=0,
                             inline=True,
@@ -66,16 +67,13 @@ top_row = html.Div(
 boxed_row = html.Div(
     [
         dbc.Row(
-
             dbc.Col(
                 html.Div(
                     "This is a 100px div in a column in a row in col 2 in row 2",
-                    style={"height": "100px", "width": "100%",
-                           "border-style": "solid"},
+                    style={"height": "100px", "width": "100%", "border-style": "solid"},
                 ),
             ),
         ),
-
     ],
 )
 

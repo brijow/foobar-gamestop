@@ -1,12 +1,11 @@
-foobar_gamestop/__pycache__
+__pycache__/
 
-foobar_gamestop/datasets/raw
-foobar_gamestop/datasets/__pycache__
-
-foobar_gamestop/vis/__pycache__
+.vscode/
 
 *.egg-info/
 
+foobar_gamestop/datasets/raw/
+
 .pdb-pyhist
 
-*-checkpoint.ipynb
+.ipynb_checkpoints
