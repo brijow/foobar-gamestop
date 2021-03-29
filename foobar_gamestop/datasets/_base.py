@@ -15,8 +15,9 @@ def get_project_root():
 
 def get_root_data_dir():
     """Return the path of the top level data dir."""
-    root_data_dir = os.environ.get('GAMESTOP_ROOT_DATA_DIR',
-                                   os.path.join(get_project_root(), 'datasets'))
+    root_data_dir = os.environ.get(
+        "GAMESTOP_ROOT_DATA_DIR", os.path.join(get_project_root(), "datasets")
+    )
 
     dir_path = os.path.expanduser(root_data_dir)
 
@@ -25,8 +26,9 @@ def get_root_data_dir():
 
 def get_or_create_raw_data_dir():
     """Return the path of the raw data dir."""
-    raw_data_dir = os.environ.get('GAMESTOP_RAW_DATA_DIR',
-                                  os.path.join(get_root_data_dir(), 'raw'))
+    raw_data_dir = os.environ.get(
+        "GAMESTOP_RAW_DATA_DIR", os.path.join(get_root_data_dir(), "raw")
+    )
 
     dir_path = os.path.expanduser(raw_data_dir)
 
@@ -47,8 +49,9 @@ def _fetch_file_from_kaggle(dataset, file_name, path=None, force=False):
     """
     api = KaggleApi()
     api.authenticate()
-    api.dataset_download_file(dataset=dataset, file_name=file_name,
-                              path=path, force=force)
+    api.dataset_download_file(
+        dataset=dataset, file_name=file_name, path=path, force=force
+    )
 
 
 def _fetch_all_files_from_kaggle(dataset, path=None, force=False, unzip=False):
@@ -65,8 +68,14 @@ def _fetch_all_files_from_kaggle(dataset, path=None, force=False, unzip=False):
     api.dataset_download_files(dataset=dataset, path=path, force=force, unzip=unzip)
 
 
-def load_kaggle_data(local_fname, dataset, unzip, single_file=False,
-                     download_if_missing=True, force=False):
+def load_kaggle_data(
+    local_fname,
+    dataset,
+    unzip,
+    single_file=False,
+    download_if_missing=True,
+    force=False,
+):
     """Load a dataset from kaggle."""
 
     data_dir = get_or_create_raw_data_dir()
@@ -77,11 +86,13 @@ def load_kaggle_data(local_fname, dataset, unzip, single_file=False,
             raise IOError("Data not found and `download_if_missing` is False")
 
         if single_file:
-            _fetch_file_from_kaggle(dataset=dataset, file_name=local_fname,
-                                    path=data_dir, force=force)
+            _fetch_file_from_kaggle(
+                dataset=dataset, file_name=local_fname, path=data_dir, force=force
+            )
         else:
-            _fetch_all_files_from_kaggle(dataset=dataset, path=data_dir,
-                                         force=force, unzip=unzip)
+            _fetch_all_files_from_kaggle(
+                dataset=dataset, path=data_dir, force=force, unzip=unzip
+            )
 
     file_path = os.path.join(data_dir, local_fname)
     df = pd.read_csv(file_path)
