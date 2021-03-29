@@ -1,5 +1,34 @@
 import dash_bootstrap_components as dbc
+import dash_core_components as dcc
 import dash_html_components as html
+import plotly.express as px
+
+df = px.data.stocks()
+fig = px.line(df, x="date", y=df.columns,
+              hover_data={"date": "|%B %d, %Y"})
+fig.update_layout(
+    margin=dict(l=0, r=0, t=0, b=0),
+)
+fig.update_layout(yaxis={'visible': False, 'showticklabels': False})
+fig.update_layout(xaxis={'title': ''})
+fig.update_xaxes(
+    dtick="M1",
+    tickformat="%b\n%Y",
+    ticklabelmode="period")
+fig.update_layout(
+    plot_bgcolor='rgba(0,0,0,0)',
+    legend=dict(
+        x=0,
+        y=1,
+        traceorder="normal",
+        font=dict(
+            family="sans-serif",
+            size=12,
+            color="black"
+        ),
+    )
+)
+fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='LightGray')
 
 GITLAB_URL = "https://csil-git1.cs.surrey.sfu.ca/733-foobar"
 REPORT_URL = "https://docs.google.com/document/d/1oBRxH3crYQBCuFkInnlJV4NEOUaxuc4ZvqbTEapj6_4/edit#heading=h.liyhn4k5ur9v"
@@ -39,7 +68,7 @@ top_row = html.Div(
                     [
                         html.Div(
                             "Reddit graph here",
-                            style={"height": "300px", "border-style": "solid"},
+                            style={"height": "340px", "border-style": "solid"},
                         ),
                         dbc.RadioItems(
                             options=[
@@ -54,8 +83,12 @@ top_row = html.Div(
                 ),
                 dbc.Col(
                     html.Div(
-                        "Financial multi line chart here",
-                        style={"height": "300px", "border-style": "solid"},
+                        [
+                            dcc.Graph(figure=fig,
+                                      style={"height": "332px"}
+                                      )
+                        ],
+                        style={"height": "340px", "border-style": "solid"},
                     ),
                     md=8,
                 ),
