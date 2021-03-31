@@ -387,3 +387,392 @@
 2021-03-30 19:28:05,743 ERROR SEC filling report with access number 0001326380-18-000026 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
 2021-03-30 19:28:05,873 ERROR SEC filling report with access number 0001326380-18-000024 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
 2021-03-30 19:28:05,974 ERROR SEC filling report with access number 0001326380-18-000022 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:37,423 ERROR SEC filling report with access number 0001225385-21-000131 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:37,541 ERROR SEC filling report with access number 0001326380-21-000032 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:37,654 ERROR SEC filling report with access number 0001326380-21-000030 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:37,761 ERROR SEC filling report with access number 0001193125-21-090320 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:37,872 ERROR SEC filling report with access number 0001225385-21-000031 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:37,984 ERROR SEC filling report with access number 0001225385-21-000030 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:38,082 ERROR SEC filling report with access number 0001193125-21-044436 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:38,187 ERROR SEC filling report with access number 0001104659-21-023554 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:38,299 ERROR SEC filling report with access number 0001104659-21-022073 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:38,400 ERROR SEC filling report with access number 0000902664-21-001289 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:38,508 ERROR SEC filling report with access number 0000354204-21-000127 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:38,607 ERROR SEC filling report with access number 0000093751-21-000355 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:38,714 ERROR SEC filling report with access number 0001104659-21-018148 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:38,829 ERROR SEC filling report with access number 0000315066-21-001389 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:38,929 ERROR SEC filling report with access number 0000315066-21-001050 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:39,039 ERROR SEC filling report with access number 0001193125-21-019848 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:39,134 ERROR SEC filling report with access number 0000834237-21-001340 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:39,231 ERROR SEC filling report with access number 0001326380-21-000020 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:39,343 ERROR SEC filling report with access number 0001326380-21-000018 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:39,473 ERROR SEC filling report with access number 0001326380-21-000017 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:39,576 ERROR SEC filling report with access number 0001326380-21-000014 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:39,676 ERROR SEC filling report with access number 0001326380-21-000013 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:39,776 ERROR SEC filling report with access number 0001326380-21-000012 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:39,881 ERROR SEC filling report with access number 0000899243-21-002090 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:39,989 ERROR SEC filling report with access number 0001326380-21-000008 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:40,096 ERROR SEC filling report with access number 0001193805-21-000031 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:40,198 ERROR SEC filling report with access number 0001326380-21-000006 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:40,292 ERROR SEC filling report with access number 0001193805-20-001580 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:40,390 ERROR SEC filling report with access number 0001193805-20-001579 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:40,490 ERROR SEC filling report with access number 0001193805-20-001571 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:40,604 ERROR SEC filling report with access number 0001193125-20-312809 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:40,714 ERROR SEC filling report with access number 0001193125-20-312805 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:40,813 ERROR SEC filling report with access number 0001193125-20-312781 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:40,911 ERROR SEC filling report with access number 0001326380-20-000134 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:41,014 ERROR SEC filling report with access number 0001326380-20-000132 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:41,120 ERROR SEC filling report with access number 0001013594-20-000821 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:41,220 ERROR SEC filling report with access number 0001326380-20-000126 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:41,318 ERROR SEC filling report with access number 0000902664-20-003611 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:41,424 ERROR SEC filling report with access number 0000000000-20-009346 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:41,538 ERROR SEC filling report with access number 0001326380-20-000122 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:41,651 ERROR SEC filling report with access number 0000000000-20-008922 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:41,755 ERROR SEC filling report with access number 0001013594-20-000699 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:41,963 ERROR SEC filling report with access number 0001326380-20-000116 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:42,065 ERROR SEC filling report with access number 0000921895-20-002369 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:42,174 ERROR SEC filling report with access number 0001326380-20-000107 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:42,291 ERROR SEC filling report with access number 0001013594-20-000673 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:42,548 ERROR SEC filling report with access number 0001013594-20-000670 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:42,712 ERROR SEC filling report with access number 0001193125-20-187950 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:42,859 ERROR SEC filling report with access number 0001326380-20-000092 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:43,037 ERROR SEC filling report with access number 0001326380-20-000091 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:43,158 ERROR SEC filling report with access number 0001193125-20-186820 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:43,263 ERROR SEC filling report with access number 0001192482-20-000530 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:43,364 ERROR SEC filling report with access number 0001192482-20-000528 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:43,464 ERROR SEC filling report with access number 0001192482-20-000526 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:43,575 ERROR SEC filling report with access number 0001192482-20-000524 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:43,690 ERROR SEC filling report with access number 0001326380-20-000087 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:43,794 ERROR SEC filling report with access number 0001193125-20-171922 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:43,911 ERROR SEC filling report with access number 0001326380-20-000084 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:44,011 ERROR SEC filling report with access number 0001326380-20-000083 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:44,106 ERROR SEC filling report with access number 0001326380-20-000082 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:44,207 ERROR SEC filling report with access number 0001326380-20-000081 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:44,305 ERROR SEC filling report with access number 0001326380-20-000079 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:44,420 ERROR SEC filling report with access number 0001326380-20-000077 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:44,530 ERROR SEC filling report with access number 0000921895-20-001762 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:44,637 ERROR SEC filling report with access number 0001326380-20-000068 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:44,748 ERROR SEC filling report with access number 0001326380-20-000067 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:44,855 ERROR SEC filling report with access number 0001326380-20-000066 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:44,956 ERROR SEC filling report with access number 0001326380-20-000065 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:45,163 ERROR SEC filling report with access number 0001326380-20-000059 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:45,268 ERROR SEC filling report with access number 0001193125-20-161300 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:45,371 ERROR SEC filling report with access number 0001193125-20-160944 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:45,470 ERROR SEC filling report with access number 0001326380-20-000051 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:45,579 ERROR SEC filling report with access number 0000921895-20-001692 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:45,684 ERROR SEC filling report with access number 0000921895-20-001680 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:45,791 ERROR SEC filling report with access number 0001193125-20-158472 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:45,897 ERROR SEC filling report with access number 0000921895-20-001672 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:45,998 ERROR SEC filling report with access number 0000921895-20-001660 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:46,102 ERROR SEC filling report with access number 0001193125-20-157306 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:46,200 ERROR SEC filling report with access number 0001193125-20-156364 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:46,305 ERROR SEC filling report with access number 0000921895-20-001620 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:47,008 ERROR SEC filling report with access number 0000921895-20-001614 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:47,116 ERROR SEC filling report with access number 0000921895-20-001599 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:47,215 ERROR SEC filling report with access number 0001193125-20-151519 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:47,329 ERROR SEC filling report with access number 0001193125-20-150812 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:47,448 ERROR SEC filling report with access number 0001193125-20-148780 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:47,561 ERROR SEC filling report with access number 0000921895-20-001562 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:47,711 ERROR SEC filling report with access number 0000921895-20-001538 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:47,818 ERROR SEC filling report with access number 0000921895-20-001510 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:47,932 ERROR SEC filling report with access number 0001326380-20-000047 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:48,046 ERROR SEC filling report with access number 0001193125-20-145224 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:48,145 ERROR SEC filling report with access number 0001326380-20-000044 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:48,260 ERROR SEC filling report with access number 0001326380-20-000043 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:48,422 ERROR SEC filling report with access number 0001193125-20-139274 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:48,530 ERROR SEC filling report with access number 0000905148-20-000563 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:48,628 ERROR SEC filling report with access number 0000921895-20-001207 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:48,729 ERROR SEC filling report with access number 0001193125-20-122095 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:48,833 ERROR SEC filling report with access number 0000921895-20-001202 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:48,937 ERROR SEC filling report with access number 0001326380-20-000039 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:49,035 ERROR SEC filling report with access number 0001193125-20-120938 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:49,133 ERROR SEC filling report with access number 0000921895-20-001193 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:49,230 ERROR SEC filling report with access number 0000921895-20-001185 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:49,341 ERROR SEC filling report with access number 0001326380-20-000037 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:49,437 ERROR SEC filling report with access number 0000921895-20-001144 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:49,535 ERROR SEC filling report with access number 0001326380-20-000034 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:49,632 ERROR SEC filling report with access number 0001326380-20-000032 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:49,727 ERROR SEC filling report with access number 0001326380-20-000030 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:49,824 ERROR SEC filling report with access number 0001326380-20-000028 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:49,933 ERROR SEC filling report with access number 0001193125-20-105336 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:50,037 ERROR SEC filling report with access number 0000905148-20-000491 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:50,142 ERROR SEC filling report with access number 0001326380-20-000026 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:50,242 ERROR SEC filling report with access number 0001326380-20-000025 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:50,339 ERROR SEC filling report with access number 0000921895-20-001011 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:50,436 ERROR SEC filling report with access number 0001193805-20-000451 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:50,631 ERROR SEC filling report with access number 0001326380-20-000018 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:50,731 ERROR SEC filling report with access number 0000921895-20-000855 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:50,832 ERROR SEC filling report with access number 0001193805-20-000384 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:50,934 ERROR SEC filling report with access number 0001193125-20-080055 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:51,034 ERROR SEC filling report with access number 0001326380-20-000013 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:51,135 ERROR SEC filling report with access number 0001326380-20-000012 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:51,229 ERROR SEC filling report with access number 0000921895-20-000719 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:51,327 ERROR SEC filling report with access number 0001193805-20-000339 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:51,426 ERROR SEC filling report with access number 0001326380-20-000009 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:51,524 ERROR SEC filling report with access number 0001104659-20-030651 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:51,622 ERROR SEC filling report with access number 0001326380-20-000005 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:51,718 ERROR SEC filling report with access number 0000093751-20-000500 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:51,816 ERROR SEC filling report with access number 0001104659-20-016604 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:51,921 ERROR SEC filling report with access number 0000315066-20-000967 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:52,026 ERROR SEC filling report with access number 0000834237-20-002055 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:52,121 ERROR SEC filling report with access number 0001326380-20-000003 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:52,217 ERROR SEC filling report with access number 0000354204-20-000005 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:52,428 ERROR SEC filling report with access number 0001326380-19-000168 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:52,530 ERROR SEC filling report with access number 0001326380-19-000164 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:52,632 ERROR SEC filling report with access number 0001326380-19-000161 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:52,731 ERROR SEC filling report with access number 0000921895-19-002546 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:52,952 ERROR SEC filling report with access number 0001326380-19-000159 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:53,058 ERROR SEC filling report with access number 0001326380-19-000154 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:53,156 ERROR SEC filling report with access number 0001326380-19-000147 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:53,358 ERROR SEC filling report with access number 0001326380-19-000142 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:53,459 ERROR SEC filling report with access number 0001193125-19-194113 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:53,561 ERROR SEC filling report with access number 0001193125-19-194097 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:53,662 ERROR SEC filling report with access number 0001326380-19-000139 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:53,760 ERROR SEC filling report with access number 0001193125-19-187373 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:53,864 ERROR SEC filling report with access number 0001326380-19-000135 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:53,963 ERROR SEC filling report with access number 0001326380-19-000134 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 500): JSON error message from Finnhub: json: error calling MarshalJSON for type models.JSONString: unexpected end of JSON input
+
+2021-03-31 10:02:54,064 ERROR SEC filling report with access number 0001326380-19-000133 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:54,163 ERROR SEC filling report with access number 0001326380-19-000132 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:54,260 ERROR SEC filling report with access number 0001326380-19-000130 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:54,359 ERROR SEC filling report with access number 0001326380-19-000129 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:54,455 ERROR SEC filling report with access number 0001326380-19-000128 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:54,558 ERROR SEC filling report with access number 0001326380-19-000127 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:54,661 ERROR SEC filling report with access number 0001326380-19-000126 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:54,755 ERROR SEC filling report with access number 0001193125-19-181191 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:54,850 ERROR SEC filling report with access number 0001326380-19-000113 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:54,944 ERROR SEC filling report with access number 0001326380-19-000111 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:55,041 ERROR SEC filling report with access number 0001193125-19-173102 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:55,136 ERROR SEC filling report with access number 0001326380-19-000110 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:55,252 ERROR SEC filling report with access number 0001326380-19-000106 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:55,349 ERROR SEC filling report with access number 0001326380-19-000104 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:55,451 ERROR SEC filling report with access number 0001193125-19-170214 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:55,554 ERROR SEC filling report with access number 0001326380-19-000102 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:55,652 ERROR SEC filling report with access number 0001193125-19-168718 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:55,748 ERROR SEC filling report with access number 0001193125-19-168720 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:55,861 ERROR SEC filling report with access number 0001326380-19-000098 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:55,968 ERROR SEC filling report with access number 0001326380-19-000096 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:56,068 ERROR SEC filling report with access number 0001326380-19-000093 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:56,173 ERROR SEC filling report with access number 0001326380-19-000091 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:56,269 ERROR SEC filling report with access number 0001326380-19-000088 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:56,384 ERROR SEC filling report with access number 0001326380-19-000087 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:56,497 ERROR SEC filling report with access number 0001326380-19-000082 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:56,604 ERROR SEC filling report with access number 0001326380-19-000080 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:56,729 ERROR SEC filling report with access number 0001326380-19-000078 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:56,839 ERROR SEC filling report with access number 0001326380-19-000076 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:56,949 ERROR SEC filling report with access number 0001326380-19-000073 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:57,054 ERROR SEC filling report with access number 0001326380-19-000071 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:57,151 ERROR SEC filling report with access number 0001326380-19-000069 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:57,247 ERROR SEC filling report with access number 0001326380-19-000065 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:57,349 ERROR SEC filling report with access number 0001326380-19-000062 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:57,459 ERROR SEC filling report with access number 0001326380-19-000061 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:57,569 ERROR SEC filling report with access number 0001326380-19-000058 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:57,675 ERROR SEC filling report with access number 0001193125-19-106755 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:57,861 ERROR SEC filling report with access number 0001326380-19-000055 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:57,956 ERROR SEC filling report with access number 0001326380-19-000052 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:58,061 ERROR SEC filling report with access number 0001326380-19-000051 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:58,176 ERROR SEC filling report with access number 0001326380-19-000043 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:58,296 ERROR SEC filling report with access number 0001326380-19-000041 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:58,393 ERROR SEC filling report with access number 0000921895-19-000922 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:58,487 ERROR SEC filling report with access number 0001326380-19-000038 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:58,600 ERROR SEC filling report with access number 0001326380-19-000036 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:58,705 ERROR SEC filling report with access number 0001326380-19-000034 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:58,803 ERROR SEC filling report with access number 0001326380-19-000030 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:58,903 ERROR SEC filling report with access number 0000921895-19-000738 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:59,002 ERROR SEC filling report with access number 0001326380-19-000028 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:59,108 ERROR SEC filling report with access number 0001326380-19-000026 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:59,222 ERROR SEC filling report with access number 0001326380-19-000024 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:59,334 ERROR SEC filling report with access number 0001326380-19-000022 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:59,433 ERROR SEC filling report with access number 0001326380-19-000020 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:59,533 ERROR SEC filling report with access number 0001326380-19-000015 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:59,631 ERROR SEC filling report with access number 0000315066-19-001099 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:59,726 ERROR SEC filling report with access number 0000932471-19-004669 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:59,835 ERROR SEC filling report with access number 0001258897-19-001551 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:02:59,931 ERROR SEC filling report with access number 0001326380-19-000011 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:00,038 ERROR SEC filling report with access number 0001326380-19-000007 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:00,136 ERROR SEC filling report with access number 0001326380-19-000002 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:00,237 ERROR SEC filling report with access number 0001326380-18-000124 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:00,336 ERROR SEC filling report with access number 0001326380-18-000122 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:00,438 ERROR SEC filling report with access number 0000932471-18-007713 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:00,539 ERROR SEC filling report with access number 0001326380-18-000120 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:00,645 ERROR SEC filling report with access number 0001326380-18-000116 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:00,742 ERROR SEC filling report with access number 0001326380-18-000113 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:00,846 ERROR SEC filling report with access number 0001326380-18-000109 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:00,952 ERROR SEC filling report with access number 0001326380-18-000105 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:01,050 ERROR SEC filling report with access number 0001326380-18-000103 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:01,149 ERROR SEC filling report with access number 0001326380-18-000096 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:01,252 ERROR SEC filling report with access number 0000000000-18-024391 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:01,363 ERROR SEC filling report with access number 0001326380-18-000093 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:01,458 ERROR SEC filling report with access number 0000000000-18-022398 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:01,575 ERROR SEC filling report with access number 0001326380-18-000091 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:01,681 ERROR SEC filling report with access number 0001326380-18-000089 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:01,793 ERROR SEC filling report with access number 0001326380-18-000087 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:01,899 ERROR SEC filling report with access number 0001326380-18-000086 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:02,004 ERROR SEC filling report with access number 0001326380-18-000085 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:02,096 ERROR SEC filling report with access number 0001326380-18-000084 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:02,199 ERROR SEC filling report with access number 0001326380-18-000077 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:02,299 ERROR SEC filling report with access number 0000000000-18-018025 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:02,397 ERROR SEC filling report with access number 0001326380-18-000075 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:02,494 ERROR SEC filling report with access number 0001326380-18-000073 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:02,592 ERROR SEC filling report with access number 0001326380-18-000069 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:02,697 ERROR SEC filling report with access number 0001326380-18-000067 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:02,800 ERROR SEC filling report with access number 0001326380-18-000064 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:02,899 ERROR SEC filling report with access number 0001326380-18-000063 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:02,995 ERROR SEC filling report with access number 0001326380-18-000056 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:03,098 ERROR SEC filling report with access number 0001326380-18-000053 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:03,199 ERROR SEC filling report with access number 0001326380-18-000052 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:03,305 ERROR SEC filling report with access number 0001326380-18-000048 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:03,450 ERROR SEC filling report with access number 0001326380-18-000045 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:03,594 ERROR SEC filling report with access number 0001326380-18-000043 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:03,756 ERROR SEC filling report with access number 0001326380-18-000041 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:03,884 ERROR SEC filling report with access number 0001326380-18-000039 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:04,028 ERROR SEC filling report with access number 0001326380-18-000035 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:04,147 ERROR SEC filling report with access number 0001326380-18-000033 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:04,320 ERROR SEC filling report with access number 0001326380-18-000030 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:04,514 ERROR SEC filling report with access number 0001326380-18-000028 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:04,651 ERROR SEC filling report with access number 0001326380-18-000026 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:04,772 ERROR SEC filling report with access number 0001326380-18-000024 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0
+2021-03-31 10:03:04,875 ERROR SEC filling report with access number 0001326380-18-000022 does not have sentiment analysis. Error Msg: FinnhubAPIException(status_code: 429): API limit reached. Please try again later. Remaining Limit: 0

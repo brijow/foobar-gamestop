@@ -1,11 +1,9 @@
 import configparser
-import json
-import os
-import pandas as pd
-from datetime import datetime, timedelta
-import time
-import finnhub
 import logging
+from datetime import datetime, timedelta
+
+import finnhub
+import pandas as pd
 
 # Finnhub API config
 config = configparser.ConfigParser()
@@ -22,18 +20,23 @@ logger.addHandler(hdlr)
 logger.setLevel(logging.ERROR)
 
 
-class finnhub_producer:
-    def __init__(self):
-        self.api_client = finnhub.Client(api_key=AUTH_TOKEN)
+class finnhub_dataloader:
+    def __init__(self, api_token):
+        self.api_client = finnhub.Client(api_key=api_token)
 
-    def query_stock_candles(self, symbol, date_from, date_to):
+    def query_stock_candles(self, symbol, resolution, date_from, date_to):
+        # args:
+        # symbol= (string) company stock symbol
+        # resolution= (1 character) data resolution - Supported resolution includes 1, 5, 15, 30, 60, D, W, M
+        # date_from= (datetime)
+        # date_to= (datetime)
+
         from_ts = int(datetime.timestamp(date_from))
         to_ts = int(datetime.timestamp(date_to))
 
-        # data resolution is set to 5 minutes
         df = pd.DataFrame(
             self.api_client.stock_candles(
-                symbol=symbol, resolution="5", _from=from_ts, to=to_ts
+                symbol=symbol, resolution=resolution, _from=from_ts, to=to_ts
             )
         )
         df = df.rename(
@@ -80,28 +83,28 @@ class finnhub_producer:
         ts = df.set_index("timestamp")
         return ts
 
-    def run(self):
-        date_from = datetime.utcnow() - timedelta(days=3 * 365)
-        date_to = datetime.utcnow()
-
-        ts = self.query_stock_candles(
-            symbol="GME", date_from=date_from, date_to=date_to
-        )
-        # print(ts)
-        ts.to_csv(
-            "foobar_gamestop/datasets/samples/stock_candle_timeseries.csv",
-            encoding="utf-8",
-        )
-        sentiment_ts = self.query_filling_sentiment(
-            symbol="GME", date_from=date_from, date_to=date_to
-        )
-        # print(sentiment_ts)
-        sentiment_ts.to_csv(
-            "foobar_gamestop/datasets/samples/filling_sentiment_ts.csv",
-            encoding="utf-8",
-        )
-
 
 if __name__ == "__main__":
-    finnhub_service = finnhub_producer()
-    finnhub_service.run()
+    # define datetime range for historical data (set to 3 years)
+    date_from = datetime.utcnow() - timedelta(days=3 * 365)
+    date_to = datetime.utcnow()
+
+    dataloader = finnhub_dataloader(api_token=AUTH_TOKEN)
+
+    # resolution is set to 5 minutes
+    stock_candle_timeseries = dataloader.query_stock_candles(
+        symbol="GME", resolution="5", date_from=date_from, date_to=date_to
+    )
+    stock_candle_timeseries.to_csv(
+        "foobar_gamestop/datasets/samples/stock_candle_timeseries.csv",
+        encoding="utf-8",
+    )
+    print("stock candle dataset is created.")
+
+    sec_filling_sentiment_timeseries = dataloader.query_filling_sentiment(
+        symbol="GME", date_from=date_from, date_to=date_to
+    )
+    sec_filling_sentiment_timeseries.to_csv(
+        "foobar_gamestop/datasets/samples/filling_sentiment_ts.csv", encoding="utf-8",
+    )
+    print("SEC sentiment analysis dataset is created.")
