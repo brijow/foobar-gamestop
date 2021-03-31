@@ -65,6 +65,5 @@ In this project, the following directory structure is followed:
 
 ## Notes on naming conventions
 ------------
-1. Directory names use hypen-case and reflect the logic they contain, (e.g. reddit-wsb, or finhub-gamestop, etc).
-2. Python file names use snake case
-3. Test file names are prefixed with 'test_', followed by the module name they are testing.
+1. Python file names use snake case
+2. Test file names are prefixed with 'test_', followed by the module name they are testing.
