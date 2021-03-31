@@ -1,9 +1,12 @@
-## Quickstart instructions
+## Developer instructions 
+1. Install the following packages in your development environment before making git commmits:
+> `conda install black flake8 isort mypy pre-commit`
+2. Clone repo `cd` into root directory of project
+3. Install the pre-commit configuration
+> `pre-commit install`
+4. Install the foobar_gamestop code as python package, `pip install -e ./` (again from root of project)
+5. Make your changes now as usual on a branch and when you run `git commit` the linters will be run to auto-format your code to PEP8
 
-1. Clone repo
-2. `cd` into directory
-3. Install package, `pip install -e ./`
-4. Run the program (TODO: add instructions -- maybe define a commands in Makefile for this!)
 
 ## Notes on directory structure
 ------------
@@ -12,71 +15,55 @@ In this project, the following directory structure is followed:
 
 ```
 .
-├── .gitignore
-├── .pre-commit-config.yaml
+├── setup.py
+├── setup.cfg
 ├── README.md
+├── .pre-commit-config.yaml
+├── .gitignore
 ├── foobar_gamestop
 │   ├── __init__.py
-│   ├── avocados
+│   ├── vis
 │   │   ├── __init__.py
+│   │   ├── components.py
+│   │   └── app.py
+│   ├── reddit_wsb
+│   │   ├── __init__.py
+│   │   ├── producer
+│   │   │   ├── wsb_posts_producer.py
+│   │   │   ├── wsb_comments_producer.py
+│   │   │   ├── requirements.txt
+│   │   │   ├── .env
+│   │   │   ├── Dockerfile
+│   │   │   └── docker-compose.yml
 │   │   └── data_utils
 │   │       ├── __init__.py
-│   │       └── _avocado_data.py
+│   │       ├── praw.ini
+│   │       ├── _reddit_data.py
+│   │       └── _kaggle_wsb_get_data.py
+│   ├── notebooks
+│   │   └── wsb-senti-analysis.ipynb
 │   ├── datasets
 │   │   ├── __init__.py
 │   │   ├── _base.py
-│   │   ├── raw
-│   │   │   ├── avocado.csv
-│   │   │   └── reddit_wsb.csv
 │   │   └── samples
-│   │       ├── comment_sample_object.json
-│   │       └── submission_sample_object.json
-│   ├── notebooks
-│   │   └── wsb-senti-analysis.ipynb
-│   ├── reddit_wsb
-│   │   ├── __init__.py
-│   │   ├── data_utils
-│   │   │   ├── __init__.py
-│   │   │   ├── _kaggle_wsb_get_data.py
-│   │   │   ├── _reddit_data.py
-│   │   │   └── praw.ini
-│   │   └── producer
-│   │       ├── .env
-│   │       ├── Dockerfile
-│   │       ├── docker-compose.yml
-│   │       ├── requirements.txt
-│   │       ├── wsb_comments_producer.py
-│   │       └── wsb_posts_producer.py
-│   └── vis
+│   │       ├── submission_sample_object.json
+│   │       ├── stock_candle_timeseries.csv
+│   │       ├── filling_sentiment_ts.csv
+│   │       └── comment_sample_object.json
+│   └── avocados
 │       ├── __init__.py
-│       └── app.py
-├── setup.cfg
-└── setup.py
+│       └── data_utils
+│           ├── __init__.py
+│           └── _avocado_data.py
+└── finnhub-producer
+    ├── requirements.txt
+    ├── Dockerfile
+    ├── docker-compose.yml
+    ├── api_client.py
+    └── api.cfg
 ```
 
-## Notes on code formatting (for contributors)
-
-> **Note:** 
-> This assumes you have installed black, flake8, isort, and mypy in your python environment.
-> For example, if using conda: 
->
-> `conda install black flake8 isort mypy`
-
-
-1. There is a setup.cfg file in root of the project. This config file ensure that
-   the auto-formatting / linting tools play nicely together. The tools used are the following:
-   - black
-   - flake8
-   - isort
-   - mypy
-
-2. There is a .pre-commit-config.yaml file in the root of the project. This ensures that that
-   auto-formatting tools will be run every time code is committed to ensure the formatting is
-   consistent.
-
-
-
-## Notes on naming conventions (for contributors)
+## Notes on naming conventions
 ------------
 1. Directory names use hypen-case and reflect the logic they contain, (e.g. reddit-wsb, or finhub-gamestop, etc).
 2. Python file names use snake case
