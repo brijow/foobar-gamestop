@@ -12,4 +12,7 @@ foobar_gamestop/datasets/raw/
 
 *-checkpoint.ipynb
 foobar_gamestop/finnhub/api.cfg
+<<<<<<< HEAD
 .vscode
+=======
+>>>>>>> 68b0d79cea224209db87e6bacddf8db434adab69

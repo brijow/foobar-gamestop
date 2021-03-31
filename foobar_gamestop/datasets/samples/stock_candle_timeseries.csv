@@ -1,5 +1,6 @@
 timestamp,close_price,high-price,low-price,open_price,status,volume
 <<<<<<< HEAD
+<<<<<<< HEAD
 1609718400,17.25,19.1,17.15,19.0,ok,10022474
 1609804800,17.37,18.0765,17.23,17.35,ok,4961457
 1609891200,18.36,18.98,17.33,17.34,ok,6056248
@@ -40,6 +41,8 @@ timestamp,close_price,high-price,low-price,open_price,status,volume
 1614297600,101.74,142.9,86.0,117.46,ok,92194154
 1614556800,120.4,133.99,99.97,104.54,ok,49793965
 =======
+=======
+>>>>>>> 68b0d79cea224209db87e6bacddf8db434adab69
 1614589200,107.01,111.0,104.11,107.5,ok,43277
 1614589500,109.0,110.3,107.41,107.53,ok,32326
 1614589800,107.11,108.72,107.11,108.69,ok,7713
@@ -3320,4 +3323,7 @@ timestamp,close_price,high-price,low-price,open_price,status,volume
 1617147900,195.44,195.86,195.44,195.55,ok,965
 1617148200,195.66,195.83,195.66,195.75,ok,2394
 1617148500,195.7,195.84,195.0,195.66,ok,9120
+<<<<<<< HEAD
 >>>>>>> finnhub service is added and orgnized based on the proposed structure.
+=======
+>>>>>>> 68b0d79cea224209db87e6bacddf8db434adab69
