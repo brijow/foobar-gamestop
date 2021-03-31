@@ -10,3 +10,4 @@ foobar_gamestop/vis/__pycache__
 .pdb-pyhist
 
 *-checkpoint.ipynb
+foobar_gamestop/finnhub/api.cfg
