@@ -8,4 +8,9 @@ foobar_gamestop/datasets/raw/
 
 .pdb-pyhist
 
+<<<<<<< HEAD
 .ipynb_checkpoints
+=======
+*-checkpoint.ipynb
+foobar_gamestop/finnhub/api.cfg
+>>>>>>> finnhub service is added and orgnized based on the proposed structure.
