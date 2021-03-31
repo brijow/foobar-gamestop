@@ -9,3 +9,7 @@ foobar_gamestop/datasets/raw/
 .pdb-pyhist
 
 .ipynb_checkpoints
+
+*-checkpoint.ipynb
+foobar_gamestop/finnhub/api.cfg
+.vscode
