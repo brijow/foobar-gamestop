@@ -29,4 +29,3 @@ repos:
         language: system
         entry: mypy
         types: [python]
-        #pass_filenames: false
