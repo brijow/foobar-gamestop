@@ -88,12 +88,18 @@ class finnhub_producer:
             symbol="GME", date_from=date_from, date_to=date_to
         )
         # print(ts)
-        ts.to_csv('foobar_gamestop/datasets/samples/stock_candle_timeseries.csv', encoding='utf-8')
+        ts.to_csv(
+            "foobar_gamestop/datasets/samples/stock_candle_timeseries.csv",
+            encoding="utf-8",
+        )
         sentiment_ts = self.query_filling_sentiment(
             symbol="GME", date_from=date_from, date_to=date_to
         )
         # print(sentiment_ts)
-        sentiment_ts.to_csv('foobar_gamestop/datasets/samples/filling_sentiment_ts.csv', encoding='utf-8')
+        sentiment_ts.to_csv(
+            "foobar_gamestop/datasets/samples/filling_sentiment_ts.csv",
+            encoding="utf-8",
+        )
 
 
 if __name__ == "__main__":
