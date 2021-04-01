@@ -38,9 +38,7 @@ def get_or_create_raw_data_dir():
 
 def get_data_loader_conf_dir():
     """Return the path of the data_loader config dir."""
-    data_loader_conf_dir = os.environ.get(
-        "FOOBAR_ROOT_DATA_DIR", os.path.join(get_project_root(), "data_loader", "conf")
-    )
+    data_loader_conf_dir = os.path.join(get_project_root(), "data_loader", "conf")
 
     dir_path = os.path.expanduser(data_loader_conf_dir)
 
