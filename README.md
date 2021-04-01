@@ -1,3 +1,5 @@
+# STALE README - needs updating
+
 ## Developer instructions 
 1. Install the following packages in your development environment before making git commmits:
 > `conda install black flake8 isort mypy pre-commit`
