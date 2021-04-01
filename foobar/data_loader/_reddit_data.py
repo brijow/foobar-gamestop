@@ -1,4 +1,4 @@
-from foobar_gamestop.datasets import load_kaggle_data
+from ._base import load_kaggle_data
 
 DATASET = "gpreda/reddit-wallstreetsbets-posts"
 LOCAL_FILE_NAME = "reddit_wsb.csv"

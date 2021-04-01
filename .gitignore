@@ -4,12 +4,10 @@ __pycache__/
 
 *.egg-info/
 
-foobar_gamestop/datasets/raw/
+foobar_gamestop/data/raw/*.csv
 
 .pdb-pyhist
 
 .ipynb_checkpoints
 
 *-checkpoint.ipynb
-foobar_gamestop/finnhub/api.cfg
-.vscode

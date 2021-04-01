@@ -1,4 +1,4 @@
-## Developer instructions 
+## Quick start instructions 
 1. Install the following packages in your development environment before making git commmits:
 > `conda install black flake8 isort mypy pre-commit`
 2. Clone repo `cd` into root directory of project
@@ -8,60 +8,76 @@
 5. Make your changes now as usual on a branch and when you run `git commit` the linters will be run to auto-format your code to PEP8
 
 
-## Notes on directory structure
+## Overview of project tree structure
 ------------
-
-In this project, the following directory structure is followed:
 
 ```
 .
 ├── setup.py
 ├── setup.cfg
 ├── README.md
+├── LICENSE.txt
 ├── .pre-commit-config.yaml
 ├── .gitignore
-├── foobar_gamestop
+│
+├── foobar
 │   ├── __init__.py
-│   ├── vis
+│   ├── trainer
 │   │   ├── __init__.py
-│   │   ├── components.py
-│   │   └── app.py
-│   ├── reddit_wsb
+│   │   ├── _base_trainer.py
+│   │   └── autoencoder_trainer.py
+│   ├── model
 │   │   ├── __init__.py
-│   │   ├── producer
-│   │   │   ├── wsb_posts_producer.py
-│   │   │   ├── wsb_comments_producer.py
-│   │   │   ├── requirements.txt
-│   │   │   ├── .env
-│   │   │   ├── Dockerfile
-│   │   │   └── docker-compose.yml
-│   │   └── data_utils
-│   │       ├── __init__.py
-│   │       ├── praw.ini
-│   │       ├── _reddit_data.py
-│   │       └── _kaggle_wsb_get_data.py
-│   ├── notebooks
-│   │   └── wsb-senti-analysis.ipynb
-│   ├── datasets
+│   │   └── _base_model.py
+│   ├── data_loader
 │   │   ├── __init__.py
+│   │   ├── _reddit_data.py
+│   │   ├── _kaggle_wsb_get_data.py
+│   │   ├── _finnhub_data.py
 │   │   ├── _base.py
-│   │   └── samples
-│   │       ├── submission_sample_object.json
-│   │       ├── stock_candle_timeseries.csv
-│   │       ├── filling_sentiment_ts.csv
-│   │       └── comment_sample_object.json
-│   └── avocados
+│   │   └── conf
+│   │      ├── praw.ini
+│   │      └── kaggle.json
+│   └── data
+│       ├── samples
+│       │   ├── submission_sample_object.json
+│       │   ├── stock_candle_timeseries.csv
+│       │   ├── shortinterest.csv.zip
+│       │   ├── README.md
+│       │   ├── filling_sentiment_ts.csv
+│       │   └── comment_sample_object.json
+│       ├── raw
+│       │   └── README.md
+│       └── processed
+│           └── README.md
+│
+├── notebooks
+│   └── wsb-senti-analysis.ipynb
+│
+├── microservices
+│   ├── reddit_wsb_producer
+│   │   ├── wsb_posts_producer.py
+│   │   ├── wsb_comments_producer.py
+│   │   ├── requirements.txt
+│   │   ├── .env
+│   │   ├── Dockerfile
+│   │   └── docker-compose.yml
+│   ├── finnhub_producer
+│   │   ├── requirements.txt
+│   │   ├── finnancial_data_producer.py
+│   │   ├── Dockerfile
+│   │   └── docker-compose.yml
+│   └── dash_app
 │       ├── __init__.py
-│       └── data_utils
-│           ├── __init__.py
-│           └── _avocado_data.py
-└── finnhub-producer
-    ├── requirements.txt
-    ├── Dockerfile
-    ├── docker-compose.yml
-    ├── api_client.py
-    └── api.cfg
-```
+│       ├── components.py
+│       ├── app.py
+│       └── figures
+│           ├── __init__.py
+│           ├── network.py
+│           └── line_chart.py
+│
+└── deploy
+    └── README.md
 
 ## Notes on naming conventions
 ------------

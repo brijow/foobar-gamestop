@@ -6,8 +6,6 @@ import os
 import pandas as pd
 from pathlib import Path
 
-from kaggle.api.kaggle_api_extended import KaggleApi
-
 
 def get_project_root():
     return Path(__file__).parent.parent
@@ -16,7 +14,7 @@ def get_project_root():
 def get_root_data_dir():
     """Return the path of the top level data dir."""
     root_data_dir = os.environ.get(
-        "GAMESTOP_ROOT_DATA_DIR", os.path.join(get_project_root(), "datasets")
+        "FOOBAR_ROOT_DATA_DIR", os.path.join(get_project_root(), "data")
     )
 
     dir_path = os.path.expanduser(root_data_dir)
@@ -27,7 +25,7 @@ def get_root_data_dir():
 def get_or_create_raw_data_dir():
     """Return the path of the raw data dir."""
     raw_data_dir = os.environ.get(
-        "GAMESTOP_RAW_DATA_DIR", os.path.join(get_root_data_dir(), "raw")
+        "FOOBAR_RAW_DATA_DIR", os.path.join(get_root_data_dir(), "raw")
     )
 
     dir_path = os.path.expanduser(raw_data_dir)
@@ -36,6 +34,23 @@ def get_or_create_raw_data_dir():
         os.makedirs(dir_path)
 
     return dir_path
+
+
+def get_data_loader_conf_dir():
+    """Return the path of the data_loader config dir."""
+    data_loader_conf_dir = os.path.join(get_project_root(), "data_loader", "conf")
+
+    dir_path = os.path.expanduser(data_loader_conf_dir)
+
+    return dir_path
+
+
+def get_praw_conf_dir():
+    get_data_loader_conf_dir()
+
+
+def set_kaggle_conf_dir():
+    os.environ["KAGGLE_CONFIG_DIR"] = get_data_loader_conf_dir()
 
 
 def _fetch_file_from_kaggle(dataset, file_name, path=None, force=False):
@@ -47,6 +62,9 @@ def _fetch_file_from_kaggle(dataset, file_name, path=None, force=False):
 
     See here for more info: https://stackoverflow.com/a/60309843/8196202
     """
+    set_kaggle_conf_dir()
+    from kaggle.api.kaggle_api_extended import KaggleApi
+
     api = KaggleApi()
     api.authenticate()
     api.dataset_download_file(
@@ -63,6 +81,9 @@ def _fetch_all_files_from_kaggle(dataset, path=None, force=False, unzip=False):
 
     See here for more info: https://stackoverflow.com/a/60309843/8196202
     """
+    set_kaggle_conf_dir()
+    from kaggle.api.kaggle_api_extended import KaggleApi
+
     api = KaggleApi()
     api.authenticate()
     api.dataset_download_files(dataset=dataset, path=path, force=force, unzip=unzip)
