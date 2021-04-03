@@ -1,8 +1,7 @@
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-
-from foobar_gamestop.vis.figures import financial_line_chart, reddit_network
+from figures import financial_line_chart, reddit_network
 
 GITLAB_URL = "https://csil-git1.cs.surrey.sfu.ca/733-foobar"
 REPORT_URL = "https://docs.google.com/document/d/1oBRxH3crYQBCuFkInnlJV4NEOUaxuc4ZvqbTEapj6_4/edit#heading=h.liyhn4k5ur9v"
