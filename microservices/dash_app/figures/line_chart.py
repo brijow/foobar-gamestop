@@ -21,5 +21,27 @@ def financial_line_chart():
             font=dict(family="sans-serif", size=12, color="black"),
         ),
     )
+    fig.update_xaxes(
+        showgrid=False,
+        zeroline=False,
+        rangeslider_visible=False,
+        showticklabels=False,
+        showspikes=True,
+        spikemode="across",
+        spikesnap="cursor",
+        showline=False,
+        spikecolor="grey",
+        spikethickness=1,
+        spikedash="solid",
+    )
+    # fig.update_yaxes(
+    #     showspikes=True,
+    #     spikedash="solid",
+    #     spikemode="across",
+    #     spikecolor="grey",
+    #     spikesnap="cursor",
+    #     spikethickness=1,
+    # )
+    fig.update_layout(spikedistance=1000, hoverdistance=1000)
 
     return fig
