@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: cassandra-secret
+type: Opaque
+data:
+    cassandra-username: YWRtaW4=
+    cassandra-password: d2VsY29tZTE=
+
+---
+{{- $fullName := .Values.cassandra.initDBConfigMap -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app.kubernetes.io/name: {{ $fullName }}
+
+data:
+  "01-init.cql": |
+    CREATE KEYSPACE IF NOT EXISTS kafkapipeline 
+    WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
+    
+    CREATE TABLE IF NOT EXISTS kafkapipeline.weatherreport (
+      forecastdate TIMESTAMP,
+      location TEXT,
+      description TEXT,
+      temp FLOAT,
+      feels_like FLOAT,
+      temp_min FLOAT,
+      temp_max FLOAT,
+      pressure FLOAT,
+      humidity FLOAT,
+      wind FLOAT,
+      sunrise BIGINT,
+      sunset BIGINT,
+      PRIMARY KEY (location, forecastdate));
+
+    CREATE TABLE IF NOT EXISTS kafkapipeline.twitterdata (
+      tweet_date TIMESTAMP,
+      location TEXT,
+      tweet TEXT,
+      classification TEXT,
+      PRIMARY KEY (location, tweet_date));
+
+

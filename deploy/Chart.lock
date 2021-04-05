@@ -1,0 +1,12 @@
+dependencies:
+- name: aws-load-balancer-controller
+  repository: https://aws.github.io/eks-charts
+  version: 1.1.5
+- name: cassandra
+  repository: https://charts.bitnami.com/bitnami
+  version: 7.3.3
+- name: kafka
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.9.5
+digest: sha256:fc84657d6144ab451f55dfe32143814276dc350bb82cc60a5465715e463f23fe
+generated: "2021-03-29T23:42:24.658588-07:00"
