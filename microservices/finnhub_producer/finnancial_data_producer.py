@@ -30,7 +30,7 @@ class finnhub_producer:
     # _last_poll_datetime = datetime.utcnow()
     # print(_last_poll_datetime)
     def __init__(self, api_token):
-        self.last_poll_datetime = datetime.utcnow() - timedelta(minutes=10)
+        self.last_poll_datetime = datetime.utcnow() - timedelta(minutes=500)
         # _last_poll_datetime = datetime.utcnow()
         # print(_last_poll_datetime)
         self.api_client = finnhub.Client(api_key=api_token)
@@ -75,8 +75,8 @@ class finnhub_producer:
             symbol="GME", date_from=date_from, date_to=date_to
         )
         if ts is not None:
-            ('Sending to financial data to Kafka queue...')
-            self.producer.send(TOPIC_NAME, value=ts)
+            print('Sending financial data to Kafka queue...')
+            self.producer.send(TOPIC_NAME, value=ts.to_json(orient='records'))
             self.producer.flush()
             print(f'stock price from {date_from} to {date_to} is send to Kafka')
         time.sleep(300)
