@@ -8,6 +8,17 @@ data:
     cassandra-password: d2VsY29tZTE=
 
 ---
+
+apiVersion: v1
+kind: Secret
+metadata:
+    name: app-secrets
+type: Opaque
+data:
+    finnhub_auth_token: YzFqMGRsNzQ4djZwdDgwZ2Y0bGcK
+
+---
+
 {{- $fullName := .Values.cassandra.initDBConfigMap -}}
 apiVersion: v1
 kind: ConfigMap

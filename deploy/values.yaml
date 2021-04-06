@@ -11,7 +11,7 @@ image:
     repository: ghcr.io/salcaino/foobar-finnhub-prod
     tag: "latest"
   app:
-    repository: ghcr.io/salcaino/foobar-vis
+    repository: ghcr.io/salcaino/foobar-dash-app
     tag: "latest"
   weather:
     repository: ghcr.io/salcaino/foobar-weather

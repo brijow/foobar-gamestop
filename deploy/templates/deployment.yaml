@@ -87,7 +87,11 @@ spec:
               value: {{ .Values.producers.finnhub.topicname }}
             - name: SLEEP_TIME
               value: "{{ .Values.producers.finnhub.sleeptime }}"
-
+            - name: FINNHUB_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: finnhub_auth_token
         # - name: {{ .Release.Name }}-weather
         #   image: "{{ .Values.image.weather.repository }}:{{ .Values.image.weather.tag | default .Chart.AppVersion }}"
         #   imagePullPolicy: {{ .Values.image.pullPolicy }}

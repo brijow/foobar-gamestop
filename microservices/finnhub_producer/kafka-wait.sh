@@ -6,10 +6,10 @@ cmd=`nc -w 2 -vz $test`
 while [[ $? -eq 1 ]] ; do 
     echo $(date) " Waiting for Kafka listener state at $test"
     sleep 5
-    $cmd
+    cmd=`nc -w 2 -vz $test`
 done
 
-echo "Launching Finnhub worker"
+echo $(date) " Launching Finnhub worker"
 
 python3 finnancial_data_producer.py &
 
