@@ -36,7 +36,7 @@ class finnhub_producer:
         self.api_client = finnhub.Client(api_key=api_token)
         self.producer = KafkaProducer(
             bootstrap_servers=KAFKA_BROKER_URL,
-            value_serializer=lambda x: json.dumps(x).encode("utf8"),
+            value_serializer=lambda x: x.encode("utf8"),
             api_version=(0, 11, 5),
         )
 
@@ -77,6 +77,7 @@ class finnhub_producer:
         if ts is not None:
             ('Sending to financial data to Kafka queue...')
             self.producer.send(TOPIC_NAME, value=ts)
+            self.producer.flush()
             print(f'stock price from {date_from} to {date_to} is send to Kafka')
         time.sleep(300)
         self.last_poll_datetime = date_to
