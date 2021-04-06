@@ -9,6 +9,7 @@ setup(
     packages=[
         "foobar",
         "foobar.data_loader",
+        "foobar.db_utils",
         "foobar.trainer",
         "foobar.model",
     ],
@@ -23,5 +24,6 @@ setup(
         "praw",
         "finnhub-python",
         "torch",
+        "SQLAlchemy",
     ],
 )
