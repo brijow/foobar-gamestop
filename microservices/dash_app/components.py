@@ -1,8 +1,7 @@
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
-
-from foobar_gamestop.vis.figures import financial_line_chart, reddit_network
+from figures import financial_line_chart, reddit_network, ts_subplots
 
 GITLAB_URL = "https://csil-git1.cs.surrey.sfu.ca/733-foobar"
 REPORT_URL = "https://docs.google.com/document/d/1oBRxH3crYQBCuFkInnlJV4NEOUaxuc4ZvqbTEapj6_4/edit#heading=h.liyhn4k5ur9v"
@@ -10,6 +9,7 @@ REPORT_URL = "https://docs.google.com/document/d/1oBRxH3crYQBCuFkInnlJV4NEOUaxuc
 
 financial_lines_fig = financial_line_chart()
 reddit_network_fig = reddit_network()
+timeseries_fig = ts_subplots()
 
 
 nav_bar = dbc.NavbarSimple(
@@ -37,7 +37,6 @@ nav_bar = dbc.NavbarSimple(
     brand_href=GITLAB_URL,
     sticky="top",
 )
-
 top_row = html.Div(
     [
         dbc.Row(
@@ -72,6 +71,44 @@ top_row = html.Div(
                             )
                         ],
                         style={"height": "340px", "border-style": "solid"},
+                    ),
+                    md=8,
+                ),
+            ]
+        ),
+    ]
+)
+
+single_row_page = html.Div(
+    [
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        html.Div(
+                            [
+                                dcc.Graph(
+                                    figure=reddit_network_fig,
+                                    style={"height": "332px"},
+                                )
+                            ],
+                            style={"height": "340px", "border-style": "solid"},
+                        ),
+                        dbc.RadioItems(
+                            options=[
+                                {"label": "Option {}".format(i), "value": i}
+                                for i in range(1, 4)
+                            ],
+                            value=0,
+                            inline=True,
+                        ),
+                    ],
+                    md=4,
+                ),
+                dbc.Col(
+                    html.Div(
+                        [dcc.Graph(figure=timeseries_fig, style={"height": "780px"})],
+                        style={"height": "788px", "border-style": "solid"},
                     ),
                     md=8,
                 ),
