@@ -12,8 +12,13 @@ import praw
 # KAFKA_BROKER_URL = os.environ.get("KAFKA_BROKER_URL")
 # TOPIC_NAME = os.environ.get("TOPIC_NAME")
 BATCH_SIZE = int(os.environ.get("BATCH_SIZE", 100))
+PRAW_CLIENT_ID = str(os.environ.get("PRAW_CLIENT_ID"))
+PRAW_CLIENT_SECRET = str(os.environ.get("PRAW_CLIENT_SECRET"))
 
-reddit = praw.Reddit("reddit_wsb", user_agent="reddit wsb producer")
+
+reddit = praw.Reddit(client_id=PRAW_CLIENT_ID,
+    client_secret=PRAW_CLIENT_SECRET,
+    user_agent="reddit wsb comments producer")
 
 # access_token = api_credential['access_token']
 # reddit = praw.Reddit(
@@ -33,7 +38,10 @@ def run():
     # kafkaurl = KAFKA_BROKER_URL
     subreddit = reddit.subreddit("wallstreetbets")
     for comment in subreddit.stream.comments(skip_existing=True):
+        c = vars(comment)
+        print(c['body'])
         print(vars(comment))
+        
 
 
 if __name__ == "__main__":

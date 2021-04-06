@@ -11,3 +11,5 @@ foobar_gamestop/data/raw/*.csv
 .ipynb_checkpoints
 
 *-checkpoint.ipynb
+
+data/
