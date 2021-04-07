@@ -1,15 +1,30 @@
 from ._base import load_kaggle_data
 
-DATASET = "gpreda/reddit-wallstreetsbets-posts"
-LOCAL_FILE_NAME = "reddit_wsb.csv"
+SUBMISSIONS_DATASET = "gpreda/reddit-wallstreetsbets-posts"
+LOCAL_SUBMISSIONS_FILE_NAME = "reddit_wsb.csv"
+
+COMMENTS_DATASET = "mattpodolak/reddit-wallstreetbets-comments"
+LOCAL_COMMENTS_FILE_NAME = "wsb_comments_raw.csv"
 
 
-def load_reddit_data(download_if_missing=True):
-    """Load reddit dataset from kaggle."""
-    reddit_df = load_kaggle_data(
-        local_fname=LOCAL_FILE_NAME,
-        dataset=DATASET,
+def load_reddit_submissions_data(download_if_missing=True):
+    """Load reddit submissions dataset from kaggle."""
+    submissions_df = load_kaggle_data(
+        local_fname=LOCAL_SUBMISSIONS_FILE_NAME,
+        dataset=SUBMISSIONS_DATASET,
         unzip=True,
         download_if_missing=download_if_missing,
     )
-    return reddit_df
+    return submissions_df
+
+
+def load_reddit_comments_data_reader(download_if_missing=True, chunksize=50000):
+    """Load reddit comments dataset from kaggle, (in a batch)."""
+    comments_reader = load_kaggle_data(
+        local_fname=LOCAL_COMMENTS_FILE_NAME,
+        dataset=COMMENTS_DATASET,
+        unzip=True,
+        download_if_missing=download_if_missing,
+        chunksize=chunksize,
+    )
+    return comments_reader
