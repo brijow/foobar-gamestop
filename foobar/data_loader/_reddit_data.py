@@ -1,7 +1,9 @@
 from ._base import load_kaggle_data
 
-SUBMISSIONS_DATASET = "gpreda/reddit-wallstreetsbets-posts"
-LOCAL_SUBMISSIONS_FILE_NAME = "reddit_wsb.csv"
+# SUBMISSIONS_DATASET = "gpreda/reddit-wallstreetsbets-posts"
+# LOCAL_SUBMISSIONS_FILE_NAME = "reddit_wsb.csv"
+SUBMISSIONS_DATASET = "unanimad/reddit-rwallstreetbets"
+LOCAL_SUBMISSIONS_FILE_NAME = "r_wallstreetbets_posts.csv"
 
 COMMENTS_DATASET = "mattpodolak/reddit-wallstreetbets-comments"
 LOCAL_COMMENTS_FILE_NAME = "wsb_comments_raw.csv"

@@ -117,6 +117,20 @@ def prep_comment_cols_for_db(df):
     return df
 
 
+def prep_submission_cols_for_db(df):
+    df = df.rename(
+        columns={
+            "author": "user",
+            "created_dt": "dt",
+            "link_id": "submission_id",
+        }
+    )
+    df["submission_id"] = df["id"]
+    df["parent_id"] = df["id"]
+    df["iscomment"] = 0
+    return df
+
+
 def select_post_record_cols(df):
     return df[
         [
