@@ -1,10 +1,9 @@
-import os
 import configparser
+import os
 from datetime import datetime, timedelta
 
 import finnhub
 import pandas as pd
-
 
 FINNHUB_FILE_PATH = "foobar/data/raw/"
 
@@ -14,6 +13,7 @@ config = configparser.ConfigParser()
 config.read("foobar/data_loader/conf/finnhub.cfg")
 api_credential = config["api_credential"]
 AUTH_TOKEN = api_credential["auth_token"]
+
 
 class finnhub_dataloader:
     def __init__(self, api_token):
@@ -86,22 +86,30 @@ def get_filling_sentiment(dataloader, date_from, date_to):
             symbol="GME", date_from=date_from, date_to=date_to
         )
         sec_filling_sentiment_timeseries.to_csv(
-            FINNHUB_FILE_PATH + "filling_sentiment_ts.csv", encoding="utf-8",
+            FINNHUB_FILE_PATH + "filling_sentiment_ts.csv",
+            encoding="utf-8",
         )
         print("SEC sentiment analysis dataset is successfully created.")
 
+
 def get_stock_candle(dataloader, data_resolution, date_from, date_to):
-    if os.path.exists(FINNHUB_FILE_PATH + f"stock_candle_timeseries_{data_resolution}.csv"):
+    if os.path.exists(
+        FINNHUB_FILE_PATH + f"stock_candle_timeseries_{data_resolution}.csv"
+    ):
         print("Stock candle dataset is already created.")
     else:
         stock_candle_timeseries = dataloader.query_stock_candles(
-            symbol="GME", resolution=data_resolution, date_from=date_from, date_to=date_to
+            symbol="GME",
+            resolution=data_resolution,
+            date_from=date_from,
+            date_to=date_to,
         )
         stock_candle_timeseries.to_csv(
             FINNHUB_FILE_PATH + f"stock_candle_timeseries_{data_resolution}.csv",
             encoding="utf-8",
         )
         print("Stock candle dataset is successfully created.")
+
 
 if __name__ == "__main__":
 
@@ -116,5 +124,3 @@ if __name__ == "__main__":
     get_stock_candle(dataloader, data_resolution, date_from, date_to)
 
     get_filling_sentiment(dataloader, date_from, date_to)
-
-    

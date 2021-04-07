@@ -3,8 +3,9 @@ Base IO code for all datasets.
 """
 
 import os
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 
 def get_project_root():
@@ -29,6 +30,20 @@ def get_or_create_raw_data_dir():
     )
 
     dir_path = os.path.expanduser(raw_data_dir)
+
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+    return dir_path
+
+
+def get_or_create_processed_data_dir():
+    """Return the path of the processed data dir."""
+    data_dir = os.environ.get(
+        "FOOBAR_PROCESSED_DATA_DIR", os.path.join(get_root_data_dir(), "processed")
+    )
+
+    dir_path = os.path.expanduser(data_dir)
 
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
@@ -96,6 +111,7 @@ def load_kaggle_data(
     single_file=False,
     download_if_missing=True,
     force=False,
+    chunksize=None,
 ):
     """Load a dataset from kaggle."""
 
@@ -116,5 +132,4 @@ def load_kaggle_data(
             )
 
     file_path = os.path.join(data_dir, local_fname)
-    df = pd.read_csv(file_path)
-    return df
+    return pd.read_csv(file_path, chunksize=chunksize)

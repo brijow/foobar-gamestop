@@ -10,6 +10,7 @@ setup(
         "foobar",
         "foobar.data_loader",
         "foobar.db_utils",
+        "foobar.preprocessing",
         "foobar.trainer",
         "foobar.model",
     ],
