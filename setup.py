@@ -27,6 +27,7 @@ setup(
         "torch",
         "SQLAlchemy",
         "spacy",
-        "nltk"
+        "nltk",
+        "joblib"
     ],
 )
