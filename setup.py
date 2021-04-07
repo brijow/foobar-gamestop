@@ -26,5 +26,7 @@ setup(
         "finnhub-python",
         "torch",
         "SQLAlchemy",
+        "spacy",
+        "nltk"
     ],
 )
