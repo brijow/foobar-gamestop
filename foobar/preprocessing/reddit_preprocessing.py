@@ -31,6 +31,7 @@ def perform_entity_extraction(df, col):
         return [(_id, chunk.text) for chunk in doc.noun_chunks]
 
     tags_sf = df[["id", col]].apply(entity_extraction, axis=1)
+    tags_sf = tags_sf.loc[tags_sf.astype(str) != "[]"]
     tags_df = pd.DataFrame(tags_sf.explode().tolist(), columns=["post_id", "tag"])
 
     tags_df["tag"] = tags_df["tag"].str.split()
