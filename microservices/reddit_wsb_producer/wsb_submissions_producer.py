@@ -51,6 +51,7 @@ def submissions_monitor(dummy):
         df = pp.perform_sentiment_analysis(df, col="title")
 
         tags_df = pp.perform_entity_extraction(df, col="title")
+        tags_df = pp.filter_tags_by_stock_tags(tags_df)
 
         df = pp.prep_submission_cols_for_db(df)
         df = pp.select_post_record_cols(df)

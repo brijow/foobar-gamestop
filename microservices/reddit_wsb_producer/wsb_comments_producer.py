@@ -55,7 +55,11 @@ def comments_monitor(dummy):
         df = pp.clean_text_col(df, col="body")
         df = pp.perform_sentiment_analysis(df, col="body")
 
+        if df.empty:
+            continue
+
         tags_df = pp.perform_entity_extraction(df, col="body")
+        tags_df = pp.filter_tags_by_stock_tags(tags_df)
 
         df = pp.prep_comment_cols_for_db(df)
         df = pp.select_post_record_cols(df)

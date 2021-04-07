@@ -1,3 +1,6 @@
 kafka-python
 praw
 joblib
+spacy
+nltk
+pandas
