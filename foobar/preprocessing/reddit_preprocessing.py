@@ -4,6 +4,8 @@ import pandas as pd
 import spacy as sp
 from nltk.sentiment.vader import SentimentIntensityAnalyzer as SIA
 
+from foobar.data_loader import load_all_stock_tags
+
 
 def clean_text_col(df, col):
     def text_processing(text):
@@ -30,6 +32,16 @@ def perform_entity_extraction(df, col):
 
     tags_sf = df[["id", col]].apply(entity_extraction, axis=1)
     tags_df = pd.DataFrame(tags_sf.explode().tolist(), columns=["post_id", "tag"])
+
+    tags_df["tag"] = tags_df["tag"].str.split()
+    tags_df = tags_df.explode("tag")
+    return tags_df
+
+
+def filter_tags_by_stock_tags(tags_df):
+    tags_df["tag"] = tags_df["tag"].str.upper()
+    stock_tags_df = load_all_stock_tags()
+    tags_df.loc[tags_df["tag"].isin(stock_tags_df["0"])]
     return tags_df
 
 
