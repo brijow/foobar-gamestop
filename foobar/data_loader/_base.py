@@ -2,9 +2,12 @@
 Base IO code for all datasets.
 """
 
+import configparser
 import os
-import pandas as pd
+import requests
 from pathlib import Path
+
+import pandas as pd
 
 
 def get_project_root():
@@ -29,6 +32,20 @@ def get_or_create_raw_data_dir():
     )
 
     dir_path = os.path.expanduser(raw_data_dir)
+
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+    return dir_path
+
+
+def get_or_create_processed_data_dir():
+    """Return the path of the processed data dir."""
+    data_dir = os.environ.get(
+        "FOOBAR_PROCESSED_DATA_DIR", os.path.join(get_root_data_dir(), "processed")
+    )
+
+    dir_path = os.path.expanduser(data_dir)
 
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
@@ -96,6 +113,7 @@ def load_kaggle_data(
     single_file=False,
     download_if_missing=True,
     force=False,
+    chunksize=None,
 ):
     """Load a dataset from kaggle."""
 
@@ -116,5 +134,33 @@ def load_kaggle_data(
             )
 
     file_path = os.path.join(data_dir, local_fname)
-    df = pd.read_csv(file_path)
-    return df
+    return pd.read_csv(file_path, chunksize=chunksize)
+
+
+def _fetch_json_from_finhubb():
+    data_dir = get_or_create_raw_data_dir()
+
+    # Finnhub API config
+    config = configparser.ConfigParser()
+    config.read(os.path.join(get_data_loader_conf_dir(), "finnhub.cfg"))
+    api_credential = config["api_credential"]
+    AUTH_TOKEN = api_credential["auth_token"]
+
+    r = requests.get(
+        f"https://finnhub.io/api/v1/stock/symbol?exchange=US&token={AUTH_TOKEN}"
+    )
+    df = pd.DataFrame.from_records(r.json())
+    sf = (df["description"] + df["symbol"]).str.split().explode()
+    sf = sf[sf.str.len() > 2]
+    sf.to_csv(os.path.join(data_dir, "all_stock_tags.csv"), index=False)
+
+
+def load_all_stock_tags():
+    data_dir = get_or_create_raw_data_dir()
+    file_path = os.path.join(data_dir, "all_stock_tags.csv")
+
+    if not os.path.exists(file_path):
+        _fetch_json_from_finhubb()
+
+    file_path = os.path.join(data_dir, "all_stock_tags.csv")
+    return pd.read_csv(file_path)

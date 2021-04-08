@@ -1,11 +1,12 @@
 import configparser
 import json
 import os
+import time
+from datetime import datetime, timedelta
+
+import finnhub
 import pandas as pd
 from kafka import KafkaProducer
-from datetime import datetime, timedelta
-import time
-import finnhub
 
 # Finnhub API config
 AUTH_TOKEN = os.environ.get("FINNHUB_AUTH_TOKEN")
@@ -25,7 +26,6 @@ KAFKA_BROKER_URL = (
 TOPIC_NAME = (
     os.environ.get("TOPIC_NAME") if os.environ.get("TOPIC_NAME") else "from_finnhub"
 )
-
 
 
 class finnhub_producer:
@@ -49,10 +49,10 @@ class finnhub_producer:
         to_ts = int(datetime.timestamp(date_to))
 
         out = self.api_client.stock_candles(
-                    symbol=symbol, resolution="5", _from=from_ts, to=to_ts
+            symbol=symbol, resolution="5", _from=from_ts, to=to_ts
         )
-        if out['s'] == 'no_data':
-            print('no data')
+        if out["s"] == "no_data":
+            print("no data")
             return
         else:
             df = pd.DataFrame(out)
@@ -84,6 +84,7 @@ class finnhub_producer:
             print(f'stock price from {date_from} to {date_to} is send to Kafka')
         time.sleep(SLEEP_TIME)
         self.last_poll_datetime = date_to
+
 
 if __name__ == "__main__":
     print("Starting Finnhub producer")

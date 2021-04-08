@@ -53,5 +53,5 @@ def filter_comments():
             df.to_csv(DATA_DIR + "processed/comment_chunks/_" + str(chunkcounter) + "_" + DATASET_NAME)
         chunkcounter += 1
 
-
-filter_comments()
+if __name__ == "__main__":
+    filter_comments()

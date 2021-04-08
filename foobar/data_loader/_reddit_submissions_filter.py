@@ -40,5 +40,5 @@ def filter_submission():
     df.to_csv(DATA_DIR + "processed/" + DATASET_NAME)
     df['id'].to_csv(DATA_DIR + "processed/" + "ids_" + DATASET_NAME)
 
-
-filter_submission()
+if __name__ == "__main__":
+    filter_submission()

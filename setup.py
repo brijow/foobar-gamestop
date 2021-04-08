@@ -9,6 +9,8 @@ setup(
     packages=[
         "foobar",
         "foobar.data_loader",
+        "foobar.db_utils",
+        "foobar.preprocessing",
         "foobar.trainer",
         "foobar.model",
     ],
@@ -23,5 +25,9 @@ setup(
         "praw",
         "finnhub-python",
         "torch",
+        "SQLAlchemy",
+        "spacy",
+        "nltk",
+        "joblib"
     ],
 )
