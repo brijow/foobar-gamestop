@@ -11,6 +11,4 @@ done
 
 echo $(date) " Launching Finnhub worker"
 
-python3 finnancial_data_producer.py &
-
-sleep infinity
+python finnancial_data_producer.py

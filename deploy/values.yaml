@@ -78,8 +78,9 @@ deployment:
 producers:
   name: producers
   finnhub:
-    topicname: finnhub-source
-    sleeptime: 300
+    topicname: finnhubsource
+    sleeptime: 30
+    encoded_token: YzFsamIyMjM3Zmt0Mm1zazZ1ZWc=
   weather:
     topicname: weather
     sleeptime: 60

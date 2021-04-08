@@ -167,6 +167,8 @@ spec:
         - env:
             - name: CASSANDRA_HOST
               value: "{{ .Release.Name }}-cassandra"
+            - name: FINNHUB_TOPIC
+              value: "{{ .Values.producers.finnhub.topicname }}"
             - name: CASSANDRA_USERNAME
               valueFrom:
                 secretKeyRef:

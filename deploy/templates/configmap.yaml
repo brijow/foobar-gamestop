@@ -15,7 +15,7 @@ metadata:
     name: app-secrets
 type: Opaque
 data:
-    finnhub_auth_token: YzFqMGRsNzQ4djZwdDgwZ2Y0bGcK
+    finnhub_auth_token: {{ .Values.producers.finnhub.encoded_token }}
 
 ---
 
@@ -32,26 +32,30 @@ data:
     CREATE KEYSPACE IF NOT EXISTS kafkapipeline 
     WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
     
-    CREATE TABLE IF NOT EXISTS kafkapipeline.weatherreport (
-      forecastdate TIMESTAMP,
-      location TEXT,
-      description TEXT,
-      temp FLOAT,
-      feels_like FLOAT,
-      temp_min FLOAT,
-      temp_max FLOAT,
-      pressure FLOAT,
-      humidity FLOAT,
-      wind FLOAT,
-      sunrise BIGINT,
-      sunset BIGINT,
-      PRIMARY KEY (location, forecastdate));
+    CREATE TABLE IF NOT EXISTS kafkapipeline.gamestop (
+      id TEXT,
+      timestamp TIMESTAMP,
+      open_price FLOAT,
+      high_price FLOAT,
+      low_price FLOAT,
+      volume FLOAT,
+      close_price FLOAT,
+      close_price_pred FLOAT,
+      PRIMARY KEY (id));
 
-    CREATE TABLE IF NOT EXISTS kafkapipeline.twitterdata (
-      tweet_date TIMESTAMP,
-      location TEXT,
-      tweet TEXT,
-      classification TEXT,
-      PRIMARY KEY (location, tweet_date));
-
-
+    CREATE TABLE IF NOT EXISTS kafkapipeline.tag (
+      post_id INT,
+      token TEXT,
+      PRIMARY KEY (token));
+    
+    CREATE TABLE IF NOT EXISTS kafkapipeline.post (
+      id TEXT,
+      iscomment BOOLEAN,
+      submission_id TEXT,
+      parent_id TEXT,
+      username TEXT,
+      positive FLOAT,
+      negative FLOAT,
+      neutral FLOAT,
+      dt TIMESTAMP,
+      PRIMARY KEY (id));
