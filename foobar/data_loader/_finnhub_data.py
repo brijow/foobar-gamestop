@@ -1,6 +1,7 @@
 import configparser
 import os
 from datetime import datetime, timedelta
+import time
 
 import finnhub
 import pandas as pd
@@ -29,12 +30,12 @@ class finnhub_dataloader:
         from_ts = int(datetime.timestamp(date_from))
         to_ts = int(datetime.timestamp(date_to))
 
-        df = pd.DataFrame(
-            self.api_client.stock_candles(
-                symbol=symbol, resolution=resolution, _from=from_ts, to=to_ts
-            )
+        out = self.api_client.stock_candles(
+            symbol=symbol, resolution=resolution, _from=from_ts, to=to_ts
         )
-        # print(df)
+        if out["s"] == "no_data":
+            return
+        df = pd.DataFrame(out)
         df = df.rename(
             columns={
                 "c": "close_price",
@@ -79,45 +80,89 @@ class finnhub_dataloader:
 
 
 def get_filling_sentiment(dataloader, date_from, date_to):
-    if os.path.exists(FINNHUB_FILE_PATH + "filling_sentiment_ts.csv"):
+    from_str = date_from.strftime("%Y-%m-%d")
+    to_str = date_to.strftime("%Y-%m-%d")
+    if os.path.exists(FINNHUB_FILE_PATH + f"filling_sentiment_{from_str}_{to_str}.csv"):
         print("SEC sentiment analysis dataset is already created.")
     else:
         sec_filling_sentiment_timeseries = dataloader.query_filling_sentiment(
             symbol="GME", date_from=date_from, date_to=date_to
         )
         sec_filling_sentiment_timeseries.to_csv(
-            FINNHUB_FILE_PATH + "filling_sentiment_ts.csv",
+            FINNHUB_FILE_PATH + f"filling_sentiment_{from_str}_{to_str}.csv",
             encoding="utf-8",
         )
         print("SEC sentiment analysis dataset is successfully created.")
 
 
 def get_stock_candle(dataloader, data_resolution, date_from, date_to):
+    from_str = date_from.strftime("%Y-%m-%d")
+    to_str = date_to.strftime("%Y-%m-%d")
     if os.path.exists(
-        FINNHUB_FILE_PATH + f"stock_candle_timeseries_{data_resolution}.csv"
+        FINNHUB_FILE_PATH + f"stock_candle_{data_resolution}_{from_str}_{to_str}.csv"
     ):
         print("Stock candle dataset is already created.")
     else:
-        stock_candle_timeseries = dataloader.query_stock_candles(
-            symbol="GME",
-            resolution=data_resolution,
-            date_from=date_from,
-            date_to=date_to,
+        f = date_from
+        time_step = timedelta(days=5)
+        t = f + time_step
+        record_count = 0
+        while t < date_to:
+            stock_candle_timeseries = dataloader.query_stock_candles(
+                symbol="GME", resolution=data_resolution, date_from=f, date_to=t,
+            )
+            time.sleep(2)
+            if stock_candle_timeseries is not None:
+                if os.path.exists(
+                    FINNHUB_FILE_PATH
+                    + f"stock_candle_{data_resolution}_{from_str}_{to_str}.csv"
+                ):
+                    stock_candle_timeseries.to_csv(
+                        FINNHUB_FILE_PATH
+                        + f"stock_candle_{data_resolution}_{from_str}_{to_str}.csv",
+                        encoding="utf-8",
+                        mode="a",
+                        header=False,
+                    )
+                else:
+                    stock_candle_timeseries.to_csv(
+                        FINNHUB_FILE_PATH
+                        + f"stock_candle_{data_resolution}_{from_str}_{to_str}.csv",
+                        encoding="utf-8",
+                        mode="a",
+                        header=True,
+                    )
+                record_count += len(stock_candle_timeseries)
+            f = t
+            if t + time_step > date_to:
+                t = date_to
+            else:
+                t += time_step
+            print(t)
+        # stock_candle_timeseries = dataloader.query_stock_candles(
+        #         symbol="GME",
+        #         resolution=data_resolution,
+        #         date_from=date_from,
+        #         date_to=date_to,
+        #     )
+        # record_count = len(stock_candle_timeseries)
+        print(
+            f"Stock candle dataset is successfully created. data size: {record_count}"
         )
-        stock_candle_timeseries.to_csv(
-            FINNHUB_FILE_PATH + f"stock_candle_timeseries_{data_resolution}.csv",
-            encoding="utf-8",
-        )
-        print("Stock candle dataset is successfully created.")
 
 
 if __name__ == "__main__":
 
-    # define datetime range for historical data (set to 3 years)
+    # Train datetime range, 3 years of historical data
     date_to = datetime(year=2021, month=1, day=1)
-    date_from = date_to - timedelta(days=3 * 365)
+    date_from = datetime(year=2020, month=3, day=1)
+
+    # Test datetime range: Short Squeeze period
+    # date_to = datetime(year=2021, month=3, day=1)
+    # date_from = datetime(year=2020, month=12, day=1)
+
     # data resolution: options 1, 5, 15, 30, 60, D, W, M as character
-    data_resolution = "D"
+    data_resolution = "60"
 
     dataloader = finnhub_dataloader(api_token=AUTH_TOKEN)
 

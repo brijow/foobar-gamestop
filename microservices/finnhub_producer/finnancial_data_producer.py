@@ -27,12 +27,8 @@ TOPIC_NAME = (
 
 class finnhub_producer:
 
-    # _last_poll_datetime = datetime.utcnow()
-    # print(_last_poll_datetime)
     def __init__(self, api_token):
         self.last_poll_datetime = datetime.utcnow() - timedelta(minutes=500)
-        # _last_poll_datetime = datetime.utcnow()
-        # print(_last_poll_datetime)
         self.api_client = finnhub.Client(api_key=api_token)
         self.producer = KafkaProducer(
             bootstrap_servers=KAFKA_BROKER_URL,
