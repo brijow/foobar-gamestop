@@ -6,6 +6,7 @@ from sqlalchemy import (
     String,
     Float,
     Boolean,
+    UniqueConstraint,
 )
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from sqlalchemy.orm import backref, relationship
@@ -16,8 +17,10 @@ Base: DeclarativeMeta = declarative_base()
 # Tag table
 class Tag(Base):
     __tablename__ = "tag"
-    token = Column(String, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    token = Column(String)
     post_id = Column(Integer, ForeignKey("post.id"))
+    __table_args__ = (UniqueConstraint("token", "post_id", name="_token_post_uc"),)
 
 
 # Post table
