@@ -7,12 +7,16 @@ from datetime import datetime, timedelta
 import finnhub
 import pandas as pd
 from kafka import KafkaProducer
+import uuid
 
 # Finnhub API config
-config = configparser.ConfigParser()
-config.read("foobar/data_loader/conf/finnhub.cfg")
-api_credential = config["api_credential"]
-AUTH_TOKEN = api_credential["auth_token"]
+AUTH_TOKEN = os.environ.get("FINNHUB_AUTH_TOKEN")
+if AUTH_TOKEN is None:
+    config = configparser.ConfigParser()
+    config.read("foobar/data_loader/conf/finnhub.cfg")
+    api_credential = config["api_credential"]
+
+SLEEP_TIME = int(os.environ.get("SLEEP_TIME", 300))
 
 # Kafka producer
 KAFKA_BROKER_URL = (
@@ -57,14 +61,14 @@ class finnhub_producer:
                 columns={
                     "c": "close_price",
                     "o": "open_price",
-                    "h": "high-price",
-                    "l": "low-price",
+                    "h": "high_price",
+                    "l": "low_price",
                     "v": "volume",
                     "t": "timestamp",
                     "s": "status",
                 }
             )
-            stock_candle_timeseries = df.set_index("timestamp")
+            stock_candle_timeseries = df.reset_index()#.set_index("timestamp")
             return stock_candle_timeseries
 
     def run(self):
@@ -75,14 +79,19 @@ class finnhub_producer:
             symbol="GME", date_from=date_from, date_to=date_to
         )
         if ts is not None:
-            print("Sending financial data to Kafka queue...")
-            self.producer.send(TOPIC_NAME, value=ts.to_json(orient="records"))
+            print('Sending financial data to Kafka queue...')
+            for index, row in ts.iterrows():
+                row['uuid'] = str(uuid.uuid4())
+                print(row.to_json())
+                self.producer.send(TOPIC_NAME, value=row.to_json())
             self.producer.flush()
-            print(f"stock price from {date_from} to {date_to} is send to Kafka")
-        time.sleep(300)
+            print(f'Stock price from {date_from} to {date_to} was sent to Kafka')
+        time.sleep(SLEEP_TIME)
         self.last_poll_datetime = date_to
 
 
 if __name__ == "__main__":
+    print("Starting Finnhub producer")
     finnhub_service = finnhub_producer(api_token=AUTH_TOKEN)
-    finnhub_service.run()
+    while True:
+        finnhub_service.run()

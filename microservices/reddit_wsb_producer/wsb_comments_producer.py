@@ -13,6 +13,7 @@ import foobar.preprocessing as pp
 
 
 def comments_monitor(dummy):
+    print("Starting comments monitor")
     KAFKA_BROKER_URL = os.environ.get("KAFKA_BROKER_URL")
     POST_TOPIC_NAME = os.environ.get("POST_TOPIC_NAME")
     TAG_TOPIC_NAME = os.environ.get("TAG_TOPIC_NAME")
@@ -67,3 +68,6 @@ def comments_monitor(dummy):
         producer.send(POST_TOPIC_NAME, value=df.to_json(orient="records")[0])
         producer.send(TAG_TOPIC_NAME, value=tags_df.to_json(orient="records")[0])
         
+
+if __name__ == "__main__":
+    comments_monitor('dummy')

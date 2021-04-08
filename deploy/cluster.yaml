@@ -1,0 +1,40 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: foobar
+  region: us-east-1
+
+nodeGroups:
+  - name: foobar-group1
+    instanceType: t2.medium
+    desiredCapacity: 2
+    maxSize: 5
+    volumeSize: 10
+    ssh:
+      allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
+    iam:
+      withAddonPolicies:
+        albIngress: true
+  - name: foobar-group2
+    instanceType: t2.medium
+    desiredCapacity: 2
+    maxSize: 5
+    volumeSize: 10
+    ssh:
+      allow: true
+    iam:
+      withAddonPolicies:
+        albIngress: true
+iam:
+  withOIDC: true
+  serviceAccounts:
+  - metadata:
+      name: aws-load-balancer-controller
+    wellKnownPolicies:
+      awsLoadBalancerController: true
+availabilityZones: 
+  - us-east-1a
+  - us-east-1b
+  - us-east-1c
+  - us-east-1d
