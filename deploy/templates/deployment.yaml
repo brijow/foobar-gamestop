@@ -27,10 +27,6 @@ spec:
               value: {{ .Release.Name }}-cassandra
             - name: CASSANDRA_KEYSPACE
               value: {{ .Values.deployment.keyspace }}
-            - name: WEATHER_TABLE
-              value: {{ .Values.deployment.weathertable }}
-            - name: TWITTER_TABLE
-              value: {{ .Values.deployment.twittertable }}
             - name: CASSANDRA_USER
               valueFrom:
                 secretKeyRef:
@@ -59,25 +55,25 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.producers.name }}
+  name: {{ .Values.producers.finnhub.containername }}
   labels:
-    app: {{ .Values.producers.name }}
-    app.kubernetes.io/name: {{ .Values.producers.name }}
+    app: {{ .Values.producers.finnhub.containername }}
+    app.kubernetes.io/name: {{ .Values.producers.finnhub.containername }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      app: {{ .Values.producers.name }}
+      app: {{ .Values.producers.finnhub.containername }}
   template:
     metadata:
       labels:
-        app: {{ .Values.producers.name }}
-        app.kubernetes.io/name: {{ .Values.producers.name }}
+        app: {{ .Values.producers.finnhub.containername }}
+        app.kubernetes.io/name: {{ .Values.producers.finnhub.containername }}
     spec:
       containers:
-        - name: finnhub
+        - name: {{ .Values.producers.finnhub.containername }}
           image: "{{ .Values.image.finnhub.repository }}:{{ .Values.image.finnhub.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:      
@@ -92,58 +88,125 @@ spec:
                 secretKeyRef:
                   name: app-secrets
                   key: finnhub_auth_token
-        # - name: {{ .Release.Name }}-weather
-        #   image: "{{ .Values.image.weather.repository }}:{{ .Values.image.weather.tag | default .Chart.AppVersion }}"
-        #   imagePullPolicy: {{ .Values.image.pullPolicy }}
-        #   env:      
-        #     - name: KAFKA_BROKER_URL #broker:9092
-        #       value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
-        #     - name: TOPIC_NAME
-        #       value: {{ .Values.producers.weather.topicname }}
-        #     - name: SLEEP_TIME
-        #       value: "{{ .Values.producers.weather.sleeptime }}"
-        # - name: {{ .Release.Name }}-twitter
-        #   image: "{{ .Values.image.twitter.repository }}:{{ .Values.image.twitter.tag | default .Chart.AppVersion }}"
-        #   imagePullPolicy: {{ .Values.image.pullPolicy }}
-        #   env:      
-        #     - name: KAFKA_BROKER_URL #broker:9092
-        #       value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
-        #     - name: TOPIC_NAME
-        #       value: {{ .Values.producers.twitter.topicname }}
-          
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.consumers.name }}
+  name: {{ .Values.producers.wsb.containername }}
   labels:
-    app: {{ .Values.consumers.name }}
-    app.kubernetes.io/name: {{ .Values.consumers.name }}
+    app: {{ .Values.producers.wsb.containername }}
+    app.kubernetes.io/name: {{ .Values.producers.wsb.containername }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      app: {{ .Values.consumers.name }}
+      app: {{ .Values.producers.wsb.containername }}
   template:
     metadata:
       labels:
-        app: {{ .Values.consumers.name }}
-        app.kubernetes.io/name: {{ .Values.consumers.name }}
+        app: {{ .Values.producers.wsb.containername }}
+        app.kubernetes.io/name: {{ .Values.producers.wsb.containername }}
     spec:
       containers:
-        - name: {{ .Release.Name }}-consumer
-          image: "{{ .Values.image.consumers.repository }}:{{ .Values.image.consumers.tag }}"
+        - name: wsbproducer
+          image: "{{ .Values.image.wsb.repository }}:{{ .Values.image.wsb.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:      
-            - name: KAFKA_BROKER_URL #broker:9092
+          # command: ["python3", "-u", "wsb_comments_producer.py"]
+          env:
+            - name: KAFKA_BROKER_URL
               value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
-            - name: TOPIC_NAME
-              value: {{ .Values.producers.twitter.topicname }}
-            - name: SINK_TOPIC_NAME
-              value: "{{ .Values.consumers.twitter.sinktopic }}"
+            - name: POST_TOPIC_NAME
+              value: {{ .Values.producers.wsb.posttopicname }}
+            - name: TAG_TOPIC_NAME
+              value: {{ .Values.producers.wsb.tagtopicname }}
+            - name: PRAW_CLIENT_ID1
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_id1
+            - name: PRAW_CLIENT_SECRET1
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_secret1
+            - name: PRAW_CLIENT_ID2
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_id2
+            - name: PRAW_CLIENT_SECRET2
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_secret2
+        # - name: submissions
+        #   image: "{{ .Values.image.wsb.repository }}:{{ .Values.image.wsb.tag }}"
+        #   imagePullPolicy: {{ .Values.image.pullPolicy }}
+        #   command: ["python3", "-u", "wsb_submissions_producer.py"]
+        #   env:
+        #     - name: KAFKA_BROKER_URL
+        #       value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
+        #     - name: POST_TOPIC_NAME
+        #       value: {{ .Values.producers.wsb.posttopicname }}
+        #     - name: TAG_TOPIC_NAME
+        #       value: {{ .Values.producers.wsb.tagtopicname }}
+        #     - name: PRAW_CLIENT_ID1
+        #       valueFrom:
+        #         secretKeyRef:
+        #           name: wsb-secrets
+        #           key: praw_client_id1
+        #     - name: PRAW_CLIENT_SECRET1
+        #       valueFrom:
+        #         secretKeyRef:
+        #           name: wsb-secrets
+        #           key: praw_client_secret1
+        #     - name: PRAW_CLIENT_ID2
+        #       valueFrom:
+        #         secretKeyRef:
+        #           name: wsb-secrets
+        #           key: praw_client_id2
+        #     - name: PRAW_CLIENT_SECRET2
+        #       valueFrom:
+        #         secretKeyRef:
+        #           name: wsb-secrets
+        #           key: praw_client_secret2
+
+# ---
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: {{ .Values.consumers.name }}
+#   labels:
+#     app: {{ .Values.consumers.name }}
+#     app.kubernetes.io/name: {{ .Values.consumers.name }}
+# spec:
+#   {{- if not .Values.autoscaling.enabled }}
+#   replicas: {{ .Values.replicaCount }}
+#   {{- end }}
+#   selector:
+#     matchLabels:
+#       app: {{ .Values.consumers.name }}
+#   template:
+#     metadata:
+#       labels:
+#         app: {{ .Values.consumers.name }}
+#         app.kubernetes.io/name: {{ .Values.consumers.name }}
+#     spec:
+#       containers:
+#         - name: {{ .Release.Name }}-consumer
+#           image: "{{ .Values.image.consumers.repository }}:{{ .Values.image.consumers.tag }}"
+#           imagePullPolicy: {{ .Values.image.pullPolicy }}
+#           env:      
+#             - name: KAFKA_BROKER_URL #broker:9092
+#               value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
+#             - name: TOPIC_NAME
+#               value: ""
+#             - name: SINK_TOPIC_NAME
+#               value: ""
 
 ---
 

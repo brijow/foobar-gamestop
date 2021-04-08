@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import finnhub
 import pandas as pd
 from kafka import KafkaProducer
+import uuid
 
 # Finnhub API config
 AUTH_TOKEN = os.environ.get("FINNHUB_AUTH_TOKEN")
@@ -67,7 +68,7 @@ class finnhub_producer:
                     "s": "status",
                 }
             )
-            stock_candle_timeseries = df.set_index("timestamp")
+            stock_candle_timeseries = df.reset_index()#.set_index("timestamp")
             return stock_candle_timeseries
 
     def run(self):
@@ -79,9 +80,12 @@ class finnhub_producer:
         )
         if ts is not None:
             print('Sending financial data to Kafka queue...')
-            self.producer.send(TOPIC_NAME, value=ts.to_json(orient='records'))
+            for index, row in ts.iterrows():
+                row['uuid'] = str(uuid.uuid4())
+                print(row.to_json())
+                self.producer.send(TOPIC_NAME, value=row.to_json())
             self.producer.flush()
-            print(f'stock price from {date_from} to {date_to} is send to Kafka')
+            print(f'Stock price from {date_from} to {date_to} was sent to Kafka')
         time.sleep(SLEEP_TIME)
         self.last_poll_datetime = date_to
 

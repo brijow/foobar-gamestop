@@ -13,8 +13,8 @@ image:
   app:
     repository: ghcr.io/salcaino/foobar-dash-app
     tag: "latest"
-  weather:
-    repository: ghcr.io/salcaino/foobar-weather
+  wsb:
+    repository: ghcr.io/salcaino/foobar-wsb
     tag: "latest"
   twitter:
     repository: ghcr.io/salcaino/foobar-twitter
@@ -76,16 +76,19 @@ deployment:
   twittertable: twitterdata
 
 producers:
-  name: producers
   finnhub:
+    containername: finnhubproducer
     topicname: finnhubsource
     sleeptime: 30
     encoded_token: YzFsamIyMjM3Zmt0Mm1zazZ1ZWc=
-  weather:
-    topicname: weather
-    sleeptime: 60
-  twitter:
-    topicname: twitter
+  wsb:
+    containername: wsbproducer
+    posttopicname: redditpost
+    tagtopicname: reddittag
+    encoded_clientid1: RHpQRUhmUXJkRlJ0b1E=
+    encoded_clientsecret1: NWItUE4zYnhacGxlR0UzczNzeDI5TV9mbkVDQTlR
+    encoded_clientid2: VWZhUDhmLXJYWEx1RHc=
+    encoded_clientsecret2: Q2YtakdWTmUyRnNVSHlyQ2RpWFd3ejlrcDdud3V3
 
 consumers:
   name: consumers

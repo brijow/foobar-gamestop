@@ -12,6 +12,7 @@ import foobar.preprocessing as pp
 
 
 def submissions_monitor(dummy):
+    print("Starting submissions monitor")
     KAFKA_BROKER_URL = os.environ.get("KAFKA_BROKER_URL")
     POST_TOPIC_NAME = os.environ.get("POST_TOPIC_NAME")
     TAG_TOPIC_NAME = os.environ.get("TAG_TOPIC_NAME")
@@ -45,7 +46,8 @@ def submissions_monitor(dummy):
             ]:
                 res[key] = [val]
             elif key == "author":
-                res['author'] = [comment.author.name]
+                res['author'] = [submission.author.name]
+        df = pd.DataFrame(res)
         df = pp.filter_by_date(df, "2020-04")
         df = pp.clean_text_col(df, col="title")
         df = pp.perform_sentiment_analysis(df, col="title")
@@ -59,3 +61,5 @@ def submissions_monitor(dummy):
         producer.send(POST_TOPIC_NAME, value=df.to_json(orient="records")[0])
         producer.send(TAG_TOPIC_NAME, value=tags_df.to_json(orient="records")[0])
         
+if __name__ == "__main__":
+    submissions_monitor('dummy')

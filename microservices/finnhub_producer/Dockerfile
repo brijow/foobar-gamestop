@@ -7,4 +7,5 @@ ADD ./requirements.txt ./
 RUN pip install -r requirements.txt
 ADD ./ ./
 RUN chmod +x *.sh
-CMD [ "/bin/bash", "-c", "/usr/app/kafka-wait.sh"]
+# ENTRYPOINT [ "./kafka-wait.sh" ]
+CMD ["python3", "-u", "finnancial_data_producer.py"]

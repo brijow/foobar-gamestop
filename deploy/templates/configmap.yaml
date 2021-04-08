@@ -16,6 +16,17 @@ metadata:
 type: Opaque
 data:
     finnhub_auth_token: {{ .Values.producers.finnhub.encoded_token }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: wsb-secrets
+type: Opaque
+data:
+    praw_client_id1: {{ .Values.producers.wsb.encoded_clientid1 }}
+    praw_client_secret1: {{ .Values.producers.wsb.encoded_clientsecret1 }}
+    praw_client_id2: {{ .Values.producers.wsb.encoded_clientid2 }}
+    praw_client_secret2: {{ .Values.producers.wsb.encoded_clientsecret2 }}
 
 ---
 
@@ -45,8 +56,8 @@ data:
 
     CREATE TABLE IF NOT EXISTS kafkapipeline.tag (
       post_id INT,
-      token TEXT,
-      PRIMARY KEY (token));
+      tag_token TEXT,
+      PRIMARY KEY (tag_token));
     
     CREATE TABLE IF NOT EXISTS kafkapipeline.post (
       id TEXT,

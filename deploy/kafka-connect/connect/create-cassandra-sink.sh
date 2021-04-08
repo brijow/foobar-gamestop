@@ -15,11 +15,11 @@ export finnhubsinkconfig='{
     "value.converter.schemas.enable": "false",  
     "key.converter": "org.apache.kafka.connect.json.JsonConverter",
     "key.converter.schemas.enable":"false",
-    "topic.'${FINNHUB_TOPIC}'.kafkapipeline.gamestop.mapping": "timestamp=value.timestamp, status=value.status, close_price=value.close_price, open_price=value.open_price, high_price=value.high_price, low_price=value.low_price, volume=value.volume",
+    "topic.'${FINNHUB_TOPIC}'.kafkapipeline.gamestop.mapping": "id=value.uuid, timestamp=value.timestamp, close_price=value.close_price, open_price=value.open_price, high_price=value.high_price, low_price=value.low_price, volume=value.volume",
     "topic.'${FINNHUB_TOPIC}'.kafkapipeline.gamestop.consistencyLevel": "LOCAL_QUORUM"
   }
 }'
-
+# {"close_price":174.49,"high_price":174.49,"low_price":174.49,"open_price":174.49,"status":"ok","volume":125,"uuid":"408d7cbb-0989-4d31-ac4c-ccb330455e4e"}
 export weathersinkconfig='{
   "name": "weathersink",
   "config": {
@@ -44,9 +44,9 @@ curl -s \
      -X POST http://${HOSTNAME}:${CONNECT_REST_PORT}/connectors \
      -H "Content-Type: application/json" \
      -d "$finnhubsinkconfig"
-echo "Starting Weather Sink"
-curl -s \
-     -X POST http://${HOSTNAME}:${CONNECT_REST_PORT}/connectors \
-     -H "Content-Type: application/json" \
-     -d "$weathersinkconfig"
+# echo "Starting Weather Sink"
+# curl -s \
+#      -X POST http://${HOSTNAME}:${CONNECT_REST_PORT}/connectors \
+#      -H "Content-Type: application/json" \
+#      -d "$weathersinkconfig"
 echo "Done."
