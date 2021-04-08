@@ -28,6 +28,8 @@ setup(
         "SQLAlchemy",
         "spacy",
         "nltk",
-        "joblib"
+        "joblib",
+        "importlib",
+        "treelib"
     ],
 )
