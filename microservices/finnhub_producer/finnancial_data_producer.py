@@ -60,7 +60,7 @@ class finnhub_producer:
                     "h": "high_price",
                     "l": "low_price",
                     "v": "volume",
-                    "t": "timestamp",
+                    "t": "timestamp_",
                     "s": "status",
                 }
             )
@@ -70,12 +70,14 @@ class finnhub_producer:
     def run(self):
         date_from = self.last_poll_datetime
         date_to = datetime.utcnow()
-
+        print(f'Getting stock price from {date_from} to {date_to}')
         ts = self.query_stock_candles(
             symbol="GME", date_from=date_from, date_to=date_to
         )
         if ts is not None:
             print('Sending financial data to Kafka queue...')
+            ts['timestamp_'] = pd.to_datetime(ts['timestamp_'], unit="s")
+            ts['timestamp_'] = ts['timestamp_'].dt.strftime("%Y-%m-%d %H:%M:%S")
             for index, row in ts.iterrows():
                 row['uuid'] = str(uuid.uuid4())
                 print(row.to_json())

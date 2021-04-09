@@ -45,7 +45,7 @@ data:
     
     CREATE TABLE IF NOT EXISTS kafkapipeline.gamestop (
       id TEXT,
-      timestamp TIMESTAMP,
+      timestamp_ TIMESTAMP,
       open_price FLOAT,
       high_price FLOAT,
       low_price FLOAT,
@@ -55,7 +55,7 @@ data:
       PRIMARY KEY (id));
 
     CREATE TABLE IF NOT EXISTS kafkapipeline.tag (
-      post_id INT,
+      post_id TEXT,
       tag_token TEXT,
       PRIMARY KEY (tag_token));
     
@@ -70,3 +70,26 @@ data:
       neutral FLOAT,
       dt TIMESTAMP,
       PRIMARY KEY (id));
+    
+    CREATE TABLE IF NOT EXISTS kafkapipeline.wide (
+      hour TIMESTAMP,
+      cnt_all_post INT,
+      cnt_all_user INT,
+      cnt_all_tag INT,
+      avg_all_post_pos FLOAT,
+      avg_all_post_neg FLOAT,
+      avg_all_post_neu FLOAT,
+      cnt_gme_post INT,
+      cnt_gme_user INT,
+      cnt_gme_tag INT,
+      avg_gme_post_pos FLOAT,
+      avg_gme_post_neg FLOAT,
+      avg_gme_post_neu FLOAT,
+      openprice FLOAT,
+      lowprice FLOAT,
+      highprice FLOAT,
+      volume FLOAT,
+      closeprice FLOAT,
+      prediction FLOAT,
+      PRIMARY KEY (hour));
+
