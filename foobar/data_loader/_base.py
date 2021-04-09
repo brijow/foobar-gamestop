@@ -4,10 +4,10 @@ Base IO code for all datasets.
 
 import configparser
 import os
-import requests
 from pathlib import Path
 
 import pandas as pd
+import requests
 
 
 def get_project_root():
@@ -151,6 +151,7 @@ def _fetch_json_from_finhubb():
     )
     df = pd.DataFrame.from_records(r.json())
     sf = (df["description"] + df["symbol"]).str.split().explode()
+    sf = sf.str.replace(r"\W", "", regex=True).str.upper().drop_duplicates()
     sf = sf[sf.str.len() > 2]
     sf.to_csv(os.path.join(data_dir, "all_stock_tags.csv"), index=False)
 
@@ -163,4 +164,5 @@ def load_all_stock_tags():
         _fetch_json_from_finhubb()
 
     file_path = os.path.join(data_dir, "all_stock_tags.csv")
-    return pd.read_csv(file_path)
+    df = pd.read_csv(file_path, names=["finnhub_tags"], header=0)
+    return df

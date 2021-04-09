@@ -22,6 +22,14 @@ def clean_text_col(df, col):
     return df
 
 
+def perform_tag_extraction(df, col):
+    stock_tags_df = load_all_stock_tags()
+    df["tag"] = df[col].str.upper().str.split()
+    tags_df = df[["id", "tag"]].explode("tag")
+    tags_df = tags_df[tags_df["tag"].isin(stock_tags_df["finnhub_tags"])]
+    return tags_df.drop_duplicates()
+
+
 def perform_entity_extraction(df, col):
     nlps = sp.load("en_core_web_sm")
 
@@ -29,8 +37,9 @@ def perform_entity_extraction(df, col):
         _id, text = x["id"], x[col]
         doc = nlps(text)
         return [(_id, chunk.text) for chunk in doc.noun_chunks]
+
     tags_sf = df[["id", col]].apply(entity_extraction, axis=1)
-    if tags_sf.empty :
+    if tags_sf.empty:
         return pd.DataFrame()
     tags_sf = tags_sf.loc[tags_sf.astype(str) != "[]"]
     tags_df = pd.DataFrame(tags_sf.explode().tolist(), columns=["post_id", "tag"])

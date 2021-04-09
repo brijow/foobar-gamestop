@@ -24,8 +24,9 @@ def raw_submissions_csv_to_post_records():
     df = pp.clean_text_col(df, col="title")
     df = pp.perform_sentiment_analysis(df, col="title")
 
-    tags_df = pp.perform_entity_extraction(df, col="title")
-    tags_df = pp.filter_tags_by_stock_tags(tags_df)
+    # tags_df = pp.perform_entity_extraction(df, col="title")
+    # tags_df = pp.filter_tags_by_stock_tags(tags_df)
+    tags_df = pp.perform_tag_extraction(df, col="title")
 
     df = pp.prep_submission_cols_for_db(df)
     df = pp.select_post_record_cols(df)
@@ -37,27 +38,27 @@ def raw_submissions_csv_to_post_records():
 def save_tags_records(df):
     if not df.empty:
         processed_data_dir = get_or_create_processed_data_dir()
-        data_dir = os.path.join(processed_data_dir, "tags")
+        data_dir = os.path.join(processed_data_dir, "tags_v2")
         dir_path = os.path.expanduser(data_dir)
 
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
 
         filename = os.path.join(data_dir, "subs_tags.csv")
-        df.to_csv(filename)
+        df.to_csv(filename, index=False)
 
 
 def save_submission_post_records(df):
     if not df.empty:
         processed_data_dir = get_or_create_processed_data_dir()
-        data_dir = os.path.join(processed_data_dir, "posts")
+        data_dir = os.path.join(processed_data_dir, "posts_v2")
         dir_path = os.path.expanduser(data_dir)
 
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
 
         filename = os.path.join(data_dir, "subs_posts.csv")
-        df.to_csv(filename)
+        df.to_csv(filename, index=False)
 
 
 if __name__ == "__main__":
