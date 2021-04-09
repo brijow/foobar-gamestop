@@ -30,5 +30,6 @@ setup(
         "nltk",
         "joblib",
         "treelib",
+        "vaderSentiment",
     ],
 )

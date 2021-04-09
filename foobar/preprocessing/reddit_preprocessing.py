@@ -2,7 +2,7 @@ import re
 
 import pandas as pd
 import spacy as sp
-from nltk.sentiment.vader import SentimentIntensityAnalyzer as SIA
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 from foobar.data_loader import load_all_stock_tags
 
@@ -106,7 +106,7 @@ def filter_by_date(df, date_str):
 
 
 def perform_sentiment_analysis(df, col):
-    sid = SIA()
+    sid = SentimentIntensityAnalyzer()
 
     def sentilysis(text):
         return sid.polarity_scores(" ".join(re.findall(r"\w+", text.lower())))
