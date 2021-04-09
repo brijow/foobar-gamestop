@@ -114,6 +114,7 @@ def load_kaggle_data(
     download_if_missing=True,
     force=False,
     chunksize=None,
+    usecols=None,
 ):
     """Load a dataset from kaggle."""
 
@@ -134,7 +135,13 @@ def load_kaggle_data(
             )
 
     file_path = os.path.join(data_dir, local_fname)
-    return pd.read_csv(file_path, chunksize=chunksize)
+
+    return pd.read_csv(
+        file_path,
+        chunksize=chunksize,
+        usecols=usecols,
+        low_memory=False,
+    )
 
 
 def _fetch_json_from_finhubb():

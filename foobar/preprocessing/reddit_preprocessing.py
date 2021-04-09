@@ -105,13 +105,16 @@ def filter_by_cols(df, cols_list):
     return df[cols_to_keep]
 
 
-def filter_by_date(df, date_str):
-    """Filter rows older than date_str
+def filter_bad_utcs(df, col):
+    return df[df[col].apply(lambda x: str(x).isdigit())]
 
-    Note: Using 2020-04-01 as min date results in 777164 records
-    """
-    df = df[df["created_utc"].apply(lambda x: str(x).isdigit())]
-    df["created_dt"] = pd.to_datetime(df.created_utc, unit="s")
+
+def utc_to_datetime(df, col):
+    return pd.to_datetime(df[col], unit="s")
+
+
+def filter_by_date(df, date_str):
+    """Filter rows older than date_str"""
     return df[df["created_dt"] >= date_str]
 
 
