@@ -29,7 +29,6 @@ setup(
         "spacy",
         "nltk",
         "joblib",
-        "importlib",
-        "treelib"
+        "treelib",
     ],
 )
