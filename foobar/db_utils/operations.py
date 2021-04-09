@@ -75,9 +75,20 @@ def join_post_tag(session):
             Post.user, Post.dt, Tag.token
         ).filter(Post.id == Tag.post_id).all()
 
-def by_the_hour(df, dt_col):
+def round_to_hour(df, dt_col):
     df['hour'] = df[dt_col].dt.round('H')
     return df
+
+def get_aggregates_by_hour(df):
+    grouped_df = df.groupby('hour')
+    result = grouped_df.mean(['positive', 'negative', 'neutral'])
+    result['User_count'] = grouped_df.agg({"user": "nunique"})
+    result['Tag_count'] = grouped_df.agg({"token": "nunique"})
+    result['Total_count'] = grouped_df.size()
+    result['Comments_count'] = grouped_df['iscomment'].sum().astype(int)
+    result = result.drop(columns=['iscomment'], axis =1).reset_index()
+    return result
+
 
 def build_wide_table(session):
 
@@ -86,22 +97,22 @@ def build_wide_table(session):
         'id', 'iscomment', 'submission_id',
         'positive', 'negative', 'neutral', 'user', 'dt', 'token'
     ]
-    df = by_the_hour(df, 'dt')
 
-    grouped_df = df.groupby(['hour', 'token'])
+    df = round_to_hour(df, 'dt')
+    df_all = get_aggregates_by_hour(df)
 
-    computed = grouped_df.mean(['positive', 'negative', 'neutral'])
-    computed['Total_count'] = grouped_df.size()
-    computed['Comments_count'] = grouped_df['iscomment'].sum().astype(int)
-    computed = computed.drop(columns=['iscomment'], axis =1).reset_index()
+    df_gme = df[(df['token'] == "GME") | (df['token'] == "GAMESTOP")]
+    df_gme = get_aggregates_by_hour(df_gme)
+    
+    final = df_all.merge(df_gme, left_on="hour", right_on="hour", how='outer', suffixes=('_all', '_gme'))
+    final = final.fillna(0)
 
-    # check = computed[computed['Total_count'] != computed['Comments_count']]
-    # check = df[df['iscomment'] == False]
-    print(computed)
+    print(result.sample(20))
+    print(result.describe())
 
 
-
-s = connect_to_db()
-build_wide_table(s)
+if __name__ = "__main__":
+    s = connect_to_db()
+    build_wide_table(s)
 
 
