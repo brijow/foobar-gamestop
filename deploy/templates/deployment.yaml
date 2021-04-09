@@ -174,6 +174,49 @@ spec:
                   name: wsb-secrets
                   key: praw_client_secret2
 
+
+
+{{- range $job, $val := .Values.producers.jobs.crons }}
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .name }}
+  labels:
+    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    app.kubernetes.io/name: {{ .name }}
+spec:
+  schedule: {{ .schedule | quote }}
+  successfulJobsHistoryLimit: 0 
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: {{ .name }}
+            app.kubernetes.io/name: {{ .name }}
+        spec:       
+          containers:
+          - name: {{ .name }}
+            image: "{{ $.Values.image.jobs.repository }}:{{ $.Values.image.jobs.tag }}"
+            imagePullPolicy: {{ $.Values.image.pullPolicy }}
+            env:
+            - name: KAFKA_BROKER_URL
+              value: "{{ $.Release.Name }}-kafka:{{ $.Values.kafka.service.port }}"
+            - name: TOPIC_NAME
+              value: {{ .topicname }}
+            args:
+              - sh
+              - -c
+              - |
+                "{{ .command}}"
+          restartPolicy: OnFailure
+
+---
+{{- end}}
+
+
+
 # ---
 
 # apiVersion: apps/v1
@@ -237,7 +280,7 @@ spec:
             - name: REDDIT_TAG_TOPIC
               value: "{{ .Values.producers.wsb.tagtopicname }}"
             - name: WIDE_TOPIC
-              value: "{{ .Values.producers.wide.topicname }}"
+              value: "{{ .Values.producers.jobs.wideproducer.topicname }}"
             - name: CASSANDRA_USERNAME
               valueFrom:
                 secretKeyRef:
