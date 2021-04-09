@@ -89,7 +89,8 @@ producers:
     encoded_clientsecret1: NWItUE4zYnhacGxlR0UzczNzeDI5TV9mbkVDQTlR
     encoded_clientid2: VWZhUDhmLXJYWEx1RHc=
     encoded_clientsecret2: Q2YtakdWTmUyRnNVSHlyQ2RpWFd3ejlrcDdud3V3
-
+  wide:
+    topicname: widetopic
 consumers:
   name: consumers
   twitter:

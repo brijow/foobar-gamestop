@@ -29,8 +29,9 @@ def perform_entity_extraction(df, col):
         _id, text = x["id"], x[col]
         doc = nlps(text)
         return [(_id, chunk.text) for chunk in doc.noun_chunks]
-
     tags_sf = df[["id", col]].apply(entity_extraction, axis=1)
+    if tags_sf.empty :
+        return pd.DataFrame()
     tags_sf = tags_sf.loc[tags_sf.astype(str) != "[]"]
     tags_df = pd.DataFrame(tags_sf.explode().tolist(), columns=["post_id", "tag"])
 

@@ -111,10 +111,10 @@ spec:
         app.kubernetes.io/name: {{ .Values.producers.wsb.containername }}
     spec:
       containers:
-        - name: wsbproducer
+        - name: comments
           image: "{{ .Values.image.wsb.repository }}:{{ .Values.image.wsb.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          # command: ["python3", "-u", "wsb_comments_producer.py"]
+          command: ["python3", "-u", "wsb_comments_producer.py"]
           env:
             - name: KAFKA_BROKER_URL
               value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
@@ -142,37 +142,37 @@ spec:
                 secretKeyRef:
                   name: wsb-secrets
                   key: praw_client_secret2
-        # - name: submissions
-        #   image: "{{ .Values.image.wsb.repository }}:{{ .Values.image.wsb.tag }}"
-        #   imagePullPolicy: {{ .Values.image.pullPolicy }}
-        #   command: ["python3", "-u", "wsb_submissions_producer.py"]
-        #   env:
-        #     - name: KAFKA_BROKER_URL
-        #       value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
-        #     - name: POST_TOPIC_NAME
-        #       value: {{ .Values.producers.wsb.posttopicname }}
-        #     - name: TAG_TOPIC_NAME
-        #       value: {{ .Values.producers.wsb.tagtopicname }}
-        #     - name: PRAW_CLIENT_ID1
-        #       valueFrom:
-        #         secretKeyRef:
-        #           name: wsb-secrets
-        #           key: praw_client_id1
-        #     - name: PRAW_CLIENT_SECRET1
-        #       valueFrom:
-        #         secretKeyRef:
-        #           name: wsb-secrets
-        #           key: praw_client_secret1
-        #     - name: PRAW_CLIENT_ID2
-        #       valueFrom:
-        #         secretKeyRef:
-        #           name: wsb-secrets
-        #           key: praw_client_id2
-        #     - name: PRAW_CLIENT_SECRET2
-        #       valueFrom:
-        #         secretKeyRef:
-        #           name: wsb-secrets
-        #           key: praw_client_secret2
+        - name: submissions
+          image: "{{ .Values.image.wsb.repository }}:{{ .Values.image.wsb.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["python3", "-u", "wsb_submissions_producer.py"]
+          env:
+            - name: KAFKA_BROKER_URL
+              value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
+            - name: POST_TOPIC_NAME
+              value: {{ .Values.producers.wsb.posttopicname }}
+            - name: TAG_TOPIC_NAME
+              value: {{ .Values.producers.wsb.tagtopicname }}
+            - name: PRAW_CLIENT_ID1
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_id1
+            - name: PRAW_CLIENT_SECRET1
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_secret1
+            - name: PRAW_CLIENT_ID2
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_id2
+            - name: PRAW_CLIENT_SECRET2
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_secret2
 
 # ---
 
@@ -232,6 +232,12 @@ spec:
               value: "{{ .Release.Name }}-cassandra"
             - name: FINNHUB_TOPIC
               value: "{{ .Values.producers.finnhub.topicname }}"
+            - name: REDDIT_POST_TOPIC
+              value: "{{ .Values.producers.wsb.posttopicname }}"
+            - name: REDDIT_TAG_TOPIC
+              value: "{{ .Values.producers.wsb.tagtopicname }}"
+            - name: WIDE_TOPIC
+              value: "{{ .Values.producers.wide.topicname }}"
             - name: CASSANDRA_USERNAME
               valueFrom:
                 secretKeyRef:
