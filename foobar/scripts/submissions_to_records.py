@@ -7,7 +7,7 @@ from foobar.data_loader import (
 )
 
 
-def raw_submissoins_csv_to_post_records():
+def raw_submissions_csv_to_post_records():
     df = load_reddit_submissions_data()
 
     df = pp.filter_by_cols(
@@ -61,4 +61,4 @@ def save_submission_post_records(df):
 
 
 if __name__ == "__main__":
-    raw_submissoins_csv_to_post_records()
+    raw_submissions_csv_to_post_records()
