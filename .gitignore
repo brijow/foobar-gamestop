@@ -19,3 +19,4 @@ deploy/dryrun.yaml
 deploy/.DS_Store
 
 data/
+*.pth
