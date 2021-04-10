@@ -7,11 +7,11 @@
 4. Install the foobar_gamestop code as python package, `pip install -e ./` (again from root of project)
 5. Make your changes now as usual on a branch and when you run `git commit` the linters will be run to auto-format your code to PEP8
 
-### EKS cluster
+## EKS cluster
 You'll have to configure access to the cluster with eksctl and kubectl.
 (more info coming.)
 
-## Connect to cassandra
+### Connect to cassandra
 ```
 kubectl exec --stdin --tty shortsqueeze-cassandra-0 -- /bin/bash
 cqlsh --cqlversion=3.4.4 -u admin -p welcome1
