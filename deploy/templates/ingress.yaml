@@ -35,11 +35,11 @@ spec:
         backend:
           serviceName: {{ $svcName }}
           servicePort: {{ $svcPort }}
-      - path: /dashboard
-        pathType: Prefix
-        backend:
-          serviceName: {{ .Release.Name }}-kubernetes-dashboard
-          servicePort: 443
+      # - path: /dashboard
+      #   pathType: Prefix
+      #   backend:
+      #     serviceName: {{ .Release.Name }}-kubernetes-dashboard
+      #     servicePort: 443
       # - path:
       #   backend:
       #     serviceName: {{ .Release.Name }}-cassandra
