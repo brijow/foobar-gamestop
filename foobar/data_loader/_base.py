@@ -162,6 +162,11 @@ def _fetch_json_from_finhubb():
     sf = sf[sf.str.len() > 2]
     sf.to_csv(os.path.join(data_dir, "all_stock_tags.csv"), index=False)
 
+    tickers = df["symbol"]
+    tickers = tickers.str.replace(r"\W", "", regex=True).str.upper().drop_duplicates()
+    tickers = tickers[tickers.str.len() > 2]
+    tickers.to_csv(os.path.join(data_dir, "stock_tickers.csv"), index=False)
+
 
 def load_all_stock_tags():
     data_dir = get_or_create_raw_data_dir()
@@ -172,4 +177,16 @@ def load_all_stock_tags():
 
     file_path = os.path.join(data_dir, "all_stock_tags.csv")
     df = pd.read_csv(file_path, names=["finnhub_tags"], header=0)
+    return df
+
+
+def load_stock_ticker_tags():
+    data_dir = get_or_create_raw_data_dir()
+    file_path = os.path.join(data_dir, "stock_tickers.csv")
+
+    if not os.path.exists(file_path):
+        _fetch_json_from_finhubb()
+
+    file_path = os.path.join(data_dir, "stock_tickers.csv")
+    df = pd.read_csv(file_path, names=["tickers"], header=0)
     return df
