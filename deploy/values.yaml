@@ -16,8 +16,8 @@ image:
   wsb:
     repository: ghcr.io/salcaino/foobar-wsb
     tag: "latest"
-  twitter:
-    repository: ghcr.io/salcaino/foobar-twitter
+  jobs:
+    repository: ghcr.io/salcaino/foobar-jobs
     tag: "latest"
   consumers:
     repository: ghcr.io/salcaino/foobar-consumers
@@ -79,7 +79,7 @@ producers:
   finnhub:
     containername: finnhubproducer
     topicname: finnhubsource
-    sleeptime: 30
+    sleeptime: 300
     encoded_token: YzFsamIyMjM3Zmt0Mm1zazZ1ZWc=
   wsb:
     containername: wsbproducer
@@ -89,8 +89,34 @@ producers:
     encoded_clientsecret1: NWItUE4zYnhacGxlR0UzczNzeDI5TV9mbkVDQTlR
     encoded_clientid2: VWZhUDhmLXJYWEx1RHc=
     encoded_clientsecret2: Q2YtakdWTmUyRnNVSHlyQ2RpWFd3ejlrcDdud3V3
-  wide:
-    topicname: widetopic
+  jobs:
+    bucket_region: us-west-2
+    crons:
+      "0":
+        name: busybox-cron
+        command: /usr/app/keep-busy.sh
+        schedule: "*/25 * * * *" #every 5 minutes for now
+        topicname: busytopic
+    wideproducer:
+      topicname: widetopic
+    preloaders:
+      "0":
+        name: tagspreloader
+        weight: -1
+        batchsize: 200
+        command: /usr/app/preload_tags.py
+      "1":
+        name: finnhubpreloader
+        weight: -2
+        batchsize: 100
+        command: /usr/app/preload_finnhub.py
+      # "2":
+      #   name: postspreloader
+      #   weight: -2
+      #   batchsize: 1000
+      #   command: /usr/app/preload_posts.py
+      
+  
 consumers:
   name: consumers
   twitter:
@@ -106,39 +132,14 @@ ingress:
   name: short-squeeze-ingress
   annotations:
     kubernetes.io/ingress.class: alb
-    # kubernetes.io/tls-acme: "true"
-  # hosts:
-  #   - host: ec2-54-160-141-94.compute-1.amazonaws.com
-  #     paths: []
-  # tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
-# resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
 
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
-# nodeSelector: {}
-
-# tolerations: []
-
-# affinity: {}
 
 kafka:
   autoCreateTopicsEnable: true
@@ -173,4 +174,6 @@ cassandra:
   persistence:
     storageClass: gp2
     size : 1Gi
+  service:
+    type: NodePort
   initDBConfigMap: init-db

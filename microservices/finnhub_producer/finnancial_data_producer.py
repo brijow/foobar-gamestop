@@ -90,6 +90,6 @@ class finnhub_producer:
 
 if __name__ == "__main__":
     print("Starting Finnhub producer")
-    finnhub_service = finnhub_producer(api_token=AUTH_TOKEN)
     while True:
+        finnhub_service = finnhub_producer(api_token=AUTH_TOKEN)
         finnhub_service.run()
