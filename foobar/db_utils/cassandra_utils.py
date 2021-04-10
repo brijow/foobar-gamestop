@@ -24,7 +24,11 @@ POST_TABLE = os.environ.get("POST_TABLE") if os.environ.get("POST_TABLE") else "
 WIDE_TABLE = os.environ.get("WIDE_TABLE") if os.environ.get("WIDE_TABLE") else "wide"
 
 
-def query_table(source_table, hour_from, hour_to):
+def query_table(source_table, timestamp_col ,hour_from, hour_to):
+    # source_table: target table name to query (string)
+    # timestamp_col: name of timesamp column in the target table (string)
+    # hour_from: query datetime from this timestamp (datetime)
+    # hour_to: query datetime to this timestamp (datetime)
     if isinstance(CASSANDRA_HOST, list):
         cluster = Cluster(CASSANDRA_HOST)
     else:
@@ -43,6 +47,6 @@ def query_table(source_table, hour_from, hour_to):
 
     from_str = hour_from.strftime("%Y-%m-%d, %H:%M:%S")
     to_str = hour_to.strftime("%Y-%m-%d, %H:%M:%S")
-    cqlquery = f"SELECT * FROM {source_table} WHERE timestamp_ BETWEEN {from_str} AND {to_str};"
+    cqlquery = f"SELECT * FROM {source_table} WHERE {timestamp_col} BETWEEN {from_str} AND {to_str};"
     rows = session.execute(cqlquery)
     return pd.DataFrame(rows)
