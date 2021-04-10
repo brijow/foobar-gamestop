@@ -14,3 +14,4 @@ foobar_gamestop/data/db
 *-checkpoint.ipynb
 
 data/
+*.pth

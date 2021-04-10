@@ -16,8 +16,8 @@ GAMESTOP_TABLE = (
     os.environ.get("GAMESTOP_TABLE") if os.environ.get("GAMESTOP_TABLE") else "gamestop"
 )
 BUCKET = "bb-s3-bucket-cmpt733"
-MODEL_FILE = "m1.pth"
-LOCAL_FILE = "microservices/m1_pred_producer/m2.pth"
+MODEL_FILE = "m2.pth"
+LOCAL_FILE = "microservices/m2_pred_producer/m2.pth"
 
 # Kafka producer
 KAFKA_BROKER_URL = (
@@ -78,7 +78,8 @@ while True:
                 print(f"Next hour close price predicted: {close_price_pred}")
                 prediction_dict = {
                     "close_price_predict": close_price_pred,
-                    "timestamp_": query_to + timedelta(hours=prediction_horizon),
+                    "timestamp_": query_to
+                    + timedelta(hours=prediction_horizon),
                 }
                 producer.send(TOPIC_NAME, value=prediction_dict)
 
