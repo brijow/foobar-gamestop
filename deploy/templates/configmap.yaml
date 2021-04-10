@@ -66,9 +66,10 @@ data:
       PRIMARY KEY (id));
 
     CREATE TABLE IF NOT EXISTS kafkapipeline.tag (
+      id TEXT,
       post_id TEXT,
       tag_token TEXT,
-      PRIMARY KEY (tag_token));
+      PRIMARY KEY (id));
     
     CREATE TABLE IF NOT EXISTS kafkapipeline.post (
       id TEXT,

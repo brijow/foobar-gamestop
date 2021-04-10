@@ -7,6 +7,8 @@ import boto3
 import pandas as pd
 import zipfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import numpy as np
+import datetime
 
 print("Starting Finnhub preloader")
 
@@ -30,6 +32,7 @@ postsobj = bucket.Object(key='gme.csv')
 response = postsobj.get()
 postsdf = pd.read_csv(io.BytesIO(response['Body'].read()), encoding='utf8')
 postsdf['hour'] = pd.to_datetime(postsdf['hour'])
+posts = np.array_split(postsdf, 100)
 print("Reading data from bucket --- done")
 
 auth_provider = PlainTextAuthProvider(username=CASSANDRA_USER, password=CASSANDRA_PWD)
@@ -43,36 +46,39 @@ insertlogs = cassandrasession.prepare("INSERT INTO gamestop (id, timestamp_, ope
 counter = 0
 totalcount = 0
 batches = []
-batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
-print("Sending {} data to cassandra".format(len(postsdf)))
+now = datetime.datetime.now()
+print("{} Sending {} data to cassandra in {} batches with {} rows".format(now.strftime("%Y-%m-%d %H:%M:%S"), len(postsdf), len(posts), len(posts[0])))
+
 with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
-    for index, values in postsdf.iterrows():
-        batch.add(insertlogs,
+    for df_ in posts:
+        def processit(df):
+            counter = 0
+            batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
+            for index, values in df.iterrows():
+                batch.add(insertlogs,
                     (str(uuid.uuid4()), values['hour'], values['openprice'], values['highprice'], 
                     values['lowprice'], values['volume'], values['closeprice']))
-
-        counter += 1
-        if counter >= BATCH_SIZE:
-            # print('Inserting ' + str(counter) + ' records from batch')
-            totalcount += counter
-            counter = 0
-            exec_ = lambda : cassandrasession.execute(batch, trace=True)
-            batches.append(executor.submit(exec_))
-            batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
-    if counter > 0:
-        exec_ = lambda : cassandrasession.execute(batch, trace=True)
+                counter += 1
+                if counter >= BATCH_SIZE:
+                    # print('Inserting ' + str(counter) + ' records from batch')
+                    counter = 0
+                    cassandrasession.execute(batch, trace=True)
+                    batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
+            if counter > 0:
+                cassandrasession.execute(batch, trace=True)
+            return len(df)
+        exec_ = lambda : processit(df_)
         batches.append(executor.submit(exec_))
     print("Waiting batches to process...")
     finishedjobs = 0
     for future in as_completed(batches):
         try:
             data = future.result()
-            finishedjobs += 1
+            totalcount += data
         except Exception as exc:
             print('Exception: %s' % (exc))
-    
-totalcount += counter
+
 print('Inserted ' + str(totalcount) + ' rows in total')
-print("Finished jobs: {}".format(finishedjobs))
-print("Done sending finnancial data to cassandra")
+now = datetime.datetime.now()
+print("{} Done sending finnhub data to cassandra".format(now.strftime("%Y-%m-%d %H:%M:%S")))
 print("Bye Bye!")

@@ -1,6 +1,7 @@
 import io
 import os
 import sys
+import datetime
 from cassandra.cluster import Cluster, BatchStatement, ConsistencyLevel, uuid
 from cassandra.auth import PlainTextAuthProvider
 import boto3
@@ -37,12 +38,12 @@ auth_provider = PlainTextAuthProvider(username=CASSANDRA_USER, password=CASSANDR
 cluster = Cluster([CASSANDRA_HOST], auth_provider=auth_provider)
 cassandrasession = cluster.connect(KEYSPACE)
 
-insertlogs = cassandrasession.prepare("INSERT INTO tag (post_id, tag_token) VALUES (?, ?)")
+insertlogs = cassandrasession.prepare("INSERT INTO tag (id, post_id, tag_token) VALUES (?, ?, ?)")
 
 totalcount = 0
 batches = []
-
-print("Sending {} tags to cassandra in {} batches with {} rows".format(len(tagsdf), len(tags), len(tags[0])))
+now = datetime.datetime.now()
+print("{} Sending {} tags to cassandra in {} batches with {} rows".format(now.strftime("%Y-%m-%d %H:%M:%S"), len(tagsdf), len(tags), len(tags[0])))
 
 with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
     for tagsdf_ in tags:
@@ -51,7 +52,7 @@ with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
             batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
             for index, values in df.iterrows():
                 batch.add(insertlogs,
-                            (values['id'], values['tag']))
+                            (str(uuid.uuid4()), values['id'], values['tag']))
                 counter += 1
                 if counter >= BATCH_SIZE:
                     # print('Inserting ' + str(counter) + ' records from batch')
@@ -74,6 +75,7 @@ with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
 
 print('Inserted ' + str(totalcount) + ' rows in total')
 print("Finished rows: {}".format(finishedjobs))
-print("Done sending tags to cassandra")
+now = datetime.datetime.now()
+print("{} Done sending tags to cassandra".format(now.strftime("%Y-%m-%d %H:%M:%S")))
 print("Bye Bye!")
 

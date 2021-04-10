@@ -31,7 +31,7 @@ spec:
         backend:
           serviceName: {{ $connectfullName }}-service
           servicePort: {{ $connectsvcPort }}
-      - path: /app
+      - path:
         backend:
           serviceName: {{ $svcName }}
           servicePort: {{ $svcPort }}
