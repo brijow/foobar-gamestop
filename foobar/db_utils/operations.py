@@ -169,6 +169,8 @@ if __name__ == "__main__":
     tag_cols = [c.name for c in Tag.__table__.columns]
     gamestop_cols = [c.name for c in Gamestop.__table__.columns]
     full_wide = pd.DataFrame()
+    proc_dir = get_or_create_processed_data_dir()
+    wide_csv = os.path.join(proc_dir, "wide.csv")
 
     for i in pd.date_range(start_date, end_date, freq='D'):        
         # tuplefied_posts = [(getattr(item, col) for col in post_cols) for item in get_posts_by_day(s, i)]
@@ -180,14 +182,17 @@ if __name__ == "__main__":
 
         df_reddit = make_reddit_hourly(i)
         tuplefied_finance = [(getattr(item, col) for col in gamestop_cols) for item in make_financial_hourly(s, i)]
+        if not tuplefied_finance:
+            print("Market closed for the day")
+            continue
         df_financial = pd.DataFrame.from_records(tuplefied_finance, columns=gamestop_cols)
         df_financial = fill_missing_hours(df_financial, i).ffill().bfill() # Should I be doing this for missing data???
         df_wide = build_wide_table(df_reddit, df_financial)
         
-        if not os.path.isfile('wide_test.csv'):
-            df_wide.to_csv('wide_test.csv')
+        if not os.path.isfile(wide_csv):
+            df_wide.to_csv(wide_csv)
         else: # else it exists so append without writing the header
-            df_wide.to_csv('wide_test.csv', mode='a', header=False)
+            df_wide.to_csv(wide_csv, mode='a', header=False)
 
 
     # build_wide_table(s)
