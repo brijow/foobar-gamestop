@@ -73,7 +73,6 @@ class finnhub_producer:
         if ts is not None:
             print("Sending financial data to Kafka queue...")
             self.producer.send(TOPIC_NAME, value=ts.to_json(orient="records"))
-            self.producer.flush()
             print(f"stock price from {date_from} to {date_to} is send to Kafka")
         time.sleep(300)
         self.last_poll_datetime = date_to
