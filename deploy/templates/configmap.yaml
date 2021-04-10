@@ -12,6 +12,17 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
+    name: bucket-secrets
+type: Opaque
+data:
+    accessKeyID: QUtJQTNGSzJOSENBUkxTM1JBN1g=
+    secretAccessKey: b3dvU2Y3OHB1TEdXejlSZnhpV3FzUTdHeW9oWHFqQ0Y1S2lHUUxzaw==
+    bucket_name: YmItczMtYnVja2V0LWNtcHQ3MzM=
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
     name: app-secrets
 type: Opaque
 data:

@@ -215,7 +215,74 @@ spec:
 ---
 {{- end}}
 
+{{- range $job, $val := .Values.producers.jobs.preloaders }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+    helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    app.kubernetes.io/name: {{ .name }}
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-weight": {{ .weight | quote }}
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ .name }}
+      labels:
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+        helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: {{ .name }}
+        image: "{{ $.Values.image.jobs.repository }}:{{ $.Values.image.jobs.tag }}"
+        imagePullPolicy: {{ $.Values.image.pullPolicy }}
+        env:
+        - name: CASSANDRA_HOST
+          value: {{ $.Release.Name }}-cassandra
+        - name: CASSANDRA_KEYSPACE
+          value: {{ $.Values.deployment.keyspace }}
+        - name: CASSANDRA_USER
+          valueFrom:
+            secretKeyRef:
+              name: cassandra-secret
+              key: cassandra-username
+        - name: CASSANDRA_PWD
+          valueFrom:
+            secretKeyRef:
+              name: cassandra-secret
+              key: cassandra-password
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: bucket-secrets
+              key: accessKeyID
+        - name: AWS_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: bucket-secrets
+              key: secretAccessKey
+        - name: BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              name: bucket-secrets
+              key: bucket_name
+        - name: REGION_NAME
+          value: {{ $.Values.producers.jobs.bucket_region }}
+        - name: BATCH_SIZE
+          value: {{ .batchsize | quote }}
+        command: ["python", "-u", "{{ .command}}"]
 
+---
+{{- end}}
 
 # ---
 

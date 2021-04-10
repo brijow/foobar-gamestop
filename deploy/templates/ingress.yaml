@@ -26,12 +26,18 @@ spec:
   rules:
   - http:
       paths:
-      - path: /connectors
+      - path: /connectors/*
         pathType: Prefix
         backend:
           serviceName: {{ $connectfullName }}-service
           servicePort: {{ $connectsvcPort }}
-      - path:
+      - path: /app
         backend:
           serviceName: {{ $svcName }}
           servicePort: {{ $svcPort }}
+      # - path:
+      #   backend:
+      #     serviceName: {{ .Release.Name }}-cassandra
+      #     servicePort: 9042
+          
+      
