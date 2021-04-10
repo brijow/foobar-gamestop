@@ -117,24 +117,24 @@ def make_reddit_hourly(running_date):
         'id', 'iscomment', 'submission_id',
         'positive', 'negative', 'neutral', 'user', 'dt', 'tag'
     ]
+
     df = round_to_hour(df, 'dt')
     df_all = get_aggregates_by_hour(df)
 
     df_gme = df[(df['tag'] == "GME") | (df['tag'] == "GAMESTOP")]
     df_gme = get_aggregates_by_hour(df_gme)
 
-    final = df_all.merge(df_gme, left_on="hour", right_on="hour", how='outer', suffixes=('_all', '_gme'))    
+    final = df_all.merge(df_gme, left_on="hour", right_on="hour", how='left', suffixes=('_all', '_gme'))    
     final = fill_missing_hours(final, running_date).fillna(0)
     return final
 
 
 def make_financial_hourly(session, day1):
     day2 = day1 + pd.DateOffset(1)
+
     return session.query(Gamestop).filter(
-        and_(
             Gamestop.hour >= day1.to_pydatetime(), 
             Gamestop.hour < day2.to_pydatetime()
-            )
         ).all()
 
 def build_wide_table(df_reddit, df_financial):
@@ -163,16 +163,20 @@ def build_wide_table(df_reddit, df_financial):
 if __name__ == "__main__":
     s = connect_to_db()
     result = get_post_minmax_dates(s)
-    start_date = result.start_date
-    end_date = result.end_date
+    start_date = result.start_date.replace(minute=0, hour=0, second=0, microsecond=0)
+    end_date = result.end_date.replace(minute=0, hour=0, second=0, microsecond=0)
     post_cols = [c.name for c in Post.__table__.columns]
     tag_cols = [c.name for c in Tag.__table__.columns]
     gamestop_cols = [c.name for c in Gamestop.__table__.columns]
     full_wide = pd.DataFrame()
-    proc_dir = get_or_create_processed_data_dir()
-    wide_csv = os.path.join(proc_dir, "wide.csv")
-
-    for i in pd.date_range(start_date, end_date, freq='D'):        
+    # proc_dir = get_or_create_processed_data_dir()
+    # wide_csv = os.path.join(proc_dir, "wide.csv")
+    wide_csv = "wide.csv"
+    c = 0
+    for i in pd.date_range(start_date, end_date, freq='D'): 
+        if c < 8:
+            c += 1
+            continue       
         # tuplefied_posts = [(getattr(item, col) for col in post_cols) for item in get_posts_by_day(s, i)]
         # df_daily_posts = pd.DataFrame.from_records(tuplefied_posts, columns=post_cols)
 
@@ -183,10 +187,12 @@ if __name__ == "__main__":
         df_reddit = make_reddit_hourly(i)
         tuplefied_finance = [(getattr(item, col) for col in gamestop_cols) for item in make_financial_hourly(s, i)]
         if not tuplefied_finance:
-            print("Market closed for the day")
+            print("Market closed for the day", str(i))
             continue
         df_financial = pd.DataFrame.from_records(tuplefied_finance, columns=gamestop_cols)
+        print(df_financial)
         df_financial = fill_missing_hours(df_financial, i).ffill().bfill() # Should I be doing this for missing data???
+        
         df_wide = build_wide_table(df_reddit, df_financial)
         
         if not os.path.isfile(wide_csv):
