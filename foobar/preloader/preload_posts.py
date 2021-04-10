@@ -6,6 +6,7 @@ from cassandra.auth import PlainTextAuthProvider
 import boto3
 import pandas as pd
 import zipfile
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 print("Starting Reddit tags preloader")
 
@@ -15,6 +16,7 @@ CASSANDRA_PWD = os.environ.get("CASSANDRA_PWD")
 KEYSPACE = os.environ.get("CASSANDRA_KEYSPACE")
 BUCKET_NAME = os.environ.get("BUCKET_NAME")
 BATCH_SIZE = int(os.environ.get("BATCH_SIZE", 100))
+NUM_WORKERS = int(os.environ.get("NUM_WORKERS", 10))
 
 session = boto3.Session(
                     aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
@@ -42,19 +44,27 @@ totalcount = 0
 batches = []
 batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
 print("Sending {} posts to cassandra".format(len(postsdf)))
+with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
+    for index, values in postsdf.iterrows():
+        batch.add(insertlogs,
+                    (values['id'], values['iscomment'], values['submission_id'], values['parent_id'], 
+                    values['user'], values['positive'], values['negative'], values['neutral'], values['dt']))
 
-for index, values in postsdf.iterrows():
-    batch.add(insertlogs,
-                (values['id'], values['iscomment'], values['submission_id'], values['parent_id'], 
-                values['user'], values['positive'], values['negative'], values['neutral'], values['dt']))
-
-    counter += 1
-    if counter >= BATCH_SIZE:
-        print('Inserting ' + str(counter) + ' records from batch')
-        totalcount += counter
-        counter = 0
-        rs = cassandrasession.execute(batch, trace=True)
-        batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
+        counter += 1
+        if counter >= BATCH_SIZE:
+            print('Inserting ' + str(counter) + ' records from batch')
+            totalcount += counter
+            counter = 0
+            exec_ = lambda : cassandrasession.execute(batch, trace=True)
+            batches.append(executor.submit(exec_))
+            batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
+            
+print("Waiting batches to process...")
+for future in as_completed(batches):
+    try:
+        data = future.result()
+    except Exception as exc:
+        print('%r generated an exception: %s' % (url, exc))
 
 totalcount += counter
 print('Inserted ' + str(totalcount) + ' rows in total')
