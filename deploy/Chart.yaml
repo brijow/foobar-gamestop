@@ -33,3 +33,9 @@ dependencies:
   - name: kafka
     version: 12.9.5
     repository: https://charts.bitnami.com/bitnami
+  # - name: metrics-server
+  #   version: 5.8.3
+  #   repository: https://charts.bitnami.com/bitnami
+  # - name: kubernetes-dashboard
+  #   version: 4.0.2
+  #   repository: https://kubernetes.github.io/dashboard/

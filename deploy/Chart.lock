@@ -8,5 +8,11 @@ dependencies:
 - name: kafka
   repository: https://charts.bitnami.com/bitnami
   version: 12.9.5
-digest: sha256:fc84657d6144ab451f55dfe32143814276dc350bb82cc60a5465715e463f23fe
-generated: "2021-03-29T23:42:24.658588-07:00"
+- name: metrics-server
+  repository: https://charts.bitnami.com/bitnami
+  version: 5.8.3
+- name: kubernetes-dashboard
+  repository: https://kubernetes.github.io/dashboard/
+  version: 4.0.2
+digest: sha256:c03d324adfdd34f2b35cf33d330539c836bf7903b7a380e3b6a87be7ccee92fa
+generated: "2021-04-10T01:59:22.267842-07:00"
