@@ -16,6 +16,13 @@ def load_reddit_submissions_data(download_if_missing=True):
         dataset=SUBMISSIONS_DATASET,
         unzip=True,
         download_if_missing=download_if_missing,
+        usecols=[
+            "author",
+            "title",
+            "created_utc",
+            "id",
+            "score",
+        ],
     )
     return submissions_df
 
@@ -28,5 +35,14 @@ def load_reddit_comments_data_reader(download_if_missing=True, chunksize=50000):
         unzip=True,
         download_if_missing=download_if_missing,
         chunksize=chunksize,
+        usecols=[
+            "author",
+            "body",
+            "created_utc",
+            "id",
+            "link_id",
+            "parent_id",
+            "score",
+        ],
     )
     return comments_reader

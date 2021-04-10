@@ -12,6 +12,11 @@ foobar_gamestop/data/db
 .ipynb_checkpoints
 
 *-checkpoint.ipynb
+deploy/charts/.DS_Store
+deploy/kafka-connect/.DS_Store
+microservices/finnhub_producer/.DS_Store
+deploy/dryrun.yaml
+deploy/.DS_Store
 
 data/
 *.pth

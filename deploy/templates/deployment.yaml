@@ -1,0 +1,410 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  labels:
+    app: {{ .Values.deployment.name }}
+    app.kubernetes.io/name: {{ .Values.deployment.name }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.name }}
+        app.kubernetes.io/name: {{ .Values.deployment.name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-front
+          image: "{{ .Values.image.app.repository }}:{{ .Values.image.app.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: CASSANDRA_HOST
+              value: {{ .Release.Name }}-cassandra
+            - name: CASSANDRA_KEYSPACE
+              value: {{ .Values.deployment.keyspace }}
+            - name: CASSANDRA_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cassandra-secret
+                  key: cassandra-username
+            - name: CASSANDRA_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: cassandra-secret
+                  key: cassandra-password
+          ports:
+            - name: http
+              containerPort: {{ .Values.containerPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+---
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.producers.finnhub.containername }}
+  labels:
+    app: {{ .Values.producers.finnhub.containername }}
+    app.kubernetes.io/name: {{ .Values.producers.finnhub.containername }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ .Values.producers.finnhub.containername }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.producers.finnhub.containername }}
+        app.kubernetes.io/name: {{ .Values.producers.finnhub.containername }}
+    spec:
+      containers:
+        - name: {{ .Values.producers.finnhub.containername }}
+          image: "{{ .Values.image.finnhub.repository }}:{{ .Values.image.finnhub.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:      
+            - name: KAFKA_BROKER_URL #broker:9092
+              value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
+            - name: TOPIC_NAME
+              value: {{ .Values.producers.finnhub.topicname }}
+            - name: SLEEP_TIME
+              value: "{{ .Values.producers.finnhub.sleeptime }}"
+            - name: FINNHUB_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: finnhub_auth_token
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.producers.wsb.containername }}
+  labels:
+    app: {{ .Values.producers.wsb.containername }}
+    app.kubernetes.io/name: {{ .Values.producers.wsb.containername }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ .Values.producers.wsb.containername }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.producers.wsb.containername }}
+        app.kubernetes.io/name: {{ .Values.producers.wsb.containername }}
+    spec:
+      containers:
+        - name: comments
+          image: "{{ .Values.image.wsb.repository }}:{{ .Values.image.wsb.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["python3", "-u", "wsb_comments_producer.py"]
+          env:
+            - name: KAFKA_BROKER_URL
+              value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
+            - name: POST_TOPIC_NAME
+              value: {{ .Values.producers.wsb.posttopicname }}
+            - name: TAG_TOPIC_NAME
+              value: {{ .Values.producers.wsb.tagtopicname }}
+            - name: PRAW_CLIENT_ID1
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_id1
+            - name: PRAW_CLIENT_SECRET1
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_secret1
+            - name: PRAW_CLIENT_ID2
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_id2
+            - name: PRAW_CLIENT_SECRET2
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_secret2
+        - name: submissions
+          image: "{{ .Values.image.wsb.repository }}:{{ .Values.image.wsb.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["python3", "-u", "wsb_submissions_producer.py"]
+          env:
+            - name: KAFKA_BROKER_URL
+              value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
+            - name: POST_TOPIC_NAME
+              value: {{ .Values.producers.wsb.posttopicname }}
+            - name: TAG_TOPIC_NAME
+              value: {{ .Values.producers.wsb.tagtopicname }}
+            - name: PRAW_CLIENT_ID1
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_id1
+            - name: PRAW_CLIENT_SECRET1
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_secret1
+            - name: PRAW_CLIENT_ID2
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_id2
+            - name: PRAW_CLIENT_SECRET2
+              valueFrom:
+                secretKeyRef:
+                  name: wsb-secrets
+                  key: praw_client_secret2
+
+
+
+{{- range $job, $val := .Values.producers.jobs.crons }}
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .name }}
+  labels:
+    chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    app.kubernetes.io/name: {{ .name }}
+spec:
+  schedule: {{ .schedule | quote }}
+  successfulJobsHistoryLimit: 0 
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: {{ .name }}
+            app.kubernetes.io/name: {{ .name }}
+        spec:       
+          containers:
+          - name: {{ .name }}
+            image: "{{ $.Values.image.jobs.repository }}:{{ $.Values.image.jobs.tag }}"
+            imagePullPolicy: {{ $.Values.image.pullPolicy }}
+            env:
+            - name: KAFKA_BROKER_URL
+              value: "{{ $.Release.Name }}-kafka:{{ $.Values.kafka.service.port }}"
+            - name: TOPIC_NAME
+              value: {{ .topicname }}
+            args:
+              - sh
+              - -c
+              - |
+                "{{ .command}}"
+          restartPolicy: OnFailure
+
+---
+{{- end}}
+
+{{- range $job, $val := .Values.producers.jobs.preloaders }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .name }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+    helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    app.kubernetes.io/name: {{ .name }}
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-weight": {{ .weight | quote }}
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ .name }}
+      labels:
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+        helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version | replace "+" "_" }}"
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: {{ .name }}
+        image: "{{ $.Values.image.jobs.repository }}:{{ $.Values.image.jobs.tag }}"
+        imagePullPolicy: {{ $.Values.image.pullPolicy }}
+        env:
+        - name: CASSANDRA_HOST
+          value: {{ $.Release.Name }}-cassandra
+        - name: CASSANDRA_KEYSPACE
+          value: {{ $.Values.deployment.keyspace }}
+        - name: CASSANDRA_USER
+          valueFrom:
+            secretKeyRef:
+              name: cassandra-secret
+              key: cassandra-username
+        - name: CASSANDRA_PWD
+          valueFrom:
+            secretKeyRef:
+              name: cassandra-secret
+              key: cassandra-password
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: bucket-secrets
+              key: accessKeyID
+        - name: AWS_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: bucket-secrets
+              key: secretAccessKey
+        - name: BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              name: bucket-secrets
+              key: bucket_name
+        - name: REGION_NAME
+          value: {{ $.Values.producers.jobs.bucket_region }}
+        - name: BATCH_SIZE
+          value: {{ .batchsize | quote }}
+        command: ["python", "-u", "{{ .command}}"]
+
+---
+{{- end}}
+
+# ---
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: {{ .Values.consumers.name }}
+#   labels:
+#     app: {{ .Values.consumers.name }}
+#     app.kubernetes.io/name: {{ .Values.consumers.name }}
+# spec:
+#   {{- if not .Values.autoscaling.enabled }}
+#   replicas: {{ .Values.replicaCount }}
+#   {{- end }}
+#   selector:
+#     matchLabels:
+#       app: {{ .Values.consumers.name }}
+#   template:
+#     metadata:
+#       labels:
+#         app: {{ .Values.consumers.name }}
+#         app.kubernetes.io/name: {{ .Values.consumers.name }}
+#     spec:
+#       containers:
+#         - name: {{ .Release.Name }}-consumer
+#           image: "{{ .Values.image.consumers.repository }}:{{ .Values.image.consumers.tag }}"
+#           imagePullPolicy: {{ .Values.image.pullPolicy }}
+#           env:      
+#             - name: KAFKA_BROKER_URL #broker:9092
+#               value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
+#             - name: TOPIC_NAME
+#               value: ""
+#             - name: SINK_TOPIC_NAME
+#               value: ""
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.kafka.connect.name }}
+  name: {{ .Values.kafka.connect.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.kafka.connect.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.kafka.connect.name }}
+    spec:
+      containers:
+        - env:
+            - name: CASSANDRA_HOST
+              value: "{{ .Release.Name }}-cassandra"
+            - name: FINNHUB_TOPIC
+              value: "{{ .Values.producers.finnhub.topicname }}"
+            - name: REDDIT_POST_TOPIC
+              value: "{{ .Values.producers.wsb.posttopicname }}"
+            - name: REDDIT_TAG_TOPIC
+              value: "{{ .Values.producers.wsb.tagtopicname }}"
+            - name: WIDE_TOPIC
+              value: "{{ .Values.producers.jobs.wideproducer.topicname }}"
+            - name: CASSANDRA_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cassandra-secret
+                  key: cassandra-username
+            - name: CASSANDRA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cassandra-secret
+                  key: cassandra-password
+            - name: CONNECT_BOOTSTRAP_SERVERS
+              value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
+            - name: CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+              value: "1"
+            - name: CONNECT_CONFIG_STORAGE_TOPIC
+              value: {{ .Values.kafka.connect.name }}-configs
+            - name: CONNECT_GROUP_ID
+              value: {{ .Values.kafka.connect.name }}-group
+            - name: CONNECT_INTERNAL_KEY_CONVERTER
+              value: org.apache.kafka.connect.json.JsonConverter
+            - name: CONNECT_INTERNAL_VALUE_CONVERTER
+              value: org.apache.kafka.connect.json.JsonConverter
+            - name: CONNECT_KEY_CONVERTER
+              value: org.apache.kafka.connect.storage.StringConverter
+            - name: CONNECT_OFFSET_FLUSH_INTERVAL_MS
+              value: "10000"
+            - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+              value: "1"
+            - name: CONNECT_OFFSET_STORAGE_TOPIC
+              value: {{ .Values.kafka.connect.name }}-offsets
+            - name: CONNECT_REST_ADVERTISED_HOST_NAME
+              value: {{ .Values.kafka.connect.name }}
+            - name: CONNECT_REST_PORT
+              value: "{{ .Values.kafka.connect.port }}"
+            - name: CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+              value: "1"
+            - name: CONNECT_STATUS_STORAGE_TOPIC
+              value: {{ .Values.kafka.connect.name }}-status
+            - name: CONNECT_VALUE_CONVERTER
+              value: org.apache.kafka.connect.json.JsonConverter
+            - name: CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE
+              value: "false"
+            - name: CONNECT_ZOOKEEPER_CONNECT
+              value: "{{ .Release.Name }}-zookeeper:{{ .Values.kafka.zookeeper.service.port }}" #kafka-zookeeper:2181
+          image: "{{ .Values.image.connect.repository }}:{{ .Values.image.connect.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Values.kafka.connect.name }}
+          ports:
+            - containerPort: 8083
+              name: http
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+      restartPolicy: Always
