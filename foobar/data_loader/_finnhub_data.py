@@ -47,12 +47,12 @@ class finnhub_dataloader:
                     stock_candle_timeseries = pd.DataFrame(out)
                     stock_candle_timeseries = stock_candle_timeseries.rename(
                         columns={
-                            "c": "closeprice",
-                            "o": "openprice",
-                            "h": "highprice",
-                            "l": "lowprice",
+                            "c": "close_price",
+                            "o": "open_price",
+                            "h": "high_price",
+                            "l": "low_price",
                             "v": "volume",
-                            "t": "hour",
+                            "t": "timestamp_",
                             "s": "status",
                         }
                     )

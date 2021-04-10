@@ -12,12 +12,13 @@ import os
 # import pandas as pd
 # df_gme = pd.read_csv("foobar/data/processed/gme.csv")
 
-GAMESTOP_TABLE = (
-    os.environ.get("GAMESTOP_TABLE") if os.environ.get("GAMESTOP_TABLE") else "gamestop"
-)
-BUCKET = "bb-s3-bucket-cmpt733"
+WIDE_TABLE = os.environ.get("WIDE_TABLE") if os.environ.get("WIDE_TABLE") else "wide"
+
+TIMESTAMP_COLUMN = "timestamp_"
+
+BUCKET = os.environ.get("BUCKET_NAME") if os.environ.get("BUCKET_NAME") else "bb-s3-bucket-cmpt733"
 MODEL_FILE = "m2.pth"
-LOCAL_FILE = "microservices/m2_pred_producer/m2.pth"
+LOCAL_FILE = MODEL_FILEervices/m2_pred_producer/m2.pth"
 
 # Kafka producer
 KAFKA_BROKER_URL = (
@@ -56,7 +57,7 @@ while True:
 
         query_from = last_poll_datetime
         query_to = query_from + timedelta(hours=train_window)
-        df_gme = query_table(GAMESTOP_TABLE, query_from, query_to)
+        df_gme = query_table(WIDE_TABLE, TIMESTAMP_COLUMN,query_from, query_to)
         print(f"queried gme table from {query_from} to {query_to}")
 
         if df_gme is not None and not df_gme.empty:
