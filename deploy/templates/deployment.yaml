@@ -205,11 +205,7 @@ spec:
               value: "{{ $.Release.Name }}-kafka:{{ $.Values.kafka.service.port }}"
             - name: TOPIC_NAME
               value: {{ .topicname }}
-            args:
-              - sh
-              - -c
-              - |
-                "{{ .command}}"
+            command: ["python", "-u", "{{ .command}}"]
           restartPolicy: OnFailure
 
 ---

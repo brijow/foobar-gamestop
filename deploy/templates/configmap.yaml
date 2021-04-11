@@ -62,7 +62,9 @@ metadata:
 data:
   "01-init.cql": |
     CREATE KEYSPACE IF NOT EXISTS kafkapipeline 
-    WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : {{ .Values.cassandra.replicaCount }} };
+    WITH REPLICATION = WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'datacenter1' : 2 };
+    
+    ALTER KEYSPACE system_auth  WITH replication = {'class': 'NetworkTopologyStrategy', 'datacenter1': {{ .Values.cassandra.replicaCount }} };    
     
     CREATE TABLE IF NOT EXISTS kafkapipeline.gamestop (
       id TEXT,

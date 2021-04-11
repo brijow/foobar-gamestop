@@ -93,17 +93,17 @@ producers:
     bucket_region: us-west-2
     crons:
       "0":
-        name: busybox-cron
-        command: /usr/app/keep-busy.sh
-        schedule: "*/25 * * * *" #every 5 minutes for now
-        topicname: busytopic
+        name: m1-predictor
+        command: "/usr/app/m1/predict-producer.py"
+        schedule: "*/55 * * * *" #every 5 minutes for now
+        topicname: finnhubsource
     wideproducer:
       topicname: widetopic
     preloaders:
       "0":
         name: tagspreloader
         weight: -1
-        batchsize: 100
+        batchsize: 250
         hook: post-upgrade
         command: /usr/app/preload_tags.py
       "1":
@@ -171,7 +171,7 @@ cassandra:
     existingSecret: cassandra-secret
   persistence:
     storageClass: gp2
-    size : 4Gi
+    size : 6Gi
   initDBConfigMap: init-db
   extraEnvVarsCM: db-conf
 metrics-server:

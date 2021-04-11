@@ -36,9 +36,7 @@ print("Reading tags from bucket --- done")
 
 auth_provider = PlainTextAuthProvider(username=CASSANDRA_USER, password=CASSANDRA_PWD)
 cluster = Cluster([CASSANDRA_HOST], auth_provider=auth_provider)
-cassandrasession = cluster.connect(KEYSPACE)
 
-insertlogs = cassandrasession.prepare("INSERT INTO tag (id, post_id, tag_token) VALUES (?, ?, ?)")
 
 totalcount = 0
 batches = []
@@ -48,6 +46,8 @@ print("{} Sending {} tags to cassandra in {} batches with {} rows".format(now.st
 with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
     for tagsdf_ in tags:
         def processit(df):
+            cassandrasession = cluster.connect(KEYSPACE)
+            insertlogs = cassandrasession.prepare("INSERT INTO tag (id, post_id, tag_token) VALUES (?, ?, ?)")
             counter = 0
             batch = BatchStatement(consistency_level=ConsistencyLevel.ONE)
             for index, values in df.iterrows():
@@ -65,7 +65,6 @@ with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
         exec_ = lambda : processit(tagsdf_)
         batches.append(executor.submit(exec_))
     print("Waiting batches to process...")
-    finishedjobs = 0
     for future in as_completed(batches):
         try:
             data = future.result()
@@ -74,7 +73,6 @@ with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
             print('Exception: %s' % (exc))
 
 print('Inserted ' + str(totalcount) + ' rows in total')
-print("Finished rows: {}".format(finishedjobs))
 now = datetime.datetime.now()
 print("{} Done sending tags to cassandra".format(now.strftime("%Y-%m-%d %H:%M:%S")))
 print("Bye Bye!")
