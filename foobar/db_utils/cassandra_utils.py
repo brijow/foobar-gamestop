@@ -1,5 +1,6 @@
 import os
 
+
 import pandas as pd
 from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
@@ -40,12 +41,13 @@ def query_table(source_table):
     rows = session.execute(cqlquery)
     return pd.DataFrame(rows)
 
+
 def query_table_for_hour(source_table, time_col, hour1):
     try:
         hour1 = hour1.replace(minute=0, second=0, microsecond=0)
         hour2 = hour1 + pd.DateOffset(hours=1)
-        hour1 = pd.to_datetime(hour1, unit='ms')
-        hour2 = pd.to_datetime(hour2, unit='ms')
+        hour1 = pd.to_datetime(hour1, unit="ms")
+        hour2 = pd.to_datetime(hour2, unit="ms")
     except:
         return "Wrong argument type"
     # source_table: target table name to query (string)
@@ -63,6 +65,7 @@ def query_table_for_hour(source_table, time_col, hour1):
     cqlquery = f"SELECT * FROM {source_table} WHERE {time_col} >= {hour1} AND {time_col} < {hour2};"
     rows = session.execute(cqlquery)
     return pd.DataFrame(rows)
+
 
 # def query_all(source_table):
 #     # source_table: target table name to query (string)

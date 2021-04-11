@@ -13,6 +13,7 @@ from treelib import Tree
 
 from foobar.db_utils.models import Base, Gamestop, Post, Tag
 
+
 def _get_or_create_db_dir():
     """Return the path of the db dir."""
     db_dir = os.environ.get(
@@ -56,20 +57,16 @@ def get_posts_by_day(session, day1):
 def get_tags_for_postids(session, postids):
     return session.query(Tag).filter(Tag.post_id.in_(postids)).all()
 
+
 def join_post_tag_db_v2(session, day1):
     day2 = day1 + pd.DateOffset(1)
     return (
         session.query(Post, Tag.tag)
-        .join(Tag, 
-            Post.id == Tag.post_id,
-            isouter=True
-        )
-        .filter(
-            Post.dt >= day1.to_pydatetime(),
-            Post.dt < day2.to_pydatetime()            
-        )
+        .join(Tag, Post.id == Tag.post_id, isouter=True)
+        .filter(Post.dt >= day1.to_pydatetime(), Post.dt < day2.to_pydatetime())
         .all()
     )
+
 
 def join_post_tag_df(df_tag, df_posts):
     df = df_posts.merge(df.join, how="left", left_on="id", right_on="post_id")
@@ -130,21 +127,24 @@ def make_reddit_hourly(running_date):
     joined = join_post_tag_db_v2(s, i)
     dump = pd.DataFrame(joined)
     if dump.empty:
-        return pd.DataFrame()   
+        return pd.DataFrame()
     tgz = dump[1]
 
-    df = pd.DataFrame.from_records([i.__dict__ for i in dump[0].tolist()],
+    df = pd.DataFrame.from_records(
+        [i.__dict__ for i in dump[0].tolist()],
         columns=[
-                "id",
-                "iscomment",
-                "submission_id",
-                "positive",
-                "negative",
-                "neutral",
-                "user",
-                "dt"],)
-    df['tag'] = tgz
-    df['tag'] = df['tag'].fillna("<NOTAG>")
+            "id",
+            "iscomment",
+            "submission_id",
+            "positive",
+            "negative",
+            "neutral",
+            "user",
+            "dt",
+        ],
+    )
+    df["tag"] = tgz
+    df["tag"] = df["tag"].fillna("<NOTAG>")
 
     if df.empty:
         return pd.DataFrame()
@@ -196,7 +196,7 @@ def build_wide_table(df_reddit, df_financial):
         "openprice",
         "closeprice",
         "highprice",
-        "lowprice",    
+        "lowprice",
         "prediction",
     ]
     return df
@@ -221,7 +221,7 @@ if __name__ == "__main__":
         if df_reddit.empty:
             print("Reddit Holiday", i)
             continue
-        df_reddit = df_reddit.set_index('hour')
+        df_reddit = df_reddit.set_index("hour")
 
         rows = get_gamestop_hourly(s, i)
         df_financial = pd.DataFrame.from_records(
@@ -244,7 +244,7 @@ if __name__ == "__main__":
         df_financial = (
             fill_missing_hours(df_financial, i).ffill().bfill()
         )  # Should I be doing this for missing data???
-        df_financial = df_financial.set_index('hour')
+        df_financial = df_financial.set_index("hour")
 
         df_wide = build_wide_table(df_reddit, df_financial)
 
@@ -252,5 +252,3 @@ if __name__ == "__main__":
             df_wide.to_csv(wide_csv)
         else:  # else it exists so append without writing the header
             df_wide.to_csv(wide_csv, mode="a", header=False)
-        
-        
