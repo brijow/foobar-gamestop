@@ -32,3 +32,5 @@ def train_model(model, device, train_batches, val_batches=None, num_epochs=200):
         train_losses.append(batch_losses_mean)
 
     return model.eval(), train_losses
+
+
