@@ -59,7 +59,7 @@ def get_tags_for_postids(session, postids):
 def join_post_tag_db_v2(session, day1):
     day2 = day1 + pd.DateOffset(1)
     return (
-        session.query(Post)
+        session.query(Post, Tag.tag)
         .join(Tag, 
             Post.id == Tag.post_id,
             isouter=True
@@ -128,7 +128,12 @@ def fill_missing_hours(df, running_date):
 
 def make_reddit_hourly(running_date):
     joined = join_post_tag_db_v2(s, i)
-    df = pd.DataFrame.from_records([i.__dict__ for i in joined],
+    dump = pd.DataFrame(joined)
+    if dump.empty:
+        return pd.DataFrame()   
+    tgz = dump[1]
+
+    df = pd.DataFrame.from_records([i.__dict__ for i in dump[0].tolist()],
         columns=[
                 "id",
                 "iscomment",
@@ -137,8 +142,8 @@ def make_reddit_hourly(running_date):
                 "negative",
                 "neutral",
                 "user",
-                "dt",
-                "tag"],)
+                "dt"],)
+    df['tag'] = tgz
     df['tag'] = df['tag'].fillna("<NOTAG>")
 
     if df.empty:
@@ -148,7 +153,6 @@ def make_reddit_hourly(running_date):
 
     df_gme = df[(df["tag"] == "GME") | (df["tag"] == "GAMESTOP")]
     df_gme = get_aggregates_by_hour(df_gme)
-
     final = df_all.merge(
         df_gme, left_on="hour", right_on="hour", how="left", suffixes=("_all", "_gme")
     )
@@ -202,8 +206,7 @@ if __name__ == "__main__":
     s = connect_to_db()
     result = get_post_minmax_dates(s)
     start_date = result.start_date.replace(minute=0, hour=0, second=0, microsecond=0)
-    start_date = pd.to_datetime("2021-02-05 00:00:00")
-    print(start_date)
+    # start_date = pd.to_datetime("2021-02-05 00:00:00")
     end_date = result.end_date.replace(minute=0, hour=0, second=0, microsecond=0)
     post_cols = [c.name for c in Post.__table__.columns]
     tag_cols = [c.name for c in Tag.__table__.columns]
