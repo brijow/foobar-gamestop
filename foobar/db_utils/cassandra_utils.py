@@ -24,7 +24,7 @@ POST_TABLE = os.environ.get("POST_TABLE") if os.environ.get("POST_TABLE") else "
 WIDE_TABLE = os.environ.get("WIDE_TABLE") if os.environ.get("WIDE_TABLE") else "wide"
 
 
-def query_table(source_table):
+def query_table(source_table, colstring="*"):
     # source_table: target table name to query (string)
     if isinstance(CASSANDRA_HOST, list):
         cluster = Cluster(CASSANDRA_HOST)
@@ -37,12 +37,12 @@ def query_table(source_table):
     session = cluster.connect(CASSANDRA_KEYSPACE)
     session.row_factory = dict_factory
 
-    cqlquery = f"SELECT * FROM {source_table};"
+    cqlquery = f"SELECT {colstring} FROM {source_table};"
     rows = session.execute(cqlquery)
     return pd.DataFrame(rows)
 
 
-def query_table_for_hour(source_table, time_col, hour1):
+def query_table_for_hour(source_table, time_col, hour1, colstring="*"):
     try:
         hour1 = hour1.replace(minute=0, second=0, microsecond=0)
         hour2 = hour1 + pd.DateOffset(hours=1)
@@ -62,7 +62,7 @@ def query_table_for_hour(source_table, time_col, hour1):
     session = cluster.connect(CASSANDRA_KEYSPACE)
     session.row_factory = dict_factory
 
-    cqlquery = f"SELECT * FROM {source_table} WHERE {time_col} >= {hour1} AND {time_col} < {hour2};"
+    cqlquery = f"SELECT {colstring} FROM {source_table} WHERE {time_col} >= {hour1} AND {time_col} < {hour2};"
     rows = session.execute(cqlquery)
     return pd.DataFrame(rows)
 
