@@ -15,7 +15,7 @@ def ts_subplots():
 
     import pandas as pd
 
-    df = pd.read_csv("data/wide.csv")
+    df = pd.read_csv("wide.csv")
     df = df.rename(
         columns={
             "hour": "DATE",
