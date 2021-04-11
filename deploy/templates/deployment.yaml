@@ -205,6 +205,23 @@ spec:
               value: "{{ $.Release.Name }}-kafka:{{ $.Values.kafka.service.port }}"
             - name: TOPIC_NAME
               value: {{ .topicname }}
+            - name: GAMESTOP_TABLE
+              value: {{ .gmetable }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: bucket-secrets
+                  key: accessKeyID
+            - name: AWS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: bucket-secrets
+                  key: secretAccessKey
+            - name: BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: bucket-secrets
+                  key: bucket_name
             command: ["python", "-u", "{{ .command}}"]
           restartPolicy: OnFailure
 

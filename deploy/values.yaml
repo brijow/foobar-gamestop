@@ -104,7 +104,7 @@ producers:
         name: tagspreloader
         weight: -1
         batchsize: 250
-        hook: post-upgrade
+        hook: post-install
         command: /usr/app/preload_tags.py
       "1":
         name: finnhubpreloader
