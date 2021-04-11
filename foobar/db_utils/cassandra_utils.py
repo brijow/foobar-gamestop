@@ -40,6 +40,29 @@ def query_table(source_table):
     rows = session.execute(cqlquery)
     return pd.DataFrame(rows)
 
+def query_table_for_hour(source_table, time_col, hour1):
+    try:
+        hour1 = hour1.replace(minute=0, second=0, microsecond=0)
+        hour2 = hour1 + pd.DateOffset(hours=1)
+        hour1 = pd.to_datetime(hour1, unit='ms')
+        hour2 = pd.to_datetime(hour2, unit='ms')
+    except:
+        return "Wrong argument type"
+    # source_table: target table name to query (string)
+    if isinstance(CASSANDRA_HOST, list):
+        cluster = Cluster(CASSANDRA_HOST)
+    else:
+        cluster = Cluster([CASSANDRA_HOST])
+
+    if source_table not in (GAMESTOP_TABLE, TAG_TABLE, POST_TABLE, WIDE_TABLE):
+        return None
+
+    session = cluster.connect(CASSANDRA_KEYSPACE)
+    session.row_factory = dict_factory
+
+    cqlquery = f"SELECT * FROM {source_table} WHERE {time_col} >= {hour1} AND {time_col} < {hour2};"
+    rows = session.execute(cqlquery)
+    return pd.DataFrame(rows)
 
 # def query_all(source_table):
 #     # source_table: target table name to query (string)
