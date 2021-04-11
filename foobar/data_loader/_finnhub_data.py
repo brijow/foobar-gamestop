@@ -1,16 +1,15 @@
 import configparser
 import os
+import time
 from datetime import datetime, timedelta
 
 import finnhub
 import pandas as pd
-
-FINNHUB_FILE_PATH = "foobar/data/raw/"
-
+from _base import get_data_loader_conf_dir, get_or_create_raw_data_dir
 
 # Finnhub API config
 config = configparser.ConfigParser()
-config.read("foobar/data_loader/conf/finnhub.cfg")
+config.read(os.path.join(get_data_loader_conf_dir(), "finnhub.cfg"))
 api_credential = config["api_credential"]
 AUTH_TOKEN = api_credential["auth_token"]
 
@@ -19,108 +18,80 @@ class finnhub_dataloader:
     def __init__(self, api_token):
         self.api_client = finnhub.Client(api_key=api_token)
 
-    def query_stock_candles(self, symbol, resolution, date_from, date_to):
-        # args:
-        # symbol= (string) company stock symbol
-        # resolution= (1 character) data resolution - Supported resolution includes 1, 5, 15, 30, 60, D, W, M
-        # date_from= (datetime)
-        # date_to= (datetime)
-
-        from_ts = int(datetime.timestamp(date_from))
-        to_ts = int(datetime.timestamp(date_to))
-
-        df = pd.DataFrame(
-            self.api_client.stock_candles(
-                symbol=symbol, resolution=resolution, _from=from_ts, to=to_ts
-            )
+    def get_stock_candle(self, data_resolution, date_from, date_to):
+        from_str = date_from.strftime("%Y-%m-%d")
+        to_str = date_to.strftime("%Y-%m-%d")
+        stock_candle_file = os.path.join(
+            get_or_create_raw_data_dir(),
+            f"stock_candle_{data_resolution}_{from_str}_{to_str}.csv",
         )
-        # print(df)
-        df = df.rename(
-            columns={
-                "c": "close_price",
-                "o": "open_price",
-                "h": "high-price",
-                "l": "low-price",
-                "v": "volume",
-                "t": "timestamp",
-                "s": "status",
-            }
-        )
-        stock_candle_timeseries = df.set_index("timestamp")
-        return stock_candle_timeseries
-
-    def query_filling_sentiment(self, symbol, date_from, date_to):
-        access_numbers_df = pd.DataFrame(
-            self.api_client.filings(symbol=symbol, _from=date_from, to=date_to)
-        )
-
-        sentiments = []
-        for i, row in access_numbers_df.iterrows():
-            ac = row["accessNumber"]
-            if len(ac) > 0:
-                try:
-                    dic = self.api_client.sec_sentiment_analysis(access_number=ac)
-                    timestamp = int(
-                        datetime.timestamp(
-                            datetime.strptime(row["filedDate"], "%Y-%m-%d %H:%M:%S")
-                        )
-                    )
-                    dic["timestamp"] = timestamp
-                    sentiments.append(dic)
-                except Exception as e:
-                    print(
-                        f"SEC filling report with access number {ac} does not have sentiment analysis. Error Msg: {e}"
-                    )
+        if os.path.exists(stock_candle_file):
+            print("Stock candle dataset is already created.")
+        else:
+            f = date_from
+            time_step = timedelta(days=5)
+            t = f + time_step
+            record_count = 0
+            while t < date_to:
+                out = self.api_client.stock_candles(
+                    symbol="GME",
+                    resolution=data_resolution,
+                    _from=int(datetime.timestamp(f)),
+                    to=int(datetime.timestamp(t)),
+                )
+                time.sleep(2)
+                if out["s"] == "no_data":
+                    print("no data")
                     pass
+                else:
+                    stock_candle_timeseries = pd.DataFrame(out)
+                    stock_candle_timeseries = stock_candle_timeseries.rename(
+                        columns={
+                            "c": "close_price",
+                            "o": "open_price",
+                            "h": "high_price",
+                            "l": "low_price",
+                            "v": "volume",
+                            "t": "timestamp_",
+                            "s": "status",
+                        }
+                    )
+                    if os.path.exists(stock_candle_file):
+                        stock_candle_timeseries.to_csv(
+                            stock_candle_file,
+                            encoding="utf-8",
+                            mode="a",
+                            header=False,
+                        )
+                    else:
+                        stock_candle_timeseries.to_csv(
+                            stock_candle_file,
+                            encoding="utf-8",
+                            mode="a",
+                            header=True,
+                        )
+                    record_count += len(stock_candle_timeseries)
 
-        df = pd.DataFrame(sentiments)
-        ts = df.set_index("timestamp")
-        return ts
-
-
-def get_filling_sentiment(dataloader, date_from, date_to):
-    if os.path.exists(FINNHUB_FILE_PATH + "filling_sentiment_ts.csv"):
-        print("SEC sentiment analysis dataset is already created.")
-    else:
-        sec_filling_sentiment_timeseries = dataloader.query_filling_sentiment(
-            symbol="GME", date_from=date_from, date_to=date_to
-        )
-        sec_filling_sentiment_timeseries.to_csv(
-            FINNHUB_FILE_PATH + "filling_sentiment_ts.csv",
-            encoding="utf-8",
-        )
-        print("SEC sentiment analysis dataset is successfully created.")
-
-
-def get_stock_candle(dataloader, data_resolution, date_from, date_to):
-    if os.path.exists(
-        FINNHUB_FILE_PATH + f"stock_candle_timeseries_{data_resolution}.csv"
-    ):
-        print("Stock candle dataset is already created.")
-    else:
-        stock_candle_timeseries = dataloader.query_stock_candles(
-            symbol="GME",
-            resolution=data_resolution,
-            date_from=date_from,
-            date_to=date_to,
-        )
-        stock_candle_timeseries.to_csv(
-            FINNHUB_FILE_PATH + f"stock_candle_timeseries_{data_resolution}.csv",
-            encoding="utf-8",
-        )
-        print("Stock candle dataset is successfully created.")
+                f = t
+                if t + time_step > date_to:
+                    t = date_to
+                else:
+                    t += time_step
+                print(t)
+            print(
+                f"Stock candle dataset is successfully created. data size: {record_count}"
+            )
 
 
 if __name__ == "__main__":
-
-    # define datetime range for historical data (set to 3 years)
-    date_to = datetime(year=2021, month=1, day=1)
-    date_from = date_to - timedelta(days=3 * 365)
     # data resolution: options 1, 5, 15, 30, 60, D, W, M as character
-    data_resolution = "D"
+    # 60  = hourly data resolution
+    data_resolution = "60"
 
+    # datatime range of the Gamestop Shortsqueeze, March 1, 2020 to March 1, 2021
+    train_from = datetime(year=2020, month=3, day=1)
+    train_to = datetime(year=2021, month=3, day=1)
+
+    # instantiate finnhub dataloader object with the api token
     dataloader = finnhub_dataloader(api_token=AUTH_TOKEN)
-
-    get_stock_candle(dataloader, data_resolution, date_from, date_to)
-
-    get_filling_sentiment(dataloader, date_from, date_to)
+    dataloader.get_stock_candle(data_resolution, train_from, train_to)

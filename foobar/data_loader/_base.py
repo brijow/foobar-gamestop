@@ -4,10 +4,10 @@ Base IO code for all datasets.
 
 import configparser
 import os
-import requests
 from pathlib import Path
 
 import pandas as pd
+import requests
 
 
 def get_project_root():
@@ -114,6 +114,7 @@ def load_kaggle_data(
     download_if_missing=True,
     force=False,
     chunksize=None,
+    usecols=None,
 ):
     """Load a dataset from kaggle."""
 
@@ -134,7 +135,13 @@ def load_kaggle_data(
             )
 
     file_path = os.path.join(data_dir, local_fname)
-    return pd.read_csv(file_path, chunksize=chunksize)
+
+    return pd.read_csv(
+        file_path,
+        chunksize=chunksize,
+        usecols=usecols,
+        low_memory=False,
+    )
 
 
 def _fetch_json_from_finhubb():
@@ -151,8 +158,14 @@ def _fetch_json_from_finhubb():
     )
     df = pd.DataFrame.from_records(r.json())
     sf = (df["description"] + df["symbol"]).str.split().explode()
+    sf = sf.str.replace(r"\W", "", regex=True).str.upper().drop_duplicates()
     sf = sf[sf.str.len() > 2]
     sf.to_csv(os.path.join(data_dir, "all_stock_tags.csv"), index=False)
+
+    tickers = df["symbol"]
+    tickers = tickers.str.replace(r"\W", "", regex=True).str.upper().drop_duplicates()
+    tickers = tickers[tickers.str.len() > 2]
+    tickers.to_csv(os.path.join(data_dir, "stock_tickers.csv"), index=False)
 
 
 def load_all_stock_tags():
@@ -163,4 +176,17 @@ def load_all_stock_tags():
         _fetch_json_from_finhubb()
 
     file_path = os.path.join(data_dir, "all_stock_tags.csv")
-    return pd.read_csv(file_path)
+    df = pd.read_csv(file_path, names=["finnhub_tags"], header=0)
+    return df
+
+
+def load_stock_ticker_tags():
+    data_dir = get_or_create_raw_data_dir()
+    file_path = os.path.join(data_dir, "stock_tickers.csv")
+
+    if not os.path.exists(file_path):
+        _fetch_json_from_finhubb()
+
+    file_path = os.path.join(data_dir, "stock_tickers.csv")
+    df = pd.read_csv(file_path, names=["tickers"], header=0)
+    return df
