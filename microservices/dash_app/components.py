@@ -117,6 +117,22 @@ single_row_page = html.Div(
     ]
 )
 
+single_row_page2 = html.Div(
+    [
+        dbc.Row(
+            [
+                dbc.Col(
+                    html.Div(
+                        [dcc.Graph(figure=timeseries_fig, style={"height": "780px"})],
+                        style={"height": "788px", "border-style": "solid"},
+                    ),
+                    # md=8,
+                ),
+            ]
+        ),
+    ]
+)
+
 boxed_row = html.Div(
     [
         dbc.Row(
