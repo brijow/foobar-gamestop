@@ -41,6 +41,16 @@ data:
 
 ---
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-conf
+  labels:
+    app.kubernetes.io/name: db-conf
+data:
+
+---
+
 {{- $fullName := .Values.cassandra.initDBConfigMap -}}
 apiVersion: v1
 kind: ConfigMap
@@ -52,7 +62,7 @@ metadata:
 data:
   "01-init.cql": |
     CREATE KEYSPACE IF NOT EXISTS kafkapipeline 
-    WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
+    WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : {{ .Values.cassandra.replicaCount }} };
     
     CREATE TABLE IF NOT EXISTS kafkapipeline.gamestop (
       id TEXT,
@@ -63,14 +73,12 @@ data:
       volume FLOAT,
       close_price FLOAT,
       close_price_pred FLOAT,
-      PRIMARY KEY (id));
-
+      PRIMARY KEY (timestamp_, id));
     CREATE TABLE IF NOT EXISTS kafkapipeline.tag (
       id TEXT,
       post_id TEXT,
       tag_token TEXT,
-      PRIMARY KEY (id));
-    
+      PRIMARY KEY (post_id, id));
     CREATE TABLE IF NOT EXISTS kafkapipeline.post (
       id TEXT,
       iscomment BOOLEAN,
@@ -81,27 +89,28 @@ data:
       negative FLOAT,
       neutral FLOAT,
       dt TIMESTAMP,
-      PRIMARY KEY (id));
+      PRIMARY KEY (dt, id));
     
     CREATE TABLE IF NOT EXISTS kafkapipeline.wide (
       hour TIMESTAMP,
-      cnt_all_post INT,
-      cnt_all_user INT,
-      cnt_all_tag INT,
-      avg_all_post_pos FLOAT,
-      avg_all_post_neg FLOAT,
-      avg_all_post_neu FLOAT,
-      cnt_gme_post INT,
-      cnt_gme_user INT,
-      cnt_gme_tag INT,
-      avg_gme_post_pos FLOAT,
-      avg_gme_post_neg FLOAT,
-      avg_gme_post_neu FLOAT,
-      openprice FLOAT,
-      lowprice FLOAT,
-      highprice FLOAT,
+      id TEXT,
+      positive_all INT,
+      negative_all INT,
+      neutral_all INT,
+      user_count_all FLOAT,
+      tag_count_all FLOAT,
+      total_count_all FLOAT,
+      comments_count_all FLOAT,
+      positive_gme INT,
+      negative_gme INT,
+      neutral_gme INT,
+      user_count_gme FLOAT,
+      tag_count_gme FLOAT,
+      total_count_gme FLOAT,
+      comments_count_gme FLOAT,
       volume FLOAT,
       closeprice FLOAT,
+      highprice FLOAT,
+      openprice FLOAT,
       prediction FLOAT,
       PRIMARY KEY (hour));
-

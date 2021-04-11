@@ -49,16 +49,16 @@ with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
     for tagsdf_ in tags:
         def processit(df):
             counter = 0
-            batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
+            batch = BatchStatement(consistency_level=ConsistencyLevel.ONE)
             for index, values in df.iterrows():
                 batch.add(insertlogs,
-                            (str(uuid.uuid4()), values['id'], values['tag']))
+                            (str(uuid.uuid4()), values['post_id'], values['tag']))
                 counter += 1
                 if counter >= BATCH_SIZE:
                     # print('Inserting ' + str(counter) + ' records from batch')
                     counter = 0
                     cassandrasession.execute(batch, trace=True)
-                    batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
+                    batch = BatchStatement(consistency_level=ConsistencyLevel.ONE)
             if counter > 0:
                 cassandrasession.execute(batch, trace=True)
             return len(df)

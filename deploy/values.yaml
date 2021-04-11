@@ -103,18 +103,21 @@ producers:
       "0":
         name: tagspreloader
         weight: -1
-        batchsize: 200
+        batchsize: 100
+        hook: post-upgrade
         command: /usr/app/preload_tags.py
       "1":
         name: finnhubpreloader
         weight: -2
         batchsize: 100
+        hook: post-install
         command: /usr/app/preload_finnhub.py
-      # "2":
-      #   name: postspreloader
-      #   weight: -2
-      #   batchsize: 1000
-      #   command: /usr/app/preload_posts.py
+      "2":
+        name: postspreloader
+        weight: -2
+        batchsize: 200
+        hook: post-install
+        command: /usr/app/preload_posts.py
       
   
 consumers:
@@ -147,12 +150,6 @@ kafka:
     port: 9092
   global:
     storageClass: gp2
-  provisioning:
-    enabled : false
-    topics : 
-      - name: weather
-      - name: twitter
-      - name: twittersink
   persistence:
     storageClass: gp2
     size: 1Gi
@@ -166,6 +163,7 @@ kafka:
     name: connect
     port: 8083
 cassandra:
+  replicaCount: 3
   image:  
     debug: true
   dbUser:
@@ -173,8 +171,9 @@ cassandra:
     existingSecret: cassandra-secret
   persistence:
     storageClass: gp2
-    size : 1Gi
+    size : 4Gi
   initDBConfigMap: init-db
+  extraEnvVarsCM: db-conf
 metrics-server:
   serviceAccount:
     create: false

@@ -15,7 +15,7 @@ export finnhubsinkconfig='{
     "value.converter.schemas.enable": "false",  
     "key.converter": "org.apache.kafka.connect.json.JsonConverter",
     "key.converter.schemas.enable":"false",
-    "topic.'${FINNHUB_TOPIC}'.kafkapipeline.gamestop.mapping": "id=value.uuid, timestamp_=value.timestamp_, close_price=value.close_price, open_price=value.open_price, high_price=value.high_price, low_price=value.low_price, volume=value.volume",
+    "topic.'${FINNHUB_TOPIC}'.kafkapipeline.gamestop.mapping": "id=value.uuid, timestamp_=value.timestamp_, close_price=value.close_price, open_price=value.open_price, high_price=value.high_price, low_price=value.low_price, volume=value.volume, prediction=value.prediction",
     "topic.'${FINNHUB_TOPIC}'.kafkapipeline.gamestop.consistencyLevel": "LOCAL_QUORUM"
   }
 }'
@@ -72,10 +72,15 @@ export widesink='{
     "tasks.max": "1",
     "topics": "'${WIDE_TOPIC}'",
     "loadBalancing.localDc": "datacenter1",
-    "topic.'${WIDE_TOPIC}'.kafkapipeline.wide.mapping": "hour=value.hour, cnt_all_post=value.cnt_all_post,cnt_all_user=value.cnt_all_user,cnt_all_tag=value.cnt_all_tag,avg_all_post_pos=value.avg_all_post_pos,avg_all_post_neg=value.avg_all_post_neg,avg_all_post_neu=value.avg_all_post_neu,cnt_gme_post=value.cnt_gme_post,cnt_gme_user=value.cnt_gme_user,cnt_gme_tag=value.cnt_gme_tag,avg_gme_post_pos=value.avg_gme_post_pos,avg_gme_post_neg=value.avg_gme_post_neg,avg_gme_post_neu=value.avg_gme_post_neu,openprice=value.openprice,lowprice=value.lowprice,highprice=value.highprice,volume=value.volume,closeprice=value.closeprice,prediction=value.prediction",
+    "topic.'${WIDE_TOPIC}'.kafkapipeline.wide.mapping": "hour=value.hour, id=value.id, positive_all=value.positive_all, negative_all=value.negative_all, neutral_all=value.neutral_all, user_count_all=value.user_count_all, tag_count_all=value.tag_count_all, total_count_all=value.total_count_all, comments_count_all=value.comments_count_all, positive_gme=value.positive_gme, negative_gme=value.negative_gme, neutral_gme=value.neutral_gme, user_count_gme=value.user_count_gme, tag_count_gme=value.tag_count_gme, total_count_gme=value.total_count_gme, comments_count_gme=value.comments_count_gme, volume=value.volume, closeprice=value.closeprice, highprice=value.highprice, openprice=value.openprice, prediction=value.prediction",
     "topic.'${WIDE_TOPIC}'.kafkapipeline.wide.consistencyLevel": "LOCAL_QUORUM"
   }
 }'
+
+# hour,id,positive_all,negative_all,neutral_all,user_count_all,tag_count_all,
+# total_count_all,comments_count_all,positive_gme,negative_gme,neutral_gme,
+# user_count_gme,tag_count_gme,total_count_gme,comments_count_gme,volume,closeprice,
+# highprice,openprice,prediction
 
 echo "Starting Finnhub sink for ${CASSANDRA_HOST}"
 curl -s \
