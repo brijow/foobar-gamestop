@@ -1,2 +1,2 @@
-
-pandas
+kafka-python
+torch
