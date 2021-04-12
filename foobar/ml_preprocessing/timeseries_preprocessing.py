@@ -39,6 +39,17 @@ def scale(df, feature_set, scaler=None):
         scaled_arr = scaler.transform(df[feature_set])
     return scaled_arr, scaler
 
+def scale_not_y(df, feature_set, scaler=None):
+    y =  'closeprice'
+    feature_set = [i for i in feature_set if i != y]
+    if scaler is None:
+        scaler = StandardScaler()
+        scaled_arr = scaler.fit_transform(df[feature_set])
+    else:
+        scaled_arr = scaler.transform(df[feature_set])
+    scaled_arr = scaled_arr.append(df[y])
+    return scaled_arr, scaler
+
 
 def split(train_arr, train_ratio):
     # split the data to train, validate
