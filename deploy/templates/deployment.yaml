@@ -198,7 +198,7 @@ spec:
         spec:       
           containers:
           - name: {{ .name }}
-            image: "{{ $.Values.image.jobs.repository }}:{{ $.Values.image.jobs.tag }}"
+            image: "{{ $.Values.image.cron.repository }}:{{ $.Values.image.cron.tag }}"
             imagePullPolicy: {{ $.Values.image.pullPolicy }}
             env:
             - name: KAFKA_BROKER_URL
@@ -212,7 +212,7 @@ spec:
                 secretKeyRef:
                   name: bucket-secrets
                   key: accessKeyID
-            - name: AWS_SECRET_KEY
+            - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: bucket-secrets
@@ -222,6 +222,20 @@ spec:
                 secretKeyRef:
                   name: bucket-secrets
                   key: bucket_name
+            - name: CASSANDRA_HOST
+              value: {{ $.Release.Name }}-cassandra
+            - name: CASSANDRA_KEYSPACE
+              value: {{ $.Values.deployment.keyspace }}
+            - name: CASSANDRA_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cassandra-secret
+                  key: cassandra-username
+            - name: CASSANDRA_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: cassandra-secret
+                  key: cassandra-password
             command: ["python", "-u", "{{ .command}}"]
           restartPolicy: OnFailure
 

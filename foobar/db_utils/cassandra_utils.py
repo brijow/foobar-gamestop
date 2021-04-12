@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from cassandra.cluster import Cluster
 from cassandra.query import dict_factory
+from cassandra.auth import PlainTextAuthProvider
 
 CASSANDRA_HOST = (
     os.environ.get("CASSANDRA_HOST")
@@ -14,6 +15,8 @@ CASSANDRA_KEYSPACE = (
     if os.environ.get("CASSANDRA_KEYSPACE")
     else "kafkapipeline"
 )
+CASSANDRA_USER = os.environ.get("CASSANDRA_USER")
+CASSANDRA_PWD = os.environ.get("CASSANDRA_PWD")
 
 GAMESTOP_TABLE = (
     os.environ.get("GAMESTOP_TABLE") if os.environ.get("GAMESTOP_TABLE") else "gamestop"
@@ -25,11 +28,9 @@ WIDE_TABLE = os.environ.get("WIDE_TABLE") if os.environ.get("WIDE_TABLE") else "
 
 def query_table(source_table):
     # source_table: target table name to query (string)
-    if isinstance(CASSANDRA_HOST, list):
-        cluster = Cluster(CASSANDRA_HOST)
-    else:
-        cluster = Cluster([CASSANDRA_HOST])
-
+    auth_provider = PlainTextAuthProvider(username=CASSANDRA_USER, password=CASSANDRA_PWD)
+    cluster = Cluster([CASSANDRA_HOST], auth_provider=auth_provider)
+    
     if source_table not in (GAMESTOP_TABLE, TAG_TABLE, POST_TABLE, WIDE_TABLE):
         return None
 

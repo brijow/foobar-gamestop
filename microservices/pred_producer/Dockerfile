@@ -2,13 +2,12 @@ FROM python:3.8
 
 WORKDIR /usr/app
 
-ADD ./microservices/m1_pred_producer/requirements.txt ./
+ADD ./microservices/pred_producer/requirements.txt ./
 RUN pip install -r requirements.txt
 
-ADD  ./microservices/m1_pred_producer/ ./
-ADD ./foobar/db_utils/cassandra_utils.py ./
-ADD ./foobar.prediction.predictor/ ./
-ADD ./foobar/model/lstm.py ./
-ADD ./foobar/model/model_loader.py ./
+ADD ./setup.py ./
+COPY foobar/ ./foobar/
+RUN pip install -e .
+COPY  ./microservices/pred_producer/ ./
 
 CMD ["python3", "-u", "m1_predict_producer.py"]

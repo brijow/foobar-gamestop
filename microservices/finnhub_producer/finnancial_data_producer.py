@@ -3,11 +3,11 @@ import json
 import os
 import time
 from datetime import datetime, timedelta
-
 import finnhub
 import pandas as pd
 from kafka import KafkaProducer
 import uuid
+import numpy as np
 
 # Finnhub API config
 AUTH_TOKEN = os.environ.get("FINNHUB_AUTH_TOKEN")
@@ -80,6 +80,7 @@ class finnhub_producer:
             ts['timestamp_'] = ts['timestamp_'].dt.strftime("%Y-%m-%d %H:%M:%S")
             for index, row in ts.iterrows():
                 row['uuid'] = str(uuid.uuid4())
+                row['close_price_pred'] = np.nan
                 print(row.to_json())
                 self.producer.send(TOPIC_NAME, value=row.to_json())
             self.producer.flush()

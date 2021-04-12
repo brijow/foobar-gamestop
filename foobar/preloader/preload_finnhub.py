@@ -40,8 +40,8 @@ cluster = Cluster([CASSANDRA_HOST], auth_provider=auth_provider)
 cassandrasession = cluster.connect(KEYSPACE)
 
 insertlogs = cassandrasession.prepare("INSERT INTO gamestop (id, timestamp_, open_price, high_price, \
-                                    low_price, volume, close_price) \
-                                    VALUES (?, ?, ?, ?, ?, ?, ?)")
+                                    low_price, volume, close_price, close_price_pred) \
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
 
 counter = 0
 totalcount = 0
@@ -57,7 +57,7 @@ with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
             for index, values in df.iterrows():
                 batch.add(insertlogs,
                     (str(uuid.uuid4()), values['hour'], values['openprice'], values['highprice'], 
-                    values['lowprice'], values['volume'], values['closeprice']))
+                    values['lowprice'], values['volume'], values['closeprice'], np.nan))
                 counter += 1
                 if counter >= BATCH_SIZE:
                     # print('Inserting ' + str(counter) + ' records from batch')

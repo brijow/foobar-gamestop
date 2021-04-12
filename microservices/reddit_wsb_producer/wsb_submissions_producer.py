@@ -66,6 +66,7 @@ def submissions_monitor(dummy):
         tags_ = get_tags_df()
         if not tags_.empty:
             print("Sending to tags topic")
+            tags_['id'] = str(uuid.uuid4())
             for index, row in tags_.iterrows():
                 print(row.to_json())
                 producer.send(TAG_TOPIC_NAME, value=row.to_json())

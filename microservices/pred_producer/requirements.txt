@@ -1,2 +1,7 @@
 kafka-python
 torch
+boto3
+cassandra-driver
+pandas
+SQLAlchemy
+sklearn

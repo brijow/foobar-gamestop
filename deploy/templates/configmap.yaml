@@ -62,7 +62,7 @@ metadata:
 data:
   "01-init.cql": |
     CREATE KEYSPACE IF NOT EXISTS kafkapipeline 
-    WITH REPLICATION = WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'datacenter1' : 2 };
+    WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'datacenter1' : 2 };
     
     ALTER KEYSPACE system_auth  WITH replication = {'class': 'NetworkTopologyStrategy', 'datacenter1': {{ .Values.cassandra.replicaCount }} };    
     
@@ -96,23 +96,24 @@ data:
     CREATE TABLE IF NOT EXISTS kafkapipeline.wide (
       hour TIMESTAMP,
       id TEXT,
-      positive_all INT,
-      negative_all INT,
-      neutral_all INT,
-      user_count_all FLOAT,
-      tag_count_all FLOAT,
-      total_count_all FLOAT,
-      comments_count_all FLOAT,
-      positive_gme INT,
-      negative_gme INT,
-      neutral_gme INT,
-      user_count_gme FLOAT,
-      tag_count_gme FLOAT,
-      total_count_gme FLOAT,
-      comments_count_gme FLOAT,
+      avg_all_post_pos INT,
+      avg_all_post_neg INT,
+      avg_all_post_neu INT,
+      cnt_all_user FLOAT,
+      cnt_all_tag FLOAT,
+      cnt_all_post FLOAT,
+      cnt_all_comments FLOAT,
+      avg_gme_post_pos INT,
+      avg_gme_post_neg INT,
+      avg_gme_post_neu INT,
+      cnt_gme_user FLOAT,
+      cnt_gme_tag FLOAT,
+      cnt_gme_post FLOAT,
+      cnt_gme_comments FLOAT,
       volume FLOAT,
+      openprice FLOAT,
       closeprice FLOAT,
       highprice FLOAT,
-      openprice FLOAT,
+      lowprice FLOAT,
       prediction FLOAT,
       PRIMARY KEY (hour));
