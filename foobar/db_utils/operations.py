@@ -67,25 +67,6 @@ def join_post_tag_db_v2(session, day1):
         .all()
     )
 
-
-def join_post_tag_df(df_tag, df_posts):
-    df = df_posts.merge(df.join, how="left", left_on="id", right_on="post_id")
-    df = df[
-        [
-            "id",
-            "iscomment",
-            "submission_id",
-            "positive",
-            "negative",
-            "neutral",
-            "user",
-            "dt",
-            "tag",
-        ]
-    ]
-    return df
-
-
 def round_to_hour(df, dt_col):
     df["hour"] = df[dt_col].dt.floor("H")
     return df
