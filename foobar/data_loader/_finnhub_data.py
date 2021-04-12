@@ -1,17 +1,15 @@
 import configparser
 import os
-from datetime import datetime, timedelta
 import time
+from datetime import datetime, timedelta
 
 import finnhub
 import pandas as pd
-
-FINNHUB_FILE_PATH = "foobar/data/raw/"
-
+from _base import get_data_loader_conf_dir, get_or_create_raw_data_dir
 
 # Finnhub API config
 config = configparser.ConfigParser()
-config.read("foobar/data_loader/conf/finnhub.cfg")
+config.read(os.path.join(get_data_loader_conf_dir(), "finnhub.cfg"))
 api_credential = config["api_credential"]
 AUTH_TOKEN = api_credential["auth_token"]
 
@@ -23,10 +21,11 @@ class finnhub_dataloader:
     def get_stock_candle(self, data_resolution, date_from, date_to):
         from_str = date_from.strftime("%Y-%m-%d")
         to_str = date_to.strftime("%Y-%m-%d")
-        if os.path.exists(
-            FINNHUB_FILE_PATH
-            + f"stock_candle_{data_resolution}_{from_str}_{to_str}.csv"
-        ):
+        stock_candle_file = os.path.join(
+            get_or_create_raw_data_dir(),
+            f"stock_candle_{data_resolution}_{from_str}_{to_str}.csv",
+        )
+        if os.path.exists(stock_candle_file):
             print("Stock candle dataset is already created.")
         else:
             f = date_from
@@ -50,28 +49,23 @@ class finnhub_dataloader:
                         columns={
                             "c": "close_price",
                             "o": "open_price",
-                            "h": "high-price",
-                            "l": "low-price",
+                            "h": "high_price",
+                            "l": "low_price",
                             "v": "volume",
-                            "t": "timestamp",
+                            "t": "timestamp_",
                             "s": "status",
                         }
                     )
-                    if os.path.exists(
-                        FINNHUB_FILE_PATH
-                        + f"stock_candle_{data_resolution}_{from_str}_{to_str}.csv"
-                    ):
+                    if os.path.exists(stock_candle_file):
                         stock_candle_timeseries.to_csv(
-                            FINNHUB_FILE_PATH
-                            + f"stock_candle_{data_resolution}_{from_str}_{to_str}.csv",
+                            stock_candle_file,
                             encoding="utf-8",
                             mode="a",
                             header=False,
                         )
                     else:
                         stock_candle_timeseries.to_csv(
-                            FINNHUB_FILE_PATH
-                            + f"stock_candle_{data_resolution}_{from_str}_{to_str}.csv",
+                            stock_candle_file,
                             encoding="utf-8",
                             mode="a",
                             header=True,

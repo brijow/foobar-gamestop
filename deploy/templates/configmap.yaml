@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: cassandra-secret
+type: Opaque
+data:
+    cassandra-username: YWRtaW4=
+    cassandra-password: d2VsY29tZTE=
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+    name: bucket-secrets
+type: Opaque
+data:
+    accessKeyID: QUtJQTNGSzJOSENBUkxTM1JBN1g=
+    secretAccessKey: b3dvU2Y3OHB1TEdXejlSZnhpV3FzUTdHeW9oWHFqQ0Y1S2lHUUxzaw==
+    bucket_name: YmItczMtYnVja2V0LWNtcHQ3MzM=
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+    name: app-secrets
+type: Opaque
+data:
+    finnhub_auth_token: {{ .Values.producers.finnhub.encoded_token }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: wsb-secrets
+type: Opaque
+data:
+    praw_client_id1: {{ .Values.producers.wsb.encoded_clientid1 }}
+    praw_client_secret1: {{ .Values.producers.wsb.encoded_clientsecret1 }}
+    praw_client_id2: {{ .Values.producers.wsb.encoded_clientid2 }}
+    praw_client_secret2: {{ .Values.producers.wsb.encoded_clientsecret2 }}
+
+---
+
+{{- $fullName := .Values.cassandra.initDBConfigMap -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app.kubernetes.io/name: {{ $fullName }}
+
+data:
+  "01-init.cql": |
+    CREATE KEYSPACE IF NOT EXISTS kafkapipeline 
+    WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
+    
+    CREATE TABLE IF NOT EXISTS kafkapipeline.gamestop (
+      id TEXT,
+      timestamp_ TIMESTAMP,
+      open_price FLOAT,
+      high_price FLOAT,
+      low_price FLOAT,
+      volume FLOAT,
+      close_price FLOAT,
+      close_price_pred FLOAT,
+      PRIMARY KEY (id));
+
+    CREATE TABLE IF NOT EXISTS kafkapipeline.tag (
+      id TEXT,
+      post_id TEXT,
+      tag_token TEXT,
+      PRIMARY KEY (id));
+    
+    CREATE TABLE IF NOT EXISTS kafkapipeline.post (
+      id TEXT,
+      iscomment BOOLEAN,
+      submission_id TEXT,
+      parent_id TEXT,
+      username TEXT,
+      positive FLOAT,
+      negative FLOAT,
+      neutral FLOAT,
+      dt TIMESTAMP,
+      PRIMARY KEY (id));
+    
+    CREATE TABLE IF NOT EXISTS kafkapipeline.wide (
+      hour TIMESTAMP,
+      cnt_all_post INT,
+      cnt_all_user INT,
+      cnt_all_tag INT,
+      avg_all_post_pos FLOAT,
+      avg_all_post_neg FLOAT,
+      avg_all_post_neu FLOAT,
+      cnt_gme_post INT,
+      cnt_gme_user INT,
+      cnt_gme_tag INT,
+      avg_gme_post_pos FLOAT,
+      avg_gme_post_neg FLOAT,
+      avg_gme_post_neu FLOAT,
+      openprice FLOAT,
+      lowprice FLOAT,
+      highprice FLOAT,
+      volume FLOAT,
+      closeprice FLOAT,
+      prediction FLOAT,
+      PRIMARY KEY (hour));
+

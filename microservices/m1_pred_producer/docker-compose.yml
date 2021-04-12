@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  finnhub_service:
+    container_name: m1_prediction_producer
+    build: .
+    environment:
+      KAFKA_BROKER_URL: broker:9092
+      TOPIC_NAME: "${FINNHUB_TOPIC}"
+      SLEEP_TIME: ${SLEEP_TIME}
+
+networks:
+  default:
+    external:
+      name: kafka-network
