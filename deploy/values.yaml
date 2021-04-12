@@ -92,19 +92,19 @@ producers:
   jobs:
     bucket_region: us-west-2
     crons:
-      # "0":
-      #   name: m1-predictor
-      #   command: "/usr/app/m1_predict_producer.py"
-      #   schedule: "*/3 * * * *" #every 5 minutes for now
-      #   topicname: finnhubsource
-      #   gmetable: gamestop
-      #   tagtable: tag
-      #   poststable: post
-      #   widetable: wide
+      "0":
+        name: m1-predictor
+        command: "/usr/app/m1_predict_producer.py"
+        schedule: "*/3 * * * *" #every 5 minutes for now
+        topicname: finnhubsource
+        gmetable: gamestop
+        tagtable: tag
+        poststable: post
+        widetable: wide
       "1":
         name: m2-predictor
         command: "/usr/app/m2_predict_producer.py"
-        schedule: "*/3 * * * *" #every 5 minutes for now
+        schedule: "*/5 * * * *" #every 5 minutes for now
         topicname: widetopic
         gmetable: gamestop
         tagtable: tag
@@ -123,7 +123,7 @@ producers:
         name: finnhubpreloader
         weight: -2
         batchsize: 100
-        hook: post-install
+        hook: post-upgrade
         command: /usr/app/preload_finnhub.py
       # "2":
       #   name: postspreloader

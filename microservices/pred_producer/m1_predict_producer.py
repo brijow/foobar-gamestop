@@ -6,11 +6,14 @@ from foobar.model.model_loader import download_model
 from foobar.db_utils.cassandra_utils import query_table
 from foobar.prediction.predictor import prediction
 import os
-
+import pandas as pd
+import numpy as np
+import uuid
 # testing the producer with csv data
 # import pandas as pd
 # df_gamestop = pd.read_csv('microservices/m1_pred_producer/sample.csv')
-
+# import time
+# while True: time.sleep(10000)
 
 GAMESTOP_TABLE = (
     os.environ.get("GAMESTOP_TABLE") if os.environ.get("GAMESTOP_TABLE") else "gamestop"
@@ -63,21 +66,27 @@ try:
     print("queried gamestop table")
 
     if df_gamestop is not None:
+        print(df_gamestop.head())
         df_predictions = prediction(
             model, device, train_scaler, df_gamestop, train_parameter_set
         )
-        print(df_predictions.head())
         # df_predictions.to_csv('microservices/m1_pred_producer/sample.csv')
         if df_predictions is not None:
             df_predictions.rename({'id': 'uuid'}, axis=1, inplace=True)
-            df_predictions = df_predictions.drop("close_price_pred", axis=1)
-            df_predictions['prediction'] = df_predictions['prediction'].astype(float)
+            df_predictions.drop('prediction', axis=1, inplace=True)
+            df_predictions['uuid'] = str(uuid.uuid4())
+            df_predictions['timestamp_'] = pd.to_datetime(df_predictions['timestamp_'], unit="s")
+            df_predictions['timestamp_'] = df_predictions['timestamp_'].dt.strftime("%Y-%m-%d %H:%M:%S")
+            df_predictions['close_price_pred'] = df_predictions['close_price']
+            print(df_predictions['close_price_pred'])
             print("Sending prediction records to kafka")
 
             for index, row in df_predictions.iterrows():
+                if index > 30: break
+                print(row.to_json())
                 producer.send(TOPIC_NAME, value=row.to_json())
-
     print("Done with predictions...")
 
 except Exception as e:
     print(f"prediction failed. ERROR: {e}")
+

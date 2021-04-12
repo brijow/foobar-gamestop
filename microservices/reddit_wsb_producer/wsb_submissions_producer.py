@@ -3,7 +3,7 @@ import json
 import os
 import time
 from collections import namedtuple
-
+import uuid
 import pandas as pd
 import praw
 from kafka import KafkaProducer

@@ -57,7 +57,7 @@ with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
             for index, values in df.iterrows():
                 batch.add(insertlogs,
                     (str(uuid.uuid4()), values['hour'], values['openprice'], values['highprice'], 
-                    values['lowprice'], values['volume'], values['closeprice'], np.nan))
+                    values['lowprice'], values['volume'], values['closeprice'], 0.0))
                 counter += 1
                 if counter >= BATCH_SIZE:
                     # print('Inserting ' + str(counter) + ' records from batch')

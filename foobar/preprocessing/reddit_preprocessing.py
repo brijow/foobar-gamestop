@@ -52,7 +52,10 @@ def perform_entity_extraction(df, col):
 def filter_tags_by_stock_tags(tags_df):
     tags_df["tag"] = tags_df["tag"].str.upper()
     stock_tags_df = load_all_stock_tags()
-    tags_df.loc[tags_df["tag"].isin(stock_tags_df["0"])]
+    if stock_tags_df.empty:
+        return pd.DataFrame()
+    print(stock_tags_df)
+    tags_df.loc[tags_df["tag"].isin(stock_tags_df["finnhub_tags"])]
     return tags_df
 
 
