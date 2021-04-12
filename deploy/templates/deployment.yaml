@@ -207,6 +207,12 @@ spec:
               value: {{ .topicname }}
             - name: GAMESTOP_TABLE
               value: {{ .gmetable }}
+            - name: TAG_TABLE
+              value: {{ .tagtable }}
+            - name: POSTS_TABLE
+              value: {{ .poststable }}
+            - name: WIDE_TABLE
+              value: {{ .widetable }}
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:

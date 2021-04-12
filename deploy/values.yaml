@@ -92,12 +92,24 @@ producers:
   jobs:
     bucket_region: us-west-2
     crons:
-      "0":
-        name: m1-predictor
-        command: "/usr/app/m1_predict_producer.py"
+      # "0":
+      #   name: m1-predictor
+      #   command: "/usr/app/m1_predict_producer.py"
+      #   schedule: "*/3 * * * *" #every 5 minutes for now
+      #   topicname: finnhubsource
+      #   gmetable: gamestop
+      #   tagtable: tag
+      #   poststable: post
+      #   widetable: wide
+      "1":
+        name: m2-predictor
+        command: "/usr/app/m2_predict_producer.py"
         schedule: "*/3 * * * *" #every 5 minutes for now
-        topicname: finnhubsource
-
+        topicname: widetopic
+        gmetable: gamestop
+        tagtable: tag
+        poststable: post
+        widetable: wide
     wideproducer:
       topicname: widetopic
     preloaders:

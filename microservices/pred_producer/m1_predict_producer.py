@@ -71,7 +71,7 @@ try:
         if df_predictions is not None:
             df_predictions.rename({'id': 'uuid'}, axis=1, inplace=True)
             df_predictions = df_predictions.drop("close_price_pred", axis=1)
-            df_predictions['prediction'] = 0 #df_predictions['prediction'].astype(float)
+            df_predictions['prediction'] = df_predictions['prediction'].astype(float)
             print("Sending prediction records to kafka")
 
             for index, row in df_predictions.iterrows():
