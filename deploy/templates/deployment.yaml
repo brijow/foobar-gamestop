@@ -174,7 +174,7 @@ spec:
                   name: wsb-secrets
                   key: praw_client_secret2
 
-
+---
 
 {{- range $job, $val := .Values.producers.jobs.crons }}
 
@@ -198,18 +198,51 @@ spec:
         spec:       
           containers:
           - name: {{ .name }}
-            image: "{{ $.Values.image.jobs.repository }}:{{ $.Values.image.jobs.tag }}"
+            image: "{{ $.Values.image.cron.repository }}:{{ $.Values.image.cron.tag }}"
             imagePullPolicy: {{ $.Values.image.pullPolicy }}
             env:
             - name: KAFKA_BROKER_URL
               value: "{{ $.Release.Name }}-kafka:{{ $.Values.kafka.service.port }}"
             - name: TOPIC_NAME
               value: {{ .topicname }}
-            args:
-              - sh
-              - -c
-              - |
-                "{{ .command}}"
+            - name: GAMESTOP_TABLE
+              value: {{ .gmetable }}
+            - name: TAG_TABLE
+              value: {{ .tagtable }}
+            - name: POSTS_TABLE
+              value: {{ .poststable }}
+            - name: WIDE_TABLE
+              value: {{ .widetable }}
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: bucket-secrets
+                  key: accessKeyID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: bucket-secrets
+                  key: secretAccessKey
+            - name: BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: bucket-secrets
+                  key: bucket_name
+            - name: CASSANDRA_HOST
+              value: {{ $.Release.Name }}-cassandra
+            - name: CASSANDRA_KEYSPACE
+              value: {{ $.Values.deployment.keyspace }}
+            - name: CASSANDRA_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cassandra-secret
+                  key: cassandra-username
+            - name: CASSANDRA_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: cassandra-secret
+                  key: cassandra-password
+            command: ["python", "-u", "{{ .command}}"]
           restartPolicy: OnFailure
 
 ---
@@ -228,7 +261,7 @@ metadata:
   annotations:
     # This is what defines this resource as a hook. Without this line, the
     # job is considered part of the release.
-    "helm.sh/hook": post-upgrade
+    "helm.sh/hook": {{ .hook | quote }}
     "helm.sh/hook-weight": {{ .weight | quote }}
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
@@ -283,42 +316,6 @@ spec:
 
 ---
 {{- end}}
-
-# ---
-
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: {{ .Values.consumers.name }}
-#   labels:
-#     app: {{ .Values.consumers.name }}
-#     app.kubernetes.io/name: {{ .Values.consumers.name }}
-# spec:
-#   {{- if not .Values.autoscaling.enabled }}
-#   replicas: {{ .Values.replicaCount }}
-#   {{- end }}
-#   selector:
-#     matchLabels:
-#       app: {{ .Values.consumers.name }}
-#   template:
-#     metadata:
-#       labels:
-#         app: {{ .Values.consumers.name }}
-#         app.kubernetes.io/name: {{ .Values.consumers.name }}
-#     spec:
-#       containers:
-#         - name: {{ .Release.Name }}-consumer
-#           image: "{{ .Values.image.consumers.repository }}:{{ .Values.image.consumers.tag }}"
-#           imagePullPolicy: {{ .Values.image.pullPolicy }}
-#           env:      
-#             - name: KAFKA_BROKER_URL #broker:9092
-#               value: "{{ .Release.Name }}-kafka:{{ .Values.kafka.service.port }}"
-#             - name: TOPIC_NAME
-#               value: ""
-#             - name: SINK_TOPIC_NAME
-#               value: ""
-
----
 
 apiVersion: apps/v1
 kind: Deployment

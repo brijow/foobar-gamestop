@@ -38,7 +38,7 @@ SLEEP_TIME = int(os.environ.get("SLEEP_TIME", 300))
 
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_BROKER_URL,
-    value_serializer=lambda x: json.dumps(x).encode("utf8"),
+    value_serializer=lambda x: x.encode("utf8"),
     api_version=(0, 11, 5),
 )
 
@@ -66,12 +66,18 @@ try:
         df_predictions = prediction(
             model, device, train_scaler, df_gamestop, train_parameter_set
         )
+        print(df_predictions.head())
         # df_predictions.to_csv('microservices/m1_pred_producer/sample.csv')
         if df_predictions is not None:
-            for index, row in df_predictions.iterrows():
-                producer.send(TOPIC_NAME, value=row)
+            df_predictions.rename({'id': 'uuid'}, axis=1, inplace=True)
+            df_predictions = df_predictions.drop("close_price_pred", axis=1)
+            df_predictions['prediction'] = df_predictions['prediction'].astype(float)
+            print("Sending prediction records to kafka")
 
-    print("Next prediction...")
+            for index, row in df_predictions.iterrows():
+                producer.send(TOPIC_NAME, value=row.to_json())
+
+    print("Done with predictions...")
 
 except Exception as e:
     print(f"prediction failed. ERROR: {e}")

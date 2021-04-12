@@ -1,4 +1,5 @@
 import torch
+import pandas as pd
 from foobar.ml_preprocessing.timeseries_preprocessing import generate_window, scale
 
 
@@ -38,6 +39,6 @@ def prediction(model, device, scaler, df, train_parameter_set):
             model.init_hidden(x_i.size(0), device)
             y_pred = model(x_i)
             predictions.append(y_pred.item())
-            df_target.at[i + train_window, "prediction"] = y_pred.item()
-
+            # df_target.at[i + train_window, "prediction"] = y_pred.item()
+    df_target['prediction'] = pd.Series(predictions)    
     return df_target

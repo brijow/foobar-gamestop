@@ -11,9 +11,10 @@ RUN pip install -r requirements.txt && \
     python -m spacy download en_core_web_sm
 
 ADD ./microservices/reddit_wsb_producer/ ./
+ADD ./setup.py ./
 
-ADD ./foobar/data_loader/ ./foobar/data_loader/
-ADD ./foobar/preprocessing/ ./foobar/preprocessing/
+COPY foobar/ ./foobar/
+RUN pip install -e .
 
 # ENTRYPOINT [ "/bin/bash", "-c", "/usr/app/kafka-wait.sh"]
 # CMD ["python3", "-u", "wsb_driver.py"]

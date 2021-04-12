@@ -19,8 +19,8 @@ image:
   jobs:
     repository: ghcr.io/salcaino/foobar-jobs
     tag: "latest"
-  consumers:
-    repository: ghcr.io/salcaino/foobar-consumers
+  cron:
+    repository: ghcr.io/salcaino/foobar-cron
     tag: "latest"
   connect:
     repository: ghcr.io/salcaino/foobar-connect
@@ -92,28 +92,44 @@ producers:
   jobs:
     bucket_region: us-west-2
     crons:
-      "0":
-        name: busybox-cron
-        command: /usr/app/keep-busy.sh
-        schedule: "*/25 * * * *" #every 5 minutes for now
-        topicname: busytopic
+      # "0":
+      #   name: m1-predictor
+      #   command: "/usr/app/m1_predict_producer.py"
+      #   schedule: "*/3 * * * *" #every 5 minutes for now
+      #   topicname: finnhubsource
+      #   gmetable: gamestop
+      #   tagtable: tag
+      #   poststable: post
+      #   widetable: wide
+      "1":
+        name: m2-predictor
+        command: "/usr/app/m2_predict_producer.py"
+        schedule: "*/3 * * * *" #every 5 minutes for now
+        topicname: widetopic
+        gmetable: gamestop
+        tagtable: tag
+        poststable: post
+        widetable: wide
     wideproducer:
       topicname: widetopic
     preloaders:
-      "0":
-        name: tagspreloader
-        weight: -1
-        batchsize: 200
-        command: /usr/app/preload_tags.py
+      # "0":
+      #   name: tagspreloader
+      #   weight: -1
+      #   batchsize: 250
+      #   hook: post-upgrade
+      #   command: /usr/app/preload_tags.py
       "1":
         name: finnhubpreloader
         weight: -2
         batchsize: 100
+        hook: post-install
         command: /usr/app/preload_finnhub.py
       # "2":
       #   name: postspreloader
       #   weight: -2
-      #   batchsize: 1000
+      #   batchsize: 200
+      #   hook: post-upgrade
       #   command: /usr/app/preload_posts.py
       
   
@@ -135,8 +151,8 @@ ingress:
 
 
 autoscaling:
-  enabled: false
-  minReplicas: 1
+  enabled: true
+  minReplicas: 3
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
 
@@ -147,12 +163,6 @@ kafka:
     port: 9092
   global:
     storageClass: gp2
-  provisioning:
-    enabled : false
-    topics : 
-      - name: weather
-      - name: twitter
-      - name: twittersink
   persistence:
     storageClass: gp2
     size: 1Gi
@@ -166,6 +176,7 @@ kafka:
     name: connect
     port: 8083
 cassandra:
+  replicaCount: 3
   image:  
     debug: true
   dbUser:
@@ -173,8 +184,9 @@ cassandra:
     existingSecret: cassandra-secret
   persistence:
     storageClass: gp2
-    size : 1Gi
+    size : 6Gi
   initDBConfigMap: init-db
+  extraEnvVarsCM: db-conf
 metrics-server:
   serviceAccount:
     create: false

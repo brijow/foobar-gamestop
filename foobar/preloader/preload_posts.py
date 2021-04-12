@@ -61,7 +61,15 @@ with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
                 if counter >= BATCH_SIZE:
                     # print('Inserting ' + str(counter) + ' records from batch')
                     counter = 0
-                    cassandrasession.execute(batch, trace=True)
+                    try:
+                        cassandrasession.execute(batch, trace=True)
+                    except Exception as exc:
+                        print(f"Exception {exc}")
+                        try:
+                            cassandrasession.execute(batch, trace=True)
+                        except Exception as exc:
+                            print(f"2nd Exception {exc}")
+                        else print("Successfully recovered")
                     batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
             if counter > 0:
                 cassandrasession.execute(batch, trace=True)

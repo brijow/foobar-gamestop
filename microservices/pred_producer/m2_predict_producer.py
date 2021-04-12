@@ -20,7 +20,7 @@ TIMESTAMP_COLUMN = "timestamp_"
 
 BUCKET = os.environ.get("BUCKET_NAME") if os.environ.get("BUCKET_NAME") else "bb-s3-bucket-cmpt733"
 MODEL_FILE = "m2.pth"
-LOCAL_FILE = MODEL_FILEervices/m2_pred_producer/m2.pth"
+LOCAL_FILE = MODEL_FILE
 
 # Kafka producer
 KAFKA_BROKER_URL = (
@@ -66,7 +66,7 @@ def join_reddit(current_time):
     ]
     if post_df.empty:
         df_all = deal_empties(current_time, post_df, reddit_cols)
-        df_all = post_df.drop(columns=['dt'])
+        df_all = df_all.drop(columns=['dt'])
         df_all = get_aggregates_by_hour(df_all)
     else:
         postids = post_df['id'].tolist()
@@ -125,7 +125,7 @@ def make_wide():
     else:
         print("Oops")
 
-def __name__ = "__main__":
+if __name__ == "__main__":
     make_wide()
 
 
