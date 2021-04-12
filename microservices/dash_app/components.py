@@ -33,7 +33,7 @@ nav_bar = dbc.NavbarSimple(
             ],
         ),
     ],
-    brand="Short Squeeze Reddit Sentiment Index",
+    brand="Sentiment Board for Reddit WallStreetBets",
     brand_href=GITLAB_URL,
     sticky="top",
 )
@@ -162,19 +162,9 @@ body_rows = html.Div(
     [
         dbc.Row(
             [
+                dbc.Col(option_checklist, md=4,),
                 dbc.Col(
-                    option_checklist,
-                    md=4,
-                ),
-                dbc.Col(
-                    [
-                        boxed_row,
-                        boxed_row,
-                        boxed_row,
-                        boxed_row,
-                        boxed_row,
-                        boxed_row,
-                    ],
+                    [boxed_row, boxed_row, boxed_row, boxed_row, boxed_row, boxed_row,],
                     md=8,
                 ),
             ],
