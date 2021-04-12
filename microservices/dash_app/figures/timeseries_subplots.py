@@ -15,7 +15,7 @@ def ts_subplots():
 
     import pandas as pd
 
-    df = pd.read_csv("wide.csv")
+    df = pd.read_csv("wide1.csv")
     df = df.rename(
         columns={
             "hour": "DATE",
@@ -23,10 +23,14 @@ def ts_subplots():
             "highprice": "HIGH",
             "lowprice": "LOW",
             "closeprice": "CLOSE",
-            "prediction": "PRED",
+            "prediction_finn": "PRED_fin_feats",
+            "prediction_wide": "PRED_all_feats",
+            "prediction_reddit": "PRED_rdt_feats",
         }
     )
-    df = df[df["PRED"].notna()]
+    df = df[df["PRED_fin_feats"].notna()]
+    df = df[df["PRED_all_feats"].notna()]
+    df = df[df["PRED_rdt_feats"].notna()]
     df = df[df["DATE"] > "2021-01-13"]
 
     ap_mean, ap_std = df["cnt_all_post"].mean(), df["cnt_all_post"].std()
@@ -40,8 +44,9 @@ def ts_subplots():
     df["cnt_all_user"] = (df["cnt_all_user"] - ap_umean) / ap_ustd
     df["cnt_gme_user"] = (df["cnt_gme_user"] - gm_umean) / gm_ustd
 
-    series = [col for col in ["OPEN", "LOW", "HIGH", "CLOSE"]]
-    # series = [col for col in ["OPEN", "LOW", "HIGH", "CLOSE", "PRED"]]
+    series = [
+        col for col in ["PRED_rdt_feats", "PRED_all_feats", "PRED_fin_feats", "CLOSE"]
+    ]
     for s in series:
         fig.append_trace(
             go.Scatter(x=df.DATE, y=df[s], name=s,), row=1, col=1,
