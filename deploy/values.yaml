@@ -19,8 +19,8 @@ image:
   jobs:
     repository: ghcr.io/salcaino/foobar-jobs
     tag: "latest"
-  consumers:
-    repository: ghcr.io/salcaino/foobar-consumers
+  cron:
+    repository: ghcr.io/salcaino/foobar-cron
     tag: "latest"
   connect:
     repository: ghcr.io/salcaino/foobar-connect
@@ -94,30 +94,31 @@ producers:
     crons:
       "0":
         name: m1-predictor
-        command: "/usr/app/m1/predict-producer.py"
-        schedule: "*/55 * * * *" #every 5 minutes for now
+        command: "/usr/app/m1_predict_producer.py"
+        schedule: "*/3 * * * *" #every 5 minutes for now
         topicname: finnhubsource
+
     wideproducer:
       topicname: widetopic
     preloaders:
-      "0":
-        name: tagspreloader
-        weight: -1
-        batchsize: 250
-        hook: post-install
-        command: /usr/app/preload_tags.py
+      # "0":
+      #   name: tagspreloader
+      #   weight: -1
+      #   batchsize: 250
+      #   hook: post-upgrade
+      #   command: /usr/app/preload_tags.py
       "1":
         name: finnhubpreloader
         weight: -2
         batchsize: 100
         hook: post-install
         command: /usr/app/preload_finnhub.py
-      "2":
-        name: postspreloader
-        weight: -2
-        batchsize: 200
-        hook: post-install
-        command: /usr/app/preload_posts.py
+      # "2":
+      #   name: postspreloader
+      #   weight: -2
+      #   batchsize: 200
+      #   hook: post-upgrade
+      #   command: /usr/app/preload_posts.py
       
   
 consumers:
@@ -138,8 +139,8 @@ ingress:
 
 
 autoscaling:
-  enabled: false
-  minReplicas: 1
+  enabled: true
+  minReplicas: 3
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
 
