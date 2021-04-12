@@ -13,8 +13,29 @@ from foobar.db_utils.cassandra_utils import query_table, query_table_for_hour, g
 from foobar.db_utils.operations import get_aggregates_by_hour, build_wide_table
 
 # testing the producer with csv data
-# import pandas as pd
 # df_gme = pd.read_csv("foobar/data/processed/gme.csv")
+
+
+TIMESTAMP_COLUMN = "timestamp_"
+
+BUCKET = os.environ.get("BUCKET_NAME") if os.environ.get("BUCKET_NAME") else "bb-s3-bucket-cmpt733"
+MODEL_FILE = "m2.pth"
+LOCAL_FILE = MODEL_FILEervices/m2_pred_producer/m2.pth"
+
+# Kafka producer
+KAFKA_BROKER_URL = (
+    os.environ.get("KAFKA_BROKER_URL")
+    if os.environ.get("KAFKA_BROKER_URL")
+    else "localhost:9092"
+)
+TOPIC_NAME = os.environ.get("TOPIC_NAME", "wide")
+SLEEP_TIME = int(os.environ.get("SLEEP_TIME", 300))
+
+producer = KafkaProducer(
+    bootstrap_servers=KAFKA_BROKER_URL,
+    value_serializer=lambda x: json.dumps(x).encode("utf8"),
+    api_version=(0, 11, 5),
+)
 
 GAMESTOP_TABLE = os.environ.get("GAMESTOP_TABLE", "gamestop")
 
@@ -98,34 +119,16 @@ def make_wide():
     reddit_df = join_reddit(current_time)
     gamestop_df = get_gamestop(current_time)
     wide_df = build_wide_table(reddit_df, gamestop_df)
-    print(wide_df)
+    if not wide_df:
+        for index, row in wide_df.iterrows():
+            producer.send(TOPIC_NAME, value=row)
+    else:
+        print("Oops")
 
 def __name__ = "__main__":
     make_wide()
 
 
-# TIMESTAMP_COLUMN = "timestamp_"
-
-# BUCKET = os.environ.get("BUCKET_NAME") if os.environ.get("BUCKET_NAME") else "bb-s3-bucket-cmpt733"
-# MODEL_FILE = "m2.pth"
-# LOCAL_FILE = MODEL_FILEervices/m2_pred_producer/m2.pth"
-
-# # Kafka producer
-# KAFKA_BROKER_URL = (
-#     os.environ.get("KAFKA_BROKER_URL")
-#     if os.environ.get("KAFKA_BROKER_URL")
-#     else "localhost:9092"
-# )
-# TOPIC_NAME = (
-#     os.environ.get("TOPIC_NAME") if os.environ.get("TOPIC_NAME") else "from_finnhub"
-# )
-# SLEEP_TIME = int(os.environ.get("SLEEP_TIME", 300))
-
-# producer = KafkaProducer(
-#     bootstrap_servers=KAFKA_BROKER_URL,
-#     value_serializer=lambda x: json.dumps(x).encode("utf8"),
-#     api_version=(0, 11, 5),
-# )
 # # read historical data from cassandra and make predictions
 
 # last_poll_datetime = datetime.utcnow() - timedelta(hours=100)
