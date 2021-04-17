@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 import finnhub
 import pandas as pd
 from kafka import KafkaProducer
-import uuid
 import numpy as np
 
 # Finnhub API config
@@ -60,7 +59,7 @@ class finnhub_producer:
                     "h": "high_price",
                     "l": "low_price",
                     "v": "volume",
-                    "t": "timestamp_",
+                    "t": "hour",
                     "s": "status",
                 }
             )
@@ -76,9 +75,8 @@ class finnhub_producer:
         )
         if ts is not None:
             print('Sending financial data to Kafka queue...')
-            ts['timestamp_'] = pd.to_datetime(ts['timestamp_'], unit="s")
-            ts['timestamp_'] = ts['timestamp_'].dt.strftime("%Y-%m-%d %H:%M:%S")
-            ts['id'] = [str(uuid.uuid4()) for _ in range(len(ts.index))]
+            ts['hour'] = pd.to_datetime(ts['hour'], unit="s")
+            ts['hour'] = ts['hour'].dt.strftime("%Y-%m-%d %H:%M:%S")
             
             print(f"Going to send {len(ts)} records to kafka")
             for index, row in predicteddata.iterrows():

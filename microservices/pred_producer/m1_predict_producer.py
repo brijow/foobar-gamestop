@@ -7,7 +7,6 @@ from foobar.prediction.predictor import prediction
 import os
 import pandas as pd
 import numpy as np
-import uuid
 import boto3
 # testing the producer with csv data
 # import pandas as pd
@@ -23,7 +22,7 @@ class FinnHubPredictor:
                 bucket=None) :
         self.MODEL_FILE = "m1.pth"
         self.LOCAL_FILE = self.MODEL_FILE
-        self.TIMESTAMP_COLUMN = "timestamp_"
+        self.TIMESTAMP_COLUMN = "hour"
         self.GAMESTOP_TABLE = gamestop_table
         self.BUCKET_NAME = bucket_name
         if bucket is None:
