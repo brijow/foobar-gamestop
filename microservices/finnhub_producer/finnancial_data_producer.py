@@ -78,19 +78,18 @@ class finnhub_producer:
             print('Sending financial data to Kafka queue...')
             ts['timestamp_'] = pd.to_datetime(ts['timestamp_'], unit="s")
             ts['timestamp_'] = ts['timestamp_'].dt.strftime("%Y-%m-%d %H:%M:%S")
-            for index, row in ts.iterrows():
-                row['uuid'] = str(uuid.uuid4())
-                row['close_price_pred'] = np.nan
+            ts['id'] = [str(uuid.uuid4()) for _ in range(len(ts.index))]
+            
+            print(f"Going to send {len(ts)} records to kafka")
+            for index, row in predicteddata.iterrows():
                 print(row.to_json())
                 self.producer.send(TOPIC_NAME, value=row.to_json())
             self.producer.flush()
             print(f'Stock price from {date_from} to {date_to} was sent to Kafka')
-        time.sleep(SLEEP_TIME)
         self.last_poll_datetime = date_to
 
 
 if __name__ == "__main__":
     print("Starting Finnhub producer")
-    while True:
-        finnhub_service = finnhub_producer(api_token=AUTH_TOKEN)
-        finnhub_service.run()
+    finnhub_service = finnhub_producer(api_token=AUTH_TOKEN)
+    finnhub_service.run()

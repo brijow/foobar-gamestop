@@ -39,15 +39,6 @@ data:
     praw_client_id2: {{ .Values.producers.wsb.encoded_clientid2 }}
     praw_client_secret2: {{ .Values.producers.wsb.encoded_clientsecret2 }}
 
----
-
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: db-conf
-  labels:
-    app.kubernetes.io/name: db-conf
-data:
 
 ---
 
@@ -74,7 +65,6 @@ data:
       low_price FLOAT,
       volume FLOAT,
       close_price FLOAT,
-      close_price_pred FLOAT,
       PRIMARY KEY (timestamp_, id));
     CREATE TABLE IF NOT EXISTS kafkapipeline.tag (
       id TEXT,
