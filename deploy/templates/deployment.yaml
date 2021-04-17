@@ -244,7 +244,7 @@ spec:
       restartPolicy: OnFailure
       containers:
       - name: {{ .name }}
-        image: "{{ .image.repository }}:{{ .image.tag }}"
+        image: "{{ $.Values.image.jobs.repository }}:{{ $.Values.image.jobs.tag }}"
         imagePullPolicy: {{ $.Values.image.pullPolicy }}
         env:
         - name: CASSANDRA_HOST

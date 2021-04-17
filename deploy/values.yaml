@@ -16,6 +16,9 @@ image:
   connect:
     repository: ghcr.io/salcaino/foobar-connect
     tag: "latest"
+  jobs:
+    repository: ghcr.io/salcaino/foobar-jobs
+    tag: "latest"
 
 # imageCredentials:
 #   name: git-credentials
@@ -117,27 +120,18 @@ producers:
         batchsize: 250
         hook: post-install
         command: /usr/app/preload_tags.py
-        image:
-          repository: ghcr.io/salcaino/foobar-jobs
-          tag: "latest"
       "1":
         name: finnhubpreloader
         weight: -2
         batchsize: 100
         hook: post-upgrade
         command: /usr/app/preload_finnhub.py
-        image:
-          repository: ghcr.io/salcaino/foobar-finnhub-prod
-          tag: "latest"
       "2":
         name: postspreloader
         weight: -2
         batchsize: 200
         hook: post-install
         command: /usr/app/preload_posts.py
-        image:
-          repository: ghcr.io/salcaino/foobar-jobs
-          tag: "latest"
   
 consumers:
   name: consumers
