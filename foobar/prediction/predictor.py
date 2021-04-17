@@ -7,12 +7,12 @@ def prediction(model, device, scaler, df, train_parameter_set):
 
     feature_set, train_window, prediction_horizon = train_parameter_set
 
-    if "close_price_pred" not in df.columns:
+    if "prediction" not in df.columns:
         df_target = df.copy()
-        df_target["close_price_pred"] = -1.0
+        df_target["prediction"] = -1.0
     else:
         # find index of the last null prediction
-        df_null = df[df["close_price_pred"] == -1]
+        df_null = df[df["prediction"] == -1]
         last_null_prediction = df_null.index[0]
         startingindex = max((last_null_prediction - train_window), 0)
         df_target = df.iloc[startingindex :, :]
@@ -43,6 +43,6 @@ def prediction(model, device, scaler, df, train_parameter_set):
             y_pred = model(x_i)
             predictions.append(y_pred.item())
             # df_target.at[i + train_window, "prediction"] = y_pred.item()
-    df_target['close_price_pred'] = pd.Series(predictions, dtype='float') 
+    df_target['prediction'] = pd.Series(predictions, dtype='float') 
     df_target = df_target.fillna(-1)
     return df_target
