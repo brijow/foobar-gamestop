@@ -46,7 +46,7 @@ class FinnHubPredictor:
         newpredictionids = data_[data_['close_price_pred'] == -1]
         predictions = self.producePredictions(data_)
         if predictions is None : return None
-        newpredictions = predictions[predictions['id'] == newpredictionids['id']]
+        newpredictions = predictions[predictions['hour'] == newpredictionids['hour']]
         return newpredictions
 
     def producePredictions(self, df_gamestop : pd.DataFrame):
