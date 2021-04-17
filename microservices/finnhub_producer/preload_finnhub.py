@@ -31,11 +31,6 @@ BUCKET_NAME = (
     else "bb-s3-bucket-cmpt733"
 )
 
-os.environ['AWS_ACCESS_KEY_ID'] = 'AKIA3FK2NHCARLS3RA7X'
-os.environ['AWS_SECRET_KEY'] = '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'
-os.environ['REGION_NAME'] = 'us-west-2'
-
-
 session = boto3.Session(
                     aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
                     aws_secret_access_key=os.environ['AWS_SECRET_KEY'],
