@@ -1,7 +1,8 @@
 import io
 import sys
 import os
-from cassandra.cluster import Cluster, BatchStatement, ConsistencyLevel, uuid
+from cassandra.cluster import Cluster, BatchStatement, ConsistencyLevel
+import uuid
 from cassandra.auth import PlainTextAuthProvider
 import boto3
 import pandas as pd
@@ -10,15 +11,30 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import numpy as np
 import datetime
 
-print("Starting Finnhub preloader")
+now = datetime.datetime.now()
+print("{} Starting Finnhub preloader".format(now.strftime("%Y-%m-%d %H:%M:%S")))
 
-CASSANDRA_HOST = os.environ.get("CASSANDRA_HOST")
+CASSANDRA_HOST = os.environ.get("CASSANDRA_HOST") if os.environ.get("CASSANDRA_HOST") else "localhost"
 CASSANDRA_USER = os.environ.get("CASSANDRA_USER")
 CASSANDRA_PWD = os.environ.get("CASSANDRA_PWD")
-KEYSPACE = os.environ.get("CASSANDRA_KEYSPACE")
-BUCKET_NAME = os.environ.get("BUCKET_NAME")
+KEYSPACE = os.environ.get("CASSANDRA_KEYSPACE") if os.environ.get("CASSANDRA_KEYSPACE") else 'kafkapipeline'
 BATCH_SIZE = int(os.environ.get("BATCH_SIZE", 100))
 NUM_WORKERS = int(os.environ.get("NUM_WORKERS", 10))
+
+GAMESTOP_TABLE = (
+    os.environ.get("GAMESTOP_TABLE") if os.environ.get("GAMESTOP_TABLE") else "gamestop"
+)
+
+BUCKET_NAME = (
+    os.environ.get("BUCKET_NAME")
+    if os.environ.get("BUCKET_NAME")
+    else "bb-s3-bucket-cmpt733"
+)
+
+os.environ['AWS_ACCESS_KEY_ID'] = 'AKIA3FK2NHCARLS3RA7X'
+os.environ['AWS_SECRET_KEY'] = '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'
+os.environ['REGION_NAME'] = 'us-west-2'
+
 
 session = boto3.Session(
                     aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
@@ -30,34 +46,48 @@ bucket = s3.Bucket(BUCKET_NAME)
 print("Reading data from bucket")
 postsobj = bucket.Object(key='gme.csv')
 response = postsobj.get()
-postsdf = pd.read_csv(io.BytesIO(response['Body'].read()), encoding='utf8')
-postsdf['hour'] = pd.to_datetime(postsdf['hour'])
-posts = np.array_split(postsdf, 100)
+historicaldata = pd.read_csv(io.BytesIO(response['Body'].read()), encoding='utf8')
+historicaldata['timestamp_'] = pd.to_datetime(historicaldata['hour'])
+historicaldata = historicaldata.drop("hour", axis=1)
+# historicaldata['id'] = [str(uuid.uuid4()) for _ in range(len(historicaldata.index))]
+
+historicaldata = historicaldata.rename(
+                columns={
+                    "closeprice": "close_price",
+                    "openprice": "open_price",
+                    "highprice": "high_price",
+                    "lowprice": "low_price",
+                }
+            )
+historicaldata = historicaldata.drop("prediction", axis=1)
 print("Reading data from bucket --- done")
+print("Splitting data")
+databatches = np.array_split(historicaldata, 100)
 
 auth_provider = PlainTextAuthProvider(username=CASSANDRA_USER, password=CASSANDRA_PWD)
-cluster = Cluster([CASSANDRA_HOST], auth_provider=auth_provider)
+# cluster = Cluster([CASSANDRA_HOST], auth_provider=auth_provider)
+cluster = Cluster([CASSANDRA_HOST])
 cassandrasession = cluster.connect(KEYSPACE)
 
-insertlogs = cassandrasession.prepare("INSERT INTO gamestop (id, timestamp_, open_price, high_price, \
-                                    low_price, volume, close_price, close_price_pred) \
-                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+insertlogs = cassandrasession.prepare(f"INSERT INTO {GAMESTOP_TABLE} (id, timestamp_, open_price, high_price, \
+                                    low_price, volume, close_price) \
+                                    VALUES (?, ?, ?, ?, ?, ?, ?)")
 
 counter = 0
 totalcount = 0
 batches = []
 now = datetime.datetime.now()
-print("{} Sending {} data to cassandra in {} batches with {} rows".format(now.strftime("%Y-%m-%d %H:%M:%S"), len(postsdf), len(posts), len(posts[0])))
+print("{} Sending {} data to cassandra in {} batches with {} rows".format(now.strftime("%Y-%m-%d %H:%M:%S"), len(historicaldata), len(databatches), len(databatches[0])))
 
 with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
-    for df_ in posts:
+    for df_ in databatches:
         def processit(df):
             counter = 0
             batch = BatchStatement(consistency_level=ConsistencyLevel.QUORUM)
             for index, values in df.iterrows():
                 batch.add(insertlogs,
-                    (str(uuid.uuid4()), values['hour'], values['openprice'], values['highprice'], 
-                    values['lowprice'], values['volume'], values['closeprice'], 0.0))
+                    (str(uuid.uuid4()), values['timestamp_'], values['open_price'], values['high_price'], 
+                    values['low_price'], values['volume'], values['close_price']))
                 counter += 1
                 if counter >= BATCH_SIZE:
                     # print('Inserting ' + str(counter) + ' records from batch')

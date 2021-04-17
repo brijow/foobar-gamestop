@@ -16,7 +16,7 @@ export finnhubsinkconfig='{
     "key.converter": "org.apache.kafka.connect.json.JsonConverter",
     "key.converter.schemas.enable":"false",
     "cassandra.write.mode" : "Update",
-    "topic.'${FINNHUB_TOPIC}'.kafkapipeline.gamestop.mapping": "timestamp_=value.timestamp_, id=value.uuid, close_price=value.close_price, open_price=value.open_price, high_price=value.high_price, volume=value.volume, low_price=value.low_price, close_price_pred=value.close_price_pred",
+    "topic.'${FINNHUB_TOPIC}'.kafkapipeline.gamestop.mapping": "timestamp_=value.timestamp_, id=value.id, close_price=value.close_price, open_price=value.open_price, high_price=value.high_price, volume=value.volume, low_price=value.low_price",
     "topic.'${FINNHUB_TOPIC}'.kafkapipeline.gamestop.consistencyLevel": "LOCAL_QUORUM"
   }
 }'

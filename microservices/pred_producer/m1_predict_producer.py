@@ -1,4 +1,3 @@
-from kafka import KafkaProducer
 import torch
 import json
 from foobar.model.lstm import LSTM
@@ -9,84 +8,81 @@ import os
 import pandas as pd
 import numpy as np
 import uuid
+import boto3
 # testing the producer with csv data
 # import pandas as pd
 # df_gamestop = pd.read_csv('microservices/m1_pred_producer/sample.csv')
 # import time
 # while True: time.sleep(10000)
 
-GAMESTOP_TABLE = (
-    os.environ.get("GAMESTOP_TABLE") if os.environ.get("GAMESTOP_TABLE") else "gamestop"
-)
-TIMESTAMP_COLUMN = "timestamp_"
 
-BUCKET = (
-    os.environ.get("BUCKET_NAME")
-    if os.environ.get("BUCKET_NAME")
-    else "bb-s3-bucket-cmpt733"
-)
-MODEL_FILE = "m1.pth"
-LOCAL_FILE = MODEL_FILE
+class FinnHubPredictor:
+    def __init__(self,
+                gamestop_table : str,
+                bucket_name : str,
+                bucket=None) :
+        self.MODEL_FILE = "m1.pth"
+        self.LOCAL_FILE = self.MODEL_FILE
+        self.TIMESTAMP_COLUMN = "timestamp_"
+        self.GAMESTOP_TABLE = gamestop_table
+        self.BUCKET_NAME = bucket_name
+        if bucket is None:
+            session = boto3.Session(
+                        aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+                        aws_secret_access_key=os.environ['AWS_SECRET_KEY'],
+                        region_name=os.environ['REGION_NAME'])
+                        
+            s3 = session.resource('s3')
+            self.bucket = s3.Bucket(bucket_name)
+        else:
+            self.bucket = bucket
 
-# Kafka producer
-KAFKA_BROKER_URL = (
-    os.environ.get("KAFKA_BROKER_URL")
-    if os.environ.get("KAFKA_BROKER_URL")
-    else "localhost:9092"
-)
-TOPIC_NAME = (
-    os.environ.get("TOPIC_NAME") if os.environ.get("TOPIC_NAME") else "from_finnhub"
-)
-SLEEP_TIME = int(os.environ.get("SLEEP_TIME", 300))
+    def predictNewData(self, newdata_df=None, historicaldata_=None):
+        if historicaldata_ is None:
+            historicaldata_ = query_table(self.GAMESTOP_TABLE)
+        print("queried gamestop table")
+        if newdata_df is not None:
+            print("Merging new data with historical data")
+            data_ = pd.concat([historicaldata_, newdata_df], axis=0)
+        newpredictionids = data_[data_['close_price_pred'] == -1]
+        predictions = self.producePredictions(data_)
+        if predictions is None : return None
+        newpredictions = predictions[predictions['id'] == newpredictionids['id']]
+        return newpredictions
 
-producer = KafkaProducer(
-    bootstrap_servers=KAFKA_BROKER_URL,
-    value_serializer=lambda x: x.encode("utf8"),
-    api_version=(0, 11, 5),
-)
+    def producePredictions(self, df_gamestop : pd.DataFrame):
+        # read historical data from cassandra and make predictions
+        print("Running prediction model")
+        try:
+            train_result = download_model(self.bucket, self.BUCKET_NAME, self.MODEL_FILE, self.LOCAL_FILE)
+            # extract model parameters
+            feature_set = train_result["feature_set"]
+            history = train_result["history"]
+            prediction_horizon = int(train_result["pred_horizon"])
+            train_window = int(train_result["train_window"])
+            train_scaler = train_result["scaler"]
+            train_parameter_set = (feature_set, train_window, prediction_horizon)
 
+            num_features = len(feature_set) - 1
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            model = LSTM(input_size=num_features, seq_length=train_window)
+            model.load_state_dict(train_result["model"])
 
-# read historical data from cassandra and make predictions
-try:
-    train_result = download_model(BUCKET, MODEL_FILE, LOCAL_FILE)
-    # extract model parameters
-    feature_set = train_result["feature_set"]
-    history = train_result["history"]
-    prediction_horizon = int(train_result["pred_horizon"])
-    train_window = int(train_result["train_window"])
-    train_scaler = train_result["scaler"]
-    train_parameter_set = (feature_set, train_window, prediction_horizon)
+            if df_gamestop is not None:
+                print(df_gamestop.head())
+                df_predictions = prediction(
+                    model, device, train_scaler, df_gamestop, train_parameter_set
+                )
+                # df_predictions.to_csv('microservices/m1_pred_producer/sample.csv')
+            print("Done with predictions...")
+            return df_predictions
+        except Exception as e:
+            print(f"prediction failed. ERROR: {e}")
+            return None
 
-    num_features = len(feature_set) - 1
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = LSTM(input_size=num_features, seq_length=train_window)
-    model.load_state_dict(train_result["model"])
-
-    df_gamestop = query_table(GAMESTOP_TABLE)
-    print("queried gamestop table")
-
-    if df_gamestop is not None:
-        print(df_gamestop.head())
-        df_predictions = prediction(
-            model, device, train_scaler, df_gamestop, train_parameter_set
-        )
-        # df_predictions.to_csv('microservices/m1_pred_producer/sample.csv')
-        if df_predictions is not None:
-            df_predictions.rename({'id': 'uuid'}, axis=1, inplace=True)
-            df_predictions.drop('prediction', axis=1, inplace=True)
-            df_predictions['uuid'] = str(uuid.uuid4())
-            df_predictions['timestamp_'] = pd.to_datetime(df_predictions['timestamp_'], unit="s")
-            df_predictions['timestamp_'] = df_predictions['timestamp_'].dt.strftime("%Y-%m-%d %H:%M:%S")
-            df_predictions['close_price_pred'] = df_predictions['close_price']
-            print(df_predictions['close_price_pred'])
-            print("Sending prediction records to kafka")
-
-            for index, row in df_predictions.iterrows():
-                if index > 30: break
-                print(row.to_json())
-                producer.send(TOPIC_NAME, value=row.to_json())
-    print("Done with predictions...")
-
-except Exception as e:
-    print(f"prediction failed. ERROR: {e}")
-
+if __name__ == '__main__':
+    print("Starting Finhub prediction runner")
+    predictor = FinnHubPredictor()
+    newrows = predictor.predictNewData()
+    print(f"Predicted {len(newrows)} new rows.")
+    print(newrows)
