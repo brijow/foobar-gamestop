@@ -74,8 +74,8 @@ producers:
     containername: finnhubproducer
     topicname: finnhubsource
     sleeptime: 300
-    encoded_token: YnZ1a29pdjQ4djZwa3E4M3VhczA=
-    # YzFsamIyMjM3Zmt0Mm1zazZ1ZWc=
+    encoded_token: YzFsamIyMjM3Zmt0Mm1zazZ1ZWc=
+    # YnZ1a29pdjQ4djZwa3E4M3VhczA=
   wsb:
     containername: wsbproducer
     posttopicname: redditpost
