@@ -38,8 +38,8 @@ def select_gamestops_by_hour_range(session, start_date=None, end_date=None):
 
     cqlquery = f"""
     SELECT * FROM gamestop
-    WHERE timestamp_ >= '{start_date}'
-    AND timestamp_ < '{end_date}' ALLOW FILTERING;
+    WHERE hour >= '{start_date}'
+    AND hour < '{end_date}' ALLOW FILTERING;
     """
     rows = session.execute(cqlquery)
     return pd.DataFrame(rows)

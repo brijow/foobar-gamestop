@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import os
 import pandas as pd
 
-from queries import (
+from foobar.db_utils.queries import (
     select_posts_by_hour_range,
     select_tags_by_postids,
     select_all_from_wide_table,
@@ -76,6 +76,7 @@ GAMESTOP_COLS = [
     "high_price",
     "volume",
     "close_price",
+    "prediction_finn",
 ]
 
 POST_COLS = [
@@ -179,22 +180,11 @@ def new_cassandra_session(auth=True):
     return session
 
 
-def get_m1_preditions(df):
-    return -1
-
-
-def get_m2_preditions(df):
-    return -1
-
-
-def get_m3_preditions(df):
-    return -1
-
 
 def run_wide_row_builder(data_point_time_step="H"):
     session = new_cassandra_session()
-    # wide_df = select_all_from_wide_table(session)
-    wide_df = pd.read_csv("wide.csv")
+    wide_df = select_all_from_wide_table(session)
+    # wide_df = pd.read_csv("wide.csv")
     wide_df["hour"] = pd.to_datetime(wide_df["hour"])
     last_time = wide_df["hour"].max()
     curr_time = datetime.now()
@@ -234,13 +224,11 @@ def run_wide_row_builder(data_point_time_step="H"):
     )
     gamestop_df = gamestop_df.ffill()
 
-    result = pd.concat([reddit_df, gamestop_df], axis=1)
-    result["prediction_finn"] = -1
-    result["prediction_wide"] = -1
-    result["prediction_reddit"] = -1
-
-    result["prediction_finn"] = get_m1_preditions(result[GAMESTOP_COLS])
-    result["prediction_wide"] = get_m2_preditions(result[WIDE_COLS])
-    result["prediction_reddit"] = get_m3_preditions(result[WIDE_REDDIT_COLS])
-
+    result = pd.merge(reddit_df, gamestop_df, on='hour')
+    newrows = pd.merge(result, wide_df['hour'], on='hour', how="outer", indicator=True)
+    newrows = newrows[newrows['_merge'] == 'left_only']
+    result = pd.concat([wide_df, newrows], axis=0)
+    result = result.fillna(-1)
+    result = result.reset_index()
+    
     return result[WIDE_COLS]
