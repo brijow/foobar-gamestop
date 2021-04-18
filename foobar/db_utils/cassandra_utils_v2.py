@@ -80,7 +80,7 @@ GAMESTOP_COLS = [
 ]
 
 POST_COLS = [
-    "dt",
+    "hour",
     "id",
     "iscomment",
     "negative",
@@ -94,16 +94,25 @@ POST_COLS = [
 TAG_COLS = ["post_id", "id", "tag_token"]
 
 
-def build_wide_reddit_row(session, start_date, end_date):
+def build_wide_reddit_row(session, start_date, end_date, all_posts):
     """NOTE: only works on a hourly basis"""
     reddit_df = pd.DataFrame(columns=WIDE_REDDIT_COLS)
     posts_df = pd.DataFrame(columns=POST_COLS)
     tags_df = pd.DataFrame(columns=TAG_COLS)
-
-    posts_df = posts_df.append(
-        select_posts_by_hour_range(session, start_date, end_date)
-    )
-    tags_df = tags_df.append(select_tags_by_postids(session, posts_df["id"].tolist()))
+    if all_posts.empty:
+        print(
+            (
+                f"No posts found for date range {start_date} = {end_date}.\n"
+                "Using last available row of reddit data from wide table."
+            )
+        )
+        return reddit_df
+    rowposts = all_posts[(all_posts['hour'] > start_date) & (all_posts['hour'] < end_date)]
+    if not rowposts.empty:
+        posts_df = posts_df.append(
+            rowposts
+        )
+        tags_df = tags_df.append(select_tags_by_postids(session, posts_df["id"].tolist()))
 
     if posts_df.empty:
         print(
@@ -197,11 +206,13 @@ def run_wide_row_builder(data_point_time_step="H"):
     reddit_df = pd.DataFrame(columns=WIDE_REDDIT_COLS)
     gamestop_df = pd.DataFrame(columns=GAMESTOP_COLS)
 
+    all_posts = select_posts_by_hour_range(session, last_time, curr_time)
+
     time_df = pd.DataFrame({"h0": time_range, "h1": time_range + timedelta(hours=1)})
     for _, row in time_df.iterrows():
         start_date, end_date = row["h0"], row["h1"]
 
-        reddit_single_hour_df = build_wide_reddit_row(session, start_date, end_date)
+        reddit_single_hour_df = build_wide_reddit_row(session, start_date, end_date, all_posts)
 
         if reddit_single_hour_df.empty:
             reddit_single_hour_df = wide_df.iloc[-1][WIDE_REDDIT_COLS]

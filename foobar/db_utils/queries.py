@@ -15,7 +15,14 @@ def select_posts_by_hour_range(session, start_date=None, end_date=None):
 
     cqlquery = f"SELECT * FROM post WHERE dt >= '{start_date}' AND dt < '{end_date}' ALLOW FILTERING;"
     rows = session.execute(cqlquery)
-    return pd.DataFrame(rows)
+    found = pd.DataFrame(rows)
+    if not found.empty:
+        found = found.rename(
+                    columns={
+                        "dt": "hour",
+                    }
+                )
+    return found
 
 
 def select_tags_by_postids(session, post_id_list):

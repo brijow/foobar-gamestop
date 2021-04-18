@@ -21,6 +21,7 @@ BUCKET_NAME = (
     else "bb-s3-bucket-cmpt733"
 )
 
+KAFKA_ENABLED=os.environ.get("KAFKA_ENABLED", "true") == "true"
 
 # Kafka producer
 KAFKA_BROKER_URL = (
@@ -39,10 +40,6 @@ TAG_TABLE = os.environ.get("TAG_TABLE", "tag")
 WIDE_TABLE = os.environ.get("WIDE_TABLE", "wide")
 
 TOPIC_NAME = os.environ.get("TOPIC_NAME", "wide")
-
-os.environ['AWS_ACCESS_KEY_ID'] = 'AKIA3FK2NHCARLS3RA7X'
-os.environ['AWS_SECRET_KEY'] = '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'
-os.environ['REGION_NAME'] = 'us-west-2'
 
 
 class WideTablePredictor:
@@ -69,8 +66,11 @@ class WideTablePredictor:
         predictions = self.makeWidePredictions()
         if predictions is None:
             sys.exit("{} Did not receive any wide table predictions".format(now.strftime("%Y-%m-%d %H:%M:%S")))
-        print(f"Finished prediction of {len(predictions)} rows. Now sending it to Kafka")
-        self.sendRecordstoKafka(predictions)
+        if KAFKA_ENABLED:
+            print(f"Finished prediction of {len(predictions)} rows. Now sending it to Kafka")
+            self.sendRecordstoKafka(predictions)
+        else:
+            print(f"KAFKA DISABLED* Finished prediction of {len(predictions)} rows. Would have sent to Kafka now")
         now = datetime.now()
         print("{} Wide prediction process done".format(now.strftime("%Y-%m-%d %H:%M:%S")))
 
@@ -124,6 +124,8 @@ class WideTablePredictor:
             newpredictions = pd.merge(predictedFinnhub, df_predictions, on='hour')
 
             print("Done with Wide predictions from {} to {}".format(newpredictions['hour'].min(), newpredictions['hour'].max()))
+            newpredictions['hour'] = pd.to_datetime(newpredictions['hour'], unit="s")
+            newpredictions['hour'] = newpredictions['hour'].dt.strftime("%Y-%m-%d %H:%M:%S")
             return newpredictions[WIDE_COLS]
 
 
