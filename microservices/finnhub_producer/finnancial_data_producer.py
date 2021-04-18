@@ -3,11 +3,10 @@ import json
 import os
 import time
 from datetime import datetime, timedelta
-
 import finnhub
 import pandas as pd
 from kafka import KafkaProducer
-import uuid
+import numpy as np
 
 # Finnhub API config
 AUTH_TOKEN = os.environ.get("FINNHUB_AUTH_TOKEN")
@@ -60,7 +59,7 @@ class finnhub_producer:
                     "h": "high_price",
                     "l": "low_price",
                     "v": "volume",
-                    "t": "timestamp_",
+                    "t": "hour",
                     "s": "status",
                 }
             )
@@ -76,20 +75,20 @@ class finnhub_producer:
         )
         if ts is not None:
             print('Sending financial data to Kafka queue...')
-            ts['timestamp_'] = pd.to_datetime(ts['timestamp_'], unit="s")
-            ts['timestamp_'] = ts['timestamp_'].dt.strftime("%Y-%m-%d %H:%M:%S")
-            for index, row in ts.iterrows():
-                row['uuid'] = str(uuid.uuid4())
+            ts['hour'] = pd.to_datetime(ts['hour'], unit="s")
+            ts['hour'] = ts['hour'].dt.strftime("%Y-%m-%d %H:%M:%S")
+            
+            print(f"Going to send {len(ts)} records to kafka")
+            for index, row in predicteddata.iterrows():
                 print(row.to_json())
                 self.producer.send(TOPIC_NAME, value=row.to_json())
             self.producer.flush()
             print(f'Stock price from {date_from} to {date_to} was sent to Kafka')
-        time.sleep(SLEEP_TIME)
         self.last_poll_datetime = date_to
 
 
 if __name__ == "__main__":
     print("Starting Finnhub producer")
-    while True:
-        finnhub_service = finnhub_producer(api_token=AUTH_TOKEN)
-        finnhub_service.run()
+    finnhub_service = finnhub_producer(api_token=AUTH_TOKEN)
+    finnhub_service.run()
+    time.sleep(10) #adding sleep here just to be able to see the logs after running.

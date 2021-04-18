@@ -7,23 +7,17 @@ replicaCount: 1
 image:
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  finnhub:
-    repository: ghcr.io/salcaino/foobar-finnhub-prod
-    tag: "latest"
   app:
     repository: ghcr.io/salcaino/foobar-dash-app
     tag: "latest"
   wsb:
     repository: ghcr.io/salcaino/foobar-wsb
     tag: "latest"
-  jobs:
-    repository: ghcr.io/salcaino/foobar-jobs
-    tag: "latest"
-  consumers:
-    repository: ghcr.io/salcaino/foobar-consumers
-    tag: "latest"
   connect:
     repository: ghcr.io/salcaino/foobar-connect
+    tag: "latest"
+  jobs:
+    repository: ghcr.io/salcaino/foobar-jobs
     tag: "latest"
 
 # imageCredentials:
@@ -81,6 +75,7 @@ producers:
     topicname: finnhubsource
     sleeptime: 300
     encoded_token: YzFsamIyMjM3Zmt0Mm1zazZ1ZWc=
+    # YnZ1a29pdjQ4djZwa3E4M3VhczA=
   wsb:
     containername: wsbproducer
     posttopicname: redditpost
@@ -93,29 +88,50 @@ producers:
     bucket_region: us-west-2
     crons:
       "0":
-        name: busybox-cron
-        command: /usr/app/keep-busy.sh
-        schedule: "*/25 * * * *" #every 5 minutes for now
-        topicname: busytopic
+        name: finnhub
+        command: "/usr/app/finnancial_data_producer.py"
+        schedule: "*/4 * * * *" #every 4 minutes for now
+        topicname: finnhubsource
+        gmetable: gamestop
+        tagtable: tag
+        poststable: post
+        widetable: wide
+        image:
+          repository: ghcr.io/salcaino/foobar-finnhub-prod
+          tag: "latest"
+      # "1":
+      #   name: m2-predictor
+      #   command: "/usr/app/m2_predict_producer.py"
+      #   schedule: "*/5 * * * *" #every 5 minutes for now
+      #   topicname: widetopic
+      #   gmetable: gamestop
+      #   tagtable: tag
+      #   poststable: post
+      #   widetable: wide
+      #   image:
+      #     repository: ghcr.io/salcaino/foobar-cron
+      #     tag: "latest"
     wideproducer:
       topicname: widetopic
     preloaders:
       "0":
         name: tagspreloader
         weight: -1
-        batchsize: 200
+        batchsize: 250
+        hook: post-install
         command: /usr/app/preload_tags.py
       "1":
         name: finnhubpreloader
         weight: -2
         batchsize: 100
+        hook: post-upgrade
         command: /usr/app/preload_finnhub.py
-      # "2":
-      #   name: postspreloader
-      #   weight: -2
-      #   batchsize: 1000
-      #   command: /usr/app/preload_posts.py
-      
+      "2":
+        name: postspreloader
+        weight: -2
+        batchsize: 200
+        hook: post-install
+        command: /usr/app/preload_posts.py
   
 consumers:
   name: consumers
@@ -135,8 +151,8 @@ ingress:
 
 
 autoscaling:
-  enabled: false
-  minReplicas: 1
+  enabled: true
+  minReplicas: 3
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
 
@@ -147,12 +163,6 @@ kafka:
     port: 9092
   global:
     storageClass: gp2
-  provisioning:
-    enabled : false
-    topics : 
-      - name: weather
-      - name: twitter
-      - name: twittersink
   persistence:
     storageClass: gp2
     size: 1Gi
@@ -166,6 +176,7 @@ kafka:
     name: connect
     port: 8083
 cassandra:
+  replicaCount: 3
   image:  
     debug: true
   dbUser:
@@ -173,8 +184,9 @@ cassandra:
     existingSecret: cassandra-secret
   persistence:
     storageClass: gp2
-    size : 1Gi
+    size : 6Gi
   initDBConfigMap: init-db
+  extraEnvVarsCM: db-conf
 metrics-server:
   serviceAccount:
     create: false

@@ -2,10 +2,9 @@ import boto3
 import torch
 
 
-def download_model(BUCKET, MODEL_FILE, LOCAL_FILE):
+def download_model(bucket, BUCKET_NAME, MODEL_FILE, LOCAL_FILE):
     try:
-        s3_client = boto3.client("s3")
-        s3_client.download_file(BUCKET, MODEL_FILE, LOCAL_FILE)
+        bucket.download_file(MODEL_FILE, LOCAL_FILE)
         train_result = torch.load(LOCAL_FILE)
         return train_result
     except Exception as e:
