@@ -1,75 +1,246 @@
+from cassandra.cluster import Cluster
+from cassandra.query import dict_factory
+from cassandra.auth import PlainTextAuthProvider
 from datetime import datetime, timedelta
+import os
+import pandas as pd
 
-def get_posts_in_date_range_as_df(session, start_date=None, end_date=None):
-    """Accepts two valid datetime.datetime objects"""
+from queries import (
+    select_posts_by_hour_range,
+    select_tags_by_postids,
+    select_all_from_wide_table,
+    select_gamestops_by_hour_range,
+)
 
-    start_date = start_date or datetime.now()
-    end_date = end_date or start_date + timedelta(hours=1)
+CASSANDRA_HOST = (
+    os.environ.get("CASSANDRA_HOST")
+    if os.environ.get("CASSANDRA_HOST")
+    else "localhost"
+)
+CASSANDRA_KEYSPACE = (
+    os.environ.get("CASSANDRA_KEYSPACE")
+    if os.environ.get("CASSANDRA_KEYSPACE")
+    else "kafkapipeline"
+)
+CASSANDRA_USER = os.environ.get("CASSANDRA_USER")
+CASSANDRA_PWD = os.environ.get("CASSANDRA_PWD")
 
-    start_date = start_date.strftime("%Y-%m-%d %H:00:00")
-    end_date = end_date.strftime("%Y-%m-%d %H:00:00")
+WIDE_COLS = [
+    "hour",
+    "avg_all_post_pos",
+    "avg_all_post_neg",
+    "avg_all_post_neu",
+    "cnt_all_user",
+    "cnt_all_tag",
+    "cnt_all_post",
+    "cnt_all_comments",
+    "avg_gme_post_pos",
+    "avg_gme_post_neg",
+    "avg_gme_post_neu",
+    "cnt_gme_user",
+    "cnt_gme_tag",
+    "cnt_gme_post",
+    "cnt_gme_comments",
+    "open_price",
+    "low_price",
+    "high_price",
+    "volume",
+    "close_price",
+    "prediction_finn",
+    "prediction_wide",
+    "prediction_reddit",
+]
 
-    cqlquery = f"SELECT * FROM post WHERE dt >= '{start_date}' AND dt < '{end_date}' ALLOW FILTERING;"
-    rows = session.execute(cqlquery)
-    return pd.DataFrame(rows)
+WIDE_REDDIT_COLS = [
+    "hour",
+    "avg_all_post_pos",
+    "avg_all_post_neg",
+    "avg_all_post_neu",
+    "cnt_all_user",
+    "cnt_all_tag",
+    "cnt_all_post",
+    "cnt_all_comments",
+    "avg_gme_post_pos",
+    "avg_gme_post_neg",
+    "avg_gme_post_neu",
+    "cnt_gme_user",
+    "cnt_gme_tag",
+    "cnt_gme_post",
+    "cnt_gme_comments",
+]
+
+GAMESTOP_COLS = [
+    "hour",
+    "open_price",
+    "low_price",
+    "high_price",
+    "volume",
+    "close_price",
+]
+
+POST_COLS = [
+    "dt",
+    "id",
+    "iscomment",
+    "negative",
+    "neutral",
+    "parent_id",
+    "positive",
+    "submission_id",
+    "username",
+]
+
+TAG_COLS = ["post_id", "id", "tag_token"]
 
 
-def get_tags_in_post_id_list_as_df(session, post_id_list):
-    """Accepts a list of post_id strings"""
-    post_id_tuple = tuple(post_id_list)
-    placeholders = ", ".join("%s" for i in post_id_tuple)
-    cqlquery = f"SELECT * FROM tag WHERE post_id in ({placeholders})"
-    rows = session.execute(cqlquery, post_id_tuple)
-    return pd.DataFrame(rows)
+def build_wide_reddit_row(session, start_date, end_date):
+    """NOTE: only works on a hourly basis"""
+    reddit_df = pd.DataFrame(columns=WIDE_REDDIT_COLS)
+    posts_df = pd.DataFrame(columns=POST_COLS)
+    tags_df = pd.DataFrame(columns=TAG_COLS)
+
+    posts_df = posts_df.append(
+        select_posts_by_hour_range(session, start_date, end_date)
+    )
+    tags_df = tags_df.append(select_tags_by_postids(session, posts_df["id"].tolist()))
+
+    if posts_df.empty:
+        print(
+            (
+                f"No posts found for date range {start_date} = {end_date}.\n"
+                "Using last available row of reddit data from wide table."
+            )
+        )
+        return reddit_df
+
+    if tags_df.empty:
+        print(
+            (
+                f"No tags found for posts in date range {start_date} = {end_date}.\n"
+                "Still performing reddit join logic but no new tag info will be present."
+            )
+        )
+
+    reddit_row = dict()
+
+    df = posts_df.set_index("id").join(tags_df.set_index("post_id"))
+
+    all_sentiments = df[["positive", "negative", "neutral"]].mean().fillna(0)
+
+    all_sentiments = all_sentiments.rename(
+        {
+            "positive": "avg_all_post_pos",
+            "negative": "avg_all_post_neg",
+            "neutral": "avg_all_post_neu",
+        }
+    )
+
+    gme_df = df[df["tag_token"] == "GME"]
+
+    gme_sentiments = gme_df[["positive", "negative", "neutral"]].mean().fillna(0)
+    gme_sentiments = gme_sentiments.rename(
+        {
+            "positive": "avg_gme_post_pos",
+            "negative": "avg_gme_post_neg",
+            "neutral": "avg_gme_post_neu",
+        }
+    )
+
+    reddit_row["cnt_all_comments"] = len(df[df["iscomment"] == True])
+    reddit_row["cnt_all_post"] = len(df[df["iscomment"] == False])
+    reddit_row["cnt_all_tag"] = len(df)
+    reddit_row["cnt_all_user"] = df["username"].nunique()
+    reddit_row["avg_all_post_neg"] = all_sentiments["avg_all_post_neg"]
+    reddit_row["avg_all_post_neu"] = all_sentiments["avg_all_post_neu"]
+    reddit_row["avg_all_post_pos"] = all_sentiments["avg_all_post_pos"]
+    reddit_row["cnt_gme_comments"] = len(gme_df[gme_df["iscomment"] == True])
+    reddit_row["cnt_gme_post"] = len(gme_df[gme_df["iscomment"] == False])
+    reddit_row["cnt_gme_tag"] = len(gme_df)
+    reddit_row["cnt_gme_user"] = gme_df["username"].nunique()
+    reddit_row["avg_gme_post_neg"] = gme_sentiments["avg_gme_post_neg"]
+    reddit_row["avg_gme_post_neu"] = gme_sentiments["avg_gme_post_neu"]
+    reddit_row["avg_gme_post_pos"] = gme_sentiments["avg_gme_post_pos"]
+    reddit_row["hour"] = start_date
+
+    reddit_df = reddit_df.append(reddit_row, ignore_index=True)
+    return reddit_df
 
 
-def get_gamestop_in_date_range_as_df(session, start_date=None, end_date=None):
-    """Accepts two valid datetime.datetime objects"""
+def new_cassandra_session(auth=True):
+    auth_provider = (
+        PlainTextAuthProvider(username=CASSANDRA_USER, password=CASSANDRA_PWD)
+        if auth
+        else None
+    )
+    cluster = Cluster([CASSANDRA_HOST], auth_provider=auth_provider)
 
-    start_date = start_date or datetime.now()
-    end_date = end_date or start_date + timedelta(hours=1)
-
-    start_date = start_date.strftime("%Y-%m-%d %H:00:00")
-    end_date = end_date.strftime("%Y-%m-%d %H:00:00")
-
-    cqlquery = f"""
-    SELECT * FROM gamestop
-    WHERE timestamp_ >= '{start_date}'
-    AND timestamp_ < '{end_date}' ALLOW FILTERING;
-    """
-    rows = session.execute(cqlquery)
-    return pd.DataFrame(rows)
+    session = cluster.connect(CASSANDRA_KEYSPACE)
+    session.row_factory = dict_factory
+    return session
 
 
-def join_posts_and_tags(session, start_date, end_date):
-    joined_df = pd.DataFrame()
-
-    posts_df = get_posts_in_date_range_as_df(session, start_date, end_date)
-    if posts_df.empty: return joined_df
-
-    post_id_list = posts_df['id'].tolist()
-    tags_df = get_tags_in_post_id_list_as_df(session, post_id_list)
-    if tags_df.empty: return joined_df
-
-    joined_df = posts_df.set_index('id').join(tags_df.set_index('post_id'))
-    return joined_df
+def get_m1_preditions(df):
+    return -1
 
 
-def test_a_few_days(session):
-    dti = pd.date_range("2021-02-01", periods=3, freq="H")
-    for start_date in dti:
-        end_date = start_date + timedelta(hours=1)
-        df = join_posts_and_tags(session, start_date, end_date)
-        if df.empty: continue
+def get_m2_preditions(df):
+    return -1
 
-        all_sentiments = df[['positive', 'negative', 'neutral']].mean().fillna(0)
-        all_sentiments = all_sentiments.rename({'positive': 'avg_all_post_pos',
-                                                'negative': 'avg_all_post_neg',
-                                                'neutral': 'avg_all_post_neu'})
 
-        gme_df = df[df['tag_token'] == 'GME']
-        gme_sentiments = gme_df[['positive', 'negative', 'neutral']].mean().fillna(0)
-        gme_sentiments = gme_sentiments.rename({'positive': 'avg_gme_post_pos',
-                                                'negative': 'avg_gme_post_neg',
-                                                'neutral': 'avg_gme_post_neu'})
+def get_m3_preditions(df):
+    return -1
 
+
+def run_wide_row_builder(data_point_time_step="H"):
+    session = new_cassandra_session()
+    # wide_df = select_all_from_wide_table(session)
+    wide_df = pd.read_csv("wide.csv")
+    wide_df["hour"] = pd.to_datetime(wide_df["hour"])
+    last_time = wide_df["hour"].max()
+    curr_time = datetime.now()
+    time_range = pd.date_range(last_time, curr_time, freq="H")
+
+    if len(time_range) <= 1:
+        print("nothing to update in wide table")
+        return
+
+    reddit_df = pd.DataFrame(columns=WIDE_REDDIT_COLS)
+    gamestop_df = pd.DataFrame(columns=GAMESTOP_COLS)
+
+    time_df = pd.DataFrame({"h0": time_range, "h1": time_range + timedelta(hours=1)})
+    for _, row in time_df.iterrows():
+        start_date, end_date = row["h0"], row["h1"]
+
+        reddit_single_hour_df = build_wide_reddit_row(session, start_date, end_date)
+
+        if reddit_single_hour_df.empty:
+            reddit_single_hour_df = wide_df.iloc[-1][WIDE_REDDIT_COLS]
+            reddit_single_hour_df["hour"] = start_date
+
+        reddit_df = reddit_df.append(reddit_single_hour_df)
+
+    reddit_df.reset_index(drop=True, inplace=True)
+
+    gamestop_df = gamestop_df.append(
+        select_gamestops_by_hour_range(session, last_time, curr_time)
+    )
+
+    time_joiner = time_df.set_index("h0")
+    gamestop_df = time_joiner.join(gamestop_df[GAMESTOP_COLS].set_index("hour"))
+    gamestop_df = gamestop_df.rename(columns={"h1": "hour"}).reset_index(drop=True)
+    last_gme_row = wide_df.iloc[-1][GAMESTOP_COLS]
+    gamestop_df = (
+        gamestop_df.append(last_gme_row).sort_values(by="hour").reset_index(drop=True)
+    )
+    gamestop_df = gamestop_df.ffill()
+
+    result = pd.concat([reddit_df, gamestop_df], axis=1)
+    result["prediction_finn"] = -1
+    result["prediction_wide"] = -1
+    result["prediction_reddit"] = -1
+
+    result["prediction_finn"] = get_m1_preditions(result[GAMESTOP_COLS])
+    result["prediction_wide"] = get_m2_preditions(result[WIDE_COLS])
+    result["prediction_reddit"] = get_m3_preditions(result[WIDE_REDDIT_COLS])
+
+    return result[WIDE_COLS]
