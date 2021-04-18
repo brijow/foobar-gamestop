@@ -99,18 +99,18 @@ producers:
         image:
           repository: ghcr.io/salcaino/foobar-finnhub-prod
           tag: "latest"
-      # "1":
-      #   name: m2-predictor
-      #   command: "/usr/app/m2_predict_producer.py"
-      #   schedule: "*/5 * * * *" #every 5 minutes for now
-      #   topicname: widetopic
-      #   gmetable: gamestop
-      #   tagtable: tag
-      #   poststable: post
-      #   widetable: wide
-      #   image:
-      #     repository: ghcr.io/salcaino/foobar-cron
-      #     tag: "latest"
+      "1":
+        name: m2-predictor
+        command: "/usr/app/m2_predict_producer.py"
+        schedule: "*/5 * * * *" #every 5 minutes for now
+        topicname: widetopic
+        gmetable: gamestop
+        tagtable: tag
+        poststable: post
+        widetable: wide
+        image:
+          repository: ghcr.io/salcaino/foobar-cron
+          tag: "latest"
     wideproducer:
       topicname: widetopic
     preloaders:
@@ -119,20 +119,30 @@ producers:
         weight: -1
         batchsize: 250
         hook: post-install
+        tablename: tag
         command: /usr/app/preload_tags.py
       "1":
         name: finnhubpreloader
         weight: -2
         batchsize: 100
-        hook: post-upgrade
+        hook: post-install
+        tablename: gamestop
         command: /usr/app/preload_finnhub.py
       "2":
         name: postspreloader
         weight: -2
         batchsize: 200
         hook: post-install
+        tablename: post
         command: /usr/app/preload_posts.py
-  
+      "3":
+        name: widetablepreloader
+        weight: -3
+        batchsize: 100
+        hook: post-install
+        tablename: wide
+        command: /usr/app/preload_widetable.py
+
 consumers:
   name: consumers
   twitter:

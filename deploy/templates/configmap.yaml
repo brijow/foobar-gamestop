@@ -103,5 +103,7 @@ data:
       close_price FLOAT,
       high_price FLOAT,
       low_price FLOAT,
-      prediction FLOAT,
+      prediction_finn FLOAT,
+      prediction_wide FLOAT,
+      prediction_reddit FLOAT,
       PRIMARY KEY (hour));

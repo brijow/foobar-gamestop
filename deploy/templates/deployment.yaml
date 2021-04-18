@@ -278,6 +278,8 @@ spec:
               key: bucket_name
         - name: REGION_NAME
           value: {{ $.Values.producers.jobs.bucket_region }}
+        - name: TABLE_NAME
+          value: {{ .tablename }}
         - name: BATCH_SIZE
           value: {{ .batchsize | quote }}
         command: ["python", "-u", "{{ .command}}"]
