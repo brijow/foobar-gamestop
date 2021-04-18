@@ -24,9 +24,8 @@ BUCKET = (
     else "bb-s3-bucket-cmpt733"
 )
 
-train_window_list = 24 * np.array([5, 10, 30])
-prediction_horizon_list = 24 * np.array([1, 2, 3, 5, 10])
-# batch_sizes = [100, 300, 500]
+train_window_list = [24*1, 24*2, 24*5, 24*10]
+prediction_horizon_list = [1, 2, 5, 24*1, 24*2]
 
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
@@ -66,8 +65,8 @@ if __name__ == "__main__":
     train_df_wide = df_wide[df_wide.index.year == 2020]
     test_df_wide = df_wide[df_wide.index.year == 2021]
 
-    train_datetime_list = list(train_df_wide.hour)
-    test_datetime_list = list(test_df_wide.hour)
+    train_datetime_list = list(train_df_wide.index)
+    test_datetime_list = list(test_df_wide.index)
 
     train_set_wide, train_scaler_wide = scale(train_df_wide, feature_set_wide)
     test_set_wide, _ = scale(test_df_wide, feature_set_wide, train_scaler_wide)
@@ -93,7 +92,9 @@ if __name__ == "__main__":
             val_seq_wide, _ = generate_window(
                 val_set_wide, train_window, prediction_horizon
             )
-
+            x, y = val_seq_wide
+            print(y.shape)
+            
             test_seq_wide, _ = generate_window(
                 test_set_wide, train_window, prediction_horizon
             )
