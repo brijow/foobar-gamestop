@@ -1,7 +1,10 @@
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from foobar.db_utils.cassandra_utils import *
 
+WIDE_TABLE = os.environ.get("WIDE_TABLE", "wide")
 
 def ts_subplots():
 
@@ -13,16 +16,21 @@ def ts_subplots():
         specs=[[{"b": 0.042}], [{}], [{}], [{}], [{}], [{}], [{}]],
     )
 
-    import pandas as pd
-
-    df = pd.read_csv("wide1.csv")
+    
+    # datetime,hour,avg_all_post_pos,avg_all_post_neg,avg_all_post_neu,cnt_all_user,
+    # cnt_all_tag,cnt_all_post,cnt_all_comments,avg_gme_post_pos,avg_gme_post_neg,avg_gme_post_neu,
+    # cnt_gme_user,cnt_gme_tag,cnt_gme_post,cnt_gme_comments,id,
+    # volume,openprice,closeprice,highprice,lowprice,
+    # prediction_finn,prediction_wide,prediction_reddit
+    # df = pd.read_csv("wide1.csv")
+    df = query_table(WIDE_TABLE)
     df = df.rename(
         columns={
             "hour": "DATE",
-            "openprice": "OPEN",
-            "highprice": "HIGH",
-            "lowprice": "LOW",
-            "closeprice": "CLOSE",
+            "open_price": "OPEN",
+            "high_price": "HIGH",
+            "low_price": "LOW",
+            "close_price": "CLOSE",
             "prediction_finn": "PRED_fin_feats",
             "prediction_wide": "PRED_all_feats",
             "prediction_reddit": "PRED_rdt_feats",

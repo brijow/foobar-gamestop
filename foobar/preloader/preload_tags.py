@@ -12,13 +12,23 @@ import numpy as np
 
 print("Starting Reddit tags preloader")
 
-CASSANDRA_HOST = os.environ.get("CASSANDRA_HOST")
+CASSANDRA_HOST = os.environ.get("CASSANDRA_HOST") if os.environ.get("CASSANDRA_HOST") else "localhost"
 CASSANDRA_USER = os.environ.get("CASSANDRA_USER")
 CASSANDRA_PWD = os.environ.get("CASSANDRA_PWD")
-KEYSPACE = os.environ.get("CASSANDRA_KEYSPACE")
-BUCKET_NAME = os.environ.get("BUCKET_NAME")
+CASSANDRA_KEYSPACE = os.environ.get("CASSANDRA_KEYSPACE") if os.environ.get("CASSANDRA_KEYSPACE") else 'kafkapipeline'
+BUCKET_NAME = (
+    os.environ.get("BUCKET_NAME")
+    if os.environ.get("BUCKET_NAME")
+    else "bb-s3-bucket-cmpt733"
+)
 BATCH_SIZE = int(os.environ.get("BATCH_SIZE"))
 NUM_WORKERS = int(os.environ.get("NUM_WORKERS", 25))
+TABLE_NAME = (
+    os.environ.get("TABLE_NAME") if os.environ.get("TABLE_NAME") else "tag"
+)
+os.environ['AWS_ACCESS_KEY_ID'] = 'AKIA3FK2NHCARLS3RA7X'
+os.environ['AWS_SECRET_KEY'] = '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'
+os.environ['REGION_NAME'] = 'us-west-2'
 
 session = boto3.Session(
                     aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
@@ -41,13 +51,17 @@ cluster = Cluster([CASSANDRA_HOST], auth_provider=auth_provider)
 totalcount = 0
 batches = []
 now = datetime.datetime.now()
-print("{} Sending {} tags to cassandra in {} batches with {} rows".format(now.strftime("%Y-%m-%d %H:%M:%S"), len(tagsdf), len(tags), len(tags[0])))
+print("{} Sending {} tags to cassandra in {} batches with {} rows"\
+    .format(now.strftime("%Y-%m-%d %H:%M:%S"), len(tagsdf), len(tags), len(tags[0])))
 
 with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
     for tagsdf_ in tags:
         def processit(df):
-            cassandrasession = cluster.connect(KEYSPACE)
-            insertlogs = cassandrasession.prepare("INSERT INTO tag (id, post_id, tag_token) VALUES (?, ?, ?)")
+            cassandrasession = cluster.connect(CASSANDRA_KEYSPACE)
+            cassandrasession.default_timeout = 60
+            cassandrasession.request_timeout = 30
+            insertlogs = cassandrasession.prepare(f"INSERT INTO {TABLE_NAME} \
+                (id, post_id, tag_token) VALUES (?, ?, ?)")
             counter = 0
             batch = BatchStatement(consistency_level=ConsistencyLevel.ONE)
             for index, values in df.iterrows():
@@ -72,8 +86,21 @@ with ThreadPoolExecutor(max_workers=NUM_WORKERS) as executor:
         except Exception as exc:
             print('Exception: %s' % (exc))
 
-print('Inserted ' + str(totalcount) + ' rows in total')
 now = datetime.datetime.now()
 print("{} Done sending tags to cassandra".format(now.strftime("%Y-%m-%d %H:%M:%S")))
+
+def query_table(source_table, colstring="*"):
+    
+    auth_provider = PlainTextAuthProvider(username=CASSANDRA_USER, password=CASSANDRA_PWD)
+    cluster = Cluster([CASSANDRA_HOST], auth_provider=auth_provider)
+
+    session = cluster.connect(CASSANDRA_KEYSPACE)
+    cqlquery = f"SELECT {colstring} FROM {source_table};"
+    rows = session.execute(cqlquery)
+    return pd.DataFrame(rows)
+
+foundrows = query_table(TABLE_NAME)
+now = datetime.datetime.now()
+print("{} Inserted {} rows in total".format(now.strftime("%Y-%m-%d %H:%M:%S"), len(foundrows)))
 print("Bye Bye!")
 

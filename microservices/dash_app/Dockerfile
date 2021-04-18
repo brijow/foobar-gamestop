@@ -2,10 +2,14 @@ FROM python:3.9
 
 WORKDIR /usr/app
 
-ADD ./requirements.txt ./
+ENV HOST="0.0.0.0"
+ADD ./microservices/dash_app/requirements.txt ./
 RUN pip install -r requirements.txt
 
-ENV HOST="0.0.0.0"
-ADD ./ ./
-ENTRYPOINT ["python", "-u", "app.py"]
+ADD ./setup.py ./
+COPY foobar/ ./foobar/
+RUN pip install -e .
+COPY  ./microservices/dash_app/ ./
 
+
+ENTRYPOINT ["python", "-u", "app.py"]

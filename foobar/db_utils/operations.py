@@ -1,17 +1,5 @@
 import os
-
 import pandas as pd
-
-from foobar.data_loader import get_root_data_dir, get_or_create_processed_data_dir
-
-from importlib import resources
-
-from sqlalchemy import and_, create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql import asc, desc, func
-from treelib import Tree
-
-from foobar.db_utils.models import Base, Gamestop, Post, Tag
 
 
 def _get_or_create_db_dir():
@@ -184,6 +172,12 @@ def build_wide_table(df_reddit, df_financial):
 
 
 if __name__ == "__main__":
+    from sqlalchemy import and_, create_engine #Moving imports here so they dont get called in the cluster
+    from sqlalchemy.orm import sessionmaker
+    from sqlalchemy.sql import asc, desc, func
+    from foobar.db_utils.models import Base, Gamestop, Post, Tag
+    from foobar.data_loader import get_root_data_dir, get_or_create_processed_data_dir
+    
     s = connect_to_db()
     result = get_post_minmax_dates(s)
     start_date = result.start_date.replace(minute=0, hour=0, second=0, microsecond=0)
