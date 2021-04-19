@@ -66,8 +66,7 @@ securityContext: {}
 deployment:
   name: shortsqueeze-app
   keyspace: kafkapipeline
-  weathertable: weatherreport
-  twittertable: twitterdata
+  widetable: wide
 
 producers:
   finnhub:
@@ -90,7 +89,7 @@ producers:
       "0":
         name: finnhub
         command: "/usr/app/finnancial_data_producer.py"
-        schedule: "*/4 * * * *" #every 4 minutes for now
+        schedule: "*/55 * * * *"
         topicname: finnhubsource
         gmetable: gamestop
         tagtable: tag
@@ -102,7 +101,7 @@ producers:
       "1":
         name: m2-predictor
         command: "/usr/app/m2_predict_producer.py"
-        schedule: "*/5 * * * *" #every 5 minutes for now
+        schedule: "*/59 * * * *"
         topicname: widetopic
         gmetable: gamestop
         tagtable: tag
