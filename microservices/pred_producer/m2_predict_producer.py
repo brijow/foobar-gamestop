@@ -81,7 +81,7 @@ class WideTablePredictor:
 
     def obtainWide_df(self):
         wide_df = run_wide_row_builder()
-        return wide_df
+        return wide_df.sort_values("hour")
 
     def makeWidePredictions(self):        
         try:
@@ -124,8 +124,9 @@ class WideTablePredictor:
             newpredictions = pd.merge(predictedFinnhub, df_predictions, on='hour')
 
             print("Done with Wide predictions from {} to {}".format(newpredictions['hour'].min(), newpredictions['hour'].max()))
-            newpredictions['hour'] = pd.to_datetime(newpredictions['hour'], unit="s")
+            newpredictions['hour'] = pd.to_datetime(newpredictions['hour'], unit="s")+ pd.to_timedelta(10, unit='s')
             newpredictions['hour'] = newpredictions['hour'].dt.strftime("%Y-%m-%d %H:%M:%S")
+            newpredictions=newpredictions.reset_index()
             return newpredictions[WIDE_COLS]
 
 
