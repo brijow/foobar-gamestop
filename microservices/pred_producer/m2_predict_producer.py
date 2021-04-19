@@ -53,7 +53,7 @@ class WideTablePredictor:
         self.bucket = s3.Bucket(BUCKET_NAME)
         self.producer = KafkaProducer(
             bootstrap_servers=KAFKA_BROKER_URL,
-            value_serializer=lambda x: json.dumps(x).encode("utf8"),
+            value_serializer=lambda x: x.encode("utf8"),
             api_version=(0, 11, 5),
         )
         self.model_file = "m2.pth"
@@ -65,7 +65,8 @@ class WideTablePredictor:
         print("{} Starting Wide prediction process".format(now.strftime("%Y-%m-%d %H:%M:%S")))
         predictions = self.makeWidePredictions()
         if predictions is None:
-            sys.exit("{} Did not receive any wide table predictions".format(now.strftime("%Y-%m-%d %H:%M:%S")))
+            print("{} Did not receive any wide table predictions".format(now.strftime("%Y-%m-%d %H:%M:%S")))
+            return
         if KAFKA_ENABLED:
             print(f"Finished prediction of {len(predictions)} rows. Now sending it to Kafka")
             self.sendRecordstoKafka(predictions)
@@ -81,6 +82,8 @@ class WideTablePredictor:
 
     def obtainWide_df(self):
         wide_df = run_wide_row_builder()
+        if wide_df is None or wide_df.empty:
+            return None
         return wide_df.sort_values("hour")
 
     def makeWidePredictions(self):        
@@ -124,7 +127,9 @@ class WideTablePredictor:
             newpredictions = pd.merge(predictedFinnhub, df_predictions, on='hour')
 
             print("Done with Wide predictions from {} to {}".format(newpredictions['hour'].min(), newpredictions['hour'].max()))
-            newpredictions['hour'] = pd.to_datetime(newpredictions['hour'], unit="s")+ pd.to_timedelta(10, unit='s')
+            # newpredictions['hour'] = pd.to_datetime(newpredictions['hour'], unit="s")+ pd.to_timedelta(10, unit='s')
+            
+            newpredictions['hour'] = pd.date_range('today', periods=len(newpredictions), freq='S')
             newpredictions['hour'] = newpredictions['hour'].dt.strftime("%Y-%m-%d %H:%M:%S")
             newpredictions=newpredictions.reset_index()
             return newpredictions[WIDE_COLS]
