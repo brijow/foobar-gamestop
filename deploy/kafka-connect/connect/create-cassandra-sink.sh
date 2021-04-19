@@ -15,7 +15,6 @@ export finnhubsinkconfig='{
     "value.converter.schemas.enable": "false",  
     "key.converter": "org.apache.kafka.connect.json.JsonConverter",
     "key.converter.schemas.enable":"false",
-    "cassandra.write.mode" : "Update",
     "topic.'${FINNHUB_TOPIC}'.kafkapipeline.gamestop.mapping": "hour=value.hour, close_price=value.close_price, open_price=value.open_price, high_price=value.high_price, volume=value.volume, low_price=value.low_price",
     "topic.'${FINNHUB_TOPIC}'.kafkapipeline.gamestop.consistencyLevel": "LOCAL_QUORUM"
   }
@@ -72,12 +71,11 @@ export widesink='{
     "tasks.max": "1",
     "topics": "'${WIDE_TOPIC}'",
     "loadBalancing.localDc": "datacenter1",
-    "topic.'${WIDE_TOPIC}'.kafkapipeline.wide.mapping": "avg_all_post_pos=value.avg_all_post_pos, avg_all_post_neg=value.avg_all_post_neg, avg_all_post_neu=value.avg_all_post_neu, cnt_all_user=value.cnt_all_user, cnt_all_tag=value.cnt_all_tag, cnt_all_post=value.cnt_all_post, cnt_all_comments=value.cnt_all_comments, avg_gme_post_pos=value.avg_gme_post_pos, avg_gme_post_neg=value.avg_gme_post_neg, avg_gme_post_neu=value.avg_gme_post_neu, cnt_gme_user=value.cnt_gme_user, cnt_gme_tag=value.cnt_gme_tag, cnt_gme_post=value.cnt_gme_post, cnt_gme_comments=value.cnt_gme_comments, volume=value.volume, open_price=value.open_price, close_price=value.close_price, high_price=value.high_price, low_price=value.low_price, prediction_finn=value.prediction_finn, prediction_wide=value.prediction_wide, prediction_reddit=value.prediction_reddit, hour=value.hour",
+    "topic.'${WIDE_TOPIC}'.kafkapipeline.wide.mapping": "prediction_reddit='"value.prediction_reddit"',hour='"value.hour"'",
     "topic.'${WIDE_TOPIC}'.kafkapipeline.wide.consistencyLevel": "LOCAL_QUORUM"
   }
 }'
-
-
+# prediction_wide='"value.prediction_wide"',prediction_finn='"value.prediction_finn"',high_price='"value.high_price"',close_price='"value.close_price"',low_price='"value.low_price"',cnt_gme_comments='"value.cnt_gme_comments"',cnt_gme_post='"value.cnt_gme_post"',cnt_gme_tag='"value.cnt_gme_tag"',cnt_gme_user='"value.cnt_gme_user"',avg_gme_post_neu='"value.avg_gme_post_neu"',avg_gme_post_neg='"value.avg_gme_post_neg"',avg_gme_post_pos='"value.avg_gme_post_pos"',cnt_all_comments='"value.cnt_all_comments"',cnt_all_post='"value.cnt_all_post"',cnt_all_tag='"value.cnt_all_tag"',cnt_all_user='"value.cnt_all_user"',avg_all_post_neu='"value.avg_all_post_neu"',avg_all_post_neg='"value.avg_all_post_neg"',avg_all_post_pos='"value.avg_all_post_pos"',open_price='"value.open_price"',volume='"value.volume"',
 echo "Starting Finnhub sink for ${CASSANDRA_HOST}"
 curl -s \
      -X POST http://${HOSTNAME}:${CONNECT_REST_PORT}/connectors \

@@ -340,7 +340,7 @@ spec:
             - name: CONNECT_INTERNAL_VALUE_CONVERTER
               value: org.apache.kafka.connect.json.JsonConverter
             - name: CONNECT_KEY_CONVERTER
-              value: org.apache.kafka.connect.storage.StringConverter
+              value: org.apache.kafka.connect.json.JsonConverter
             - name: CONNECT_OFFSET_FLUSH_INTERVAL_MS
               value: "10000"
             - name: CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
@@ -361,6 +361,8 @@ spec:
               value: "false"
             - name: CONNECT_ZOOKEEPER_CONNECT
               value: "{{ .Release.Name }}-zookeeper:{{ .Values.kafka.zookeeper.service.port }}" #kafka-zookeeper:2181
+            - name: CONNECT_LOG4J_LOGGERS
+              value: "org.apache.kafka.connect=INFO"
           image: "{{ .Values.image.connect.repository }}:{{ .Values.image.connect.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: {{ .Values.kafka.connect.name }}
