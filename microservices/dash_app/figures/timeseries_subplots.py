@@ -36,6 +36,7 @@ def ts_subplots():
             "prediction_reddit": "PRED_rdt_feats",
         }
     )
+    df = df.sort_values('DATE')
     df = df[df["PRED_fin_feats"].notna()]
     df = df[df["PRED_all_feats"].notna()]
     df = df[df["PRED_rdt_feats"].notna()]

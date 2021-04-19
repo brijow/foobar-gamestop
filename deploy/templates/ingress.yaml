@@ -20,13 +20,19 @@ metadata:
     # share a single ALB with all ingress rules with search-app-ingress
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/group.name: {{ $fullName }}
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    alb.ingress.kubernetes.io/rewrite-target: /
+    # alb.ingress.kubernetes.io/backend-protocol: HTTPS
   {{- end }}
 spec:
   rules:
   - http:
       paths:
       - path: /connectors/*
+        pathType: Prefix
+        backend:
+          serviceName: {{ $connectfullName }}-service
+          servicePort: {{ $connectsvcPort }}
+      - path: /connectors
         pathType: Prefix
         backend:
           serviceName: {{ $connectfullName }}-service

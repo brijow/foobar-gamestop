@@ -11,6 +11,21 @@
 You'll have to configure access to the cluster with eksctl and kubectl.
 (more info coming.)
 
+All commands have to be run from gamestop/deploy root directory
+
+### Creating the EKS cluster
+```
+eksctl create cluster -f cluster.yaml
+
+```
+
+### Install the application using Helm
+
+```
+helm install shortsqueeze ./
+
+```
+
 ### Connect to cassandra
 ```
 kubectl exec --stdin --tty shortsqueeze-cassandra-0 -- /bin/bash
@@ -18,6 +33,15 @@ cqlsh --cqlversion=3.4.4 -u admin -p welcome1
 
 ```
 
+### Uninstalling the application
+```
+helm delete shortsqueeze
+
+```
+### Delete the EKS cluster
+```
+kubectl delete cluster -f cluster.yaml
+```
 
 ### Overview of project tree structure
 ------------

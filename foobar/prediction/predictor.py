@@ -43,6 +43,6 @@ def prediction(model, device, scaler, df, train_parameter_set):
             y_pred = model(x_i)
             predictions.append(y_pred.item())
             # df_target.at[i + train_window, "prediction"] = y_pred.item()
-    df_target[target_col] = pd.Series(predictions, dtype='float') 
-    df_target = df_target.fillna(-1)
-    return df_target
+    df[target_col] = pd.Series(predictions, dtype='float') 
+    df = df.fillna(-1)
+    return df

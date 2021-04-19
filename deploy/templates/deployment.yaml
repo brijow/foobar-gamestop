@@ -37,6 +37,8 @@ spec:
                 secretKeyRef:
                   name: cassandra-secret
                   key: cassandra-password
+            - name: WIDE_TABLE
+              value: {{ .Values.deployment.widetable }}
           ports:
             - name: http
               containerPort: {{ .Values.containerPort }}
