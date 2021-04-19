@@ -71,11 +71,10 @@ export widesink='{
     "tasks.max": "1",
     "topics": "'${WIDE_TOPIC}'",
     "loadBalancing.localDc": "datacenter1",
-    "topic.'${WIDE_TOPIC}'.kafkapipeline.wide.mapping": "prediction_reddit='"value.prediction_reddit"',hour='"value.hour"'",
+    "topic.'${WIDE_TOPIC}'.kafkapipeline.wide.mapping": "prediction_wide='"value.prediction_wide"',prediction_finn='"value.prediction_finn"',high_price='"value.high_price"',close_price='"value.close_price"',low_price='"value.low_price"',cnt_gme_comments='"value.cnt_gme_comments"',cnt_gme_post='"value.cnt_gme_post"',cnt_gme_tag='"value.cnt_gme_tag"',cnt_gme_user='"value.cnt_gme_user"',avg_gme_post_neu='"value.avg_gme_post_neu"',avg_gme_post_neg='"value.avg_gme_post_neg"',avg_gme_post_pos='"value.avg_gme_post_pos"',cnt_all_comments='"value.cnt_all_comments"',cnt_all_post='"value.cnt_all_post"',cnt_all_tag='"value.cnt_all_tag"',cnt_all_user='"value.cnt_all_user"',avg_all_post_neu='"value.avg_all_post_neu"',avg_all_post_neg='"value.avg_all_post_neg"',avg_all_post_pos='"value.avg_all_post_pos"',open_price='"value.open_price"',volume='"value.volume"',prediction_reddit='"value.prediction_reddit"',hour='"value.hour"'",
     "topic.'${WIDE_TOPIC}'.kafkapipeline.wide.consistencyLevel": "LOCAL_QUORUM"
   }
 }'
-# prediction_wide='"value.prediction_wide"',prediction_finn='"value.prediction_finn"',high_price='"value.high_price"',close_price='"value.close_price"',low_price='"value.low_price"',cnt_gme_comments='"value.cnt_gme_comments"',cnt_gme_post='"value.cnt_gme_post"',cnt_gme_tag='"value.cnt_gme_tag"',cnt_gme_user='"value.cnt_gme_user"',avg_gme_post_neu='"value.avg_gme_post_neu"',avg_gme_post_neg='"value.avg_gme_post_neg"',avg_gme_post_pos='"value.avg_gme_post_pos"',cnt_all_comments='"value.cnt_all_comments"',cnt_all_post='"value.cnt_all_post"',cnt_all_tag='"value.cnt_all_tag"',cnt_all_user='"value.cnt_all_user"',avg_all_post_neu='"value.avg_all_post_neu"',avg_all_post_neg='"value.avg_all_post_neg"',avg_all_post_pos='"value.avg_all_post_pos"',open_price='"value.open_price"',volume='"value.volume"',
 echo "Starting Finnhub sink for ${CASSANDRA_HOST}"
 curl -s \
      -X POST http://${HOSTNAME}:${CONNECT_REST_PORT}/connectors \
