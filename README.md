@@ -1,3 +1,10 @@
+## Application URL
+
+The final application can be accessed from this link:
+
+http://k8s-shortsqueezeingre-bdf54e695e-1796258414.us-east-1.elb.amazonaws.com
+
+
 ## Quick start instructions 
 1. Install the following packages in your development environment before making git commmits:
 > `conda install black flake8 isort mypy pre-commit`
