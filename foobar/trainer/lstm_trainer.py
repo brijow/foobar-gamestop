@@ -2,14 +2,14 @@ import numpy as np
 import torch
 
 
-def train_model(model, device, train_batches, val_batches=None, num_epochs=200):
+def train_model(model, device, train_batches, val_batches=None, num_epochs=50):
 
+    learning_rate = 1e-2
     train_losses = []
     val_losses = []
     best_loss = np.Inf
     val_loss = None
 
-    learning_rate = 1e-3
     criterion = torch.nn.MSELoss().to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -31,24 +31,22 @@ def train_model(model, device, train_batches, val_batches=None, num_epochs=200):
             batch_loss = loss.item()
             batch_losses.append(batch_loss)
 
-            if val_batches is not None:
-                with torch.no_grad():
-                    model.eval()
-                    val_batch_losses = []
-                    for _, val_batch in enumerate(val_batches):
-                        x_val, y_val = val_batch
-                        batch_size = x_val.size(0)
-                        x_val = x_val.to(device)
-                        y_val = y_val.to(device)
-                        model.init_hidden(batch_size, device)
-                        pred = model(x_val)
-                        loss = criterion(pred, y_val)
-                        val_loss = loss.item()
-                        val_losses.append(val_loss)
-                        if val_loss < best_loss:
-                            best_loss = val_loss
-                        if val_loss < 0.05:
-                            break
+        if val_batches is not None:
+            model.eval()
+            with torch.no_grad():
+                val_batch_losses = []
+                for _, val_batch in enumerate(val_batches):
+                    x_val, y_val = val_batch
+                    batch_size = x_val.size(0)
+                    x_val = x_val.to(device)
+                    y_val = y_val.to(device)
+                    model.init_hidden(batch_size, device)
+                    pred = model(x_val)
+                    loss = criterion(pred, y_val)
+                    val_loss = loss.item()
+                    val_batch_losses.append(val_loss)
+                    if val_loss < best_loss:
+                        best_loss = val_loss
 
         val_losses_mean = np.mean(val_batch_losses)
         batch_losses_mean = np.mean(batch_losses)

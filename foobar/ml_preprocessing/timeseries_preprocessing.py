@@ -4,16 +4,14 @@ from sklearn.preprocessing import StandardScaler
 
 
 # Generate time windows for time series forecasting with LSTM network
-def generate_window(dataset, train_window, pred_horizon):
+def generate_window(dataset, label, train_window, pred_horizon):
     dataset_seq = []
     size = len(dataset)
     x_arr = []
     y_arr = []
     for i in range(size - train_window - pred_horizon):
         x = dataset[i : (i + train_window), :-1]
-        y = dataset[
-            i + train_window + pred_horizon - 1 : i + train_window + pred_horizon, -1
-        ]
+        y = label[i + train_window + pred_horizon - 1 : i + train_window + pred_horizon]
         x_arr.append(x)
         y_arr.append(y)
 
@@ -37,17 +35,6 @@ def scale(df, feature_set, scaler=None):
         scaled_arr = scaler.fit_transform(df[feature_set])
     else:
         scaled_arr = scaler.transform(df[feature_set])
-    return scaled_arr, scaler
-
-def scale_not_y(df, feature_set, scaler=None):
-    y =  'closeprice'
-    feature_set = [i for i in feature_set if i != y]
-    if scaler is None:
-        scaler = StandardScaler()
-        scaled_arr = scaler.fit_transform(df[feature_set])
-    else:
-        scaled_arr = scaler.transform(df[feature_set])
-    scaled_arr = scaled_arr.append(df[y])
     return scaled_arr, scaler
 
 

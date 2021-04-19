@@ -1,9 +1,8 @@
 import boto3
 import pandas as pd
 
-def download_csv(BUCKET, CSV_FILE, LOCAL_FILE):
+def download_csv(s3_client, BUCKET, CSV_FILE, LOCAL_FILE):
     try:
-        s3_client = boto3.client("s3")
         s3_client.download_file(BUCKET, CSV_FILE, LOCAL_FILE)
         df = pd.read_csv(LOCAL_FILE)
         if df.empty:
