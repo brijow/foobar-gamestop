@@ -8,4 +8,3 @@ dash-html-components
 dash-bootstrap-components
 decorator==4.4.2
 networkx
-cassandra-driver
