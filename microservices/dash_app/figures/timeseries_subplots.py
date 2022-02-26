@@ -2,7 +2,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from foobar.db_utils.cassandra_utils import *
+# from foobar.db_utils.cassandra_utils import *
+import os
 
 WIDE_TABLE = os.environ.get("WIDE_TABLE", "wide")
 
@@ -22,15 +23,15 @@ def ts_subplots():
     # cnt_gme_user,cnt_gme_tag,cnt_gme_post,cnt_gme_comments,id,
     # volume,openprice,closeprice,highprice,lowprice,
     # prediction_finn,prediction_wide,prediction_reddit
-    # df = pd.read_csv("wide1.csv")
-    df = query_table(WIDE_TABLE)
+    df = pd.read_csv("wide1.csv")
+    # df = query_table(WIDE_TABLE)
     df = df.rename(
         columns={
             "hour": "DATE",
-            "open_price": "OPEN",
-            "high_price": "HIGH",
-            "low_price": "LOW",
-            "close_price": "CLOSE",
+            "openprice": "OPEN",
+            "highprice": "HIGH",
+            "lowprice": "LOW",
+            "closeprice": "CLOSE",
             "prediction_finn": "PRED_fin_feats",
             "prediction_wide": "PRED_all_feats",
             "prediction_reddit": "PRED_rdt_feats",
