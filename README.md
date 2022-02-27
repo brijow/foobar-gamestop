@@ -1,8 +1,26 @@
-## Application URL
+# foobar-gamestop, or "Real time data mining r/WallStreetBets"
 
-The final application can be accessed from this link:
 
-http://k8s-shortsqueezeingre-bdf54e695e-1796258414.us-east-1.elb.amazonaws.com
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/11220949/155862781-4763b6dc-f06e-4769-ad68-a5f8253ec418.png">
+</p>
+
+
+## Running the application
+
+> The bad news: Sorry, the app is no longer live (running our K8s cluster in EKS was too costly).
+> 
+> The good news: You can still follow the instructions below to bring up your own EKS cluster (assuming you have installed the aws cli tools for managing an EKS cluster), or, just clone the repo (instructions below) and run a static version of the dash app to visualize some [sample data in a csv](https://raw.githubusercontent.com/brijow/foobar-gamestop/demo/microservices/dash_app/wide1.csv?token=GHSAT0AAAAAABQ45KNS7BK4YINMZ7V7BIVQYRD7WZA) ! For the latter:
+>
+> ```
+> git clone https://github.com/brijow/foobar-gamestop.git
+> cd foobar-gamestop/microservices/dash_app
+> pip install -r requirements
+> python app.py
+> ```
+>
+> You can now view the dash app in your browser, (link is displayed in your terminal, should be http://127.0.0.1:8888/)
+
 
 
 ## Quick start instructions 
