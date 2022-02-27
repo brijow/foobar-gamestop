@@ -36,7 +36,7 @@
 You'll have to configure access to the cluster with eksctl and kubectl.
 (more info coming.)
 
-All commands have to be run from gamestop/deploy root directory
+All commands have to be run from gamestop/deploy root directory **on the master branch**
 
 ### Creating the EKS cluster
 ```
